@@ -25,16 +25,12 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
-require_once 'Zend/Config/Xml.php';
 
 // Create application, bootstrap, and run
 
-$config = new Zend_Config_Xml(APPLICATION_PATH . '/configs/application.xml',
-                              APPLICATION_ENV);
-
 $application = new Zend_Application(
     APPLICATION_ENV,
-    $config
+    APPLICATION_PATH . '/configs/application.ini'
 );
 
 try {
