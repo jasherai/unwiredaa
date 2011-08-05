@@ -1,0 +1,27 @@
+<?php
+	$this->headScript()->appendFile('http://maps.googleapis.com/maps/api/js?sensor=false');
+
+	$this->headScript()->captureStart();
+?>
+
+	$(document).ready(function(){
+		$('#nodemap').width(900)
+					 .height(450);
+
+		var latlng = new google.maps.LatLng(-34.397, 150.644);
+    	var myOptions = {
+      		zoom: 8,
+      		center: latlng,
+      		mapTypeId: google.maps.MapTypeId.ROADMAP
+    	};
+
+    	var map = new google.maps.Map(document.getElementById("nodemap"),
+        							  myOptions);
+
+	});
+
+<?php
+	$this->headScript()->captureEnd();
+?>
+
+<div id="nodemap"></div>

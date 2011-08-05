@@ -1,1 +1,27 @@
-<?php echo $this->layout()->content; ?>
+<?php echo $this->docType('XHTML1_TRANSITIONAL'); ?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <?php echo $this->headTitle('UnwiredAA')?>
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+    <!--
+    	All core meta, link, styles and scripts must be here.
+    	Everything else is loaded as needed with the appropriate helpers below.
+    -->
+
+	<?php
+		echo $this->headLink();
+		echo $this->headMeta();
+		echo $this->headStyle();
+		echo $this->headScript();
+	?>
+  </head>
+  <body>
+
+	<?php echo $this->layout()->content; ?>
+
+  </body>
+</html>
