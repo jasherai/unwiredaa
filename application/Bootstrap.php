@@ -43,51 +43,6 @@ class Unwired_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         date_default_timezone_set('Europe/Sofia');
     }
 
-    /**
-     * Initialize Zend_Layout
-     *
-     * @return Zend_Layout
-     */
-    public function _initLayout()
-    {
-        /**
-         * Check if view is initialized
-         */
-        if (!$this->hasResource('View')) {
-            $this->registerPluginResource('View');
-            $this->bootstrapView();
-        }
-
-        $view = $this->getResource('View');
-
-        $options = $this->getOption('resources');
-
-        /**
-         * Merge layout config options with view instance
-         * so action views and layout views are the same object and share assigned variables
-         */
-        $layoutOptions = array('view' => $view);
-        if ($options && is_array($options) && isset($options['layout'])
-            && is_array($options['layout'])) {
-
-            $layoutOptions = array_merge($layoutOptions, $options['layout']);
-
-            if (isset($layoutOptions['doctype'])) {
-                $view->doctype()->setDoctype($layoutOptions['doctype']);
-            }
-        }
-
-        /**
-         * Set content type and charset
-         */
-        $view->headMeta()->prependHttpEquiv('Content-Type',
-                                            'text/html; charset=' . $view->getEncoding());
-
-        $layout = Zend_Layout::startMvc($layoutOptions);
-
-        return $layout;
-    }
-
 
     /**
      * Init session namespace for current project
