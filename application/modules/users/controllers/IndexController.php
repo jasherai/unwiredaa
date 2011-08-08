@@ -1,13 +1,15 @@
 <?php
+/**
+* Unwired AA GUI
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+* Licensed unter the terms of http://www.unwired.at/license.html
+*/
 
 /**
- * IndexController
- *
- * @author
- * @version
+ * Users/Index controller
+ * @author B. Krastev <bkrastev@web-teh.net>
  */
-
-require_once 'Zend/Controller/Action.php';
 
 class Users_IndexController extends Zend_Controller_Action {
 	/**
@@ -15,6 +17,20 @@ class Users_IndexController extends Zend_Controller_Action {
 	 */
 	public function indexAction() {
 		// TODO Auto-generated IndexController::indexAction() default action
+	}
+
+	public function loginAction()
+	{
+		if (!$this->getRequest()->isPost()) {
+			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
+		}
+
+		$form = new Users_Form_Login();
+
+		if (!$form->isValid($this->getRequest()->getPost())) {
+			return;
+		}
+
 	}
 
 }

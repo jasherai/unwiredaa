@@ -22,7 +22,7 @@ class Users_Bootstrap extends Zend_Application_Module_Bootstrap
 
 		$view = $this->getResource('view');
 
-		$view->addHelperPath(APPLICATION_PATH . '/modules/users/view/helpers', 'Users_View_Helper');
+		$view->addHelperPath(APPLICATION_PATH . '/modules/users/views/helpers', 'Users_View_Helper');
 
 		return null;
 	}

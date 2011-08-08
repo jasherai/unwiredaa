@@ -120,6 +120,11 @@ class Unwired_Model_Mapper {
         return $model;
     }
 
+    public function findBy(array $conditions, $limit = null)
+    {
+
+    }
+
     public function fetchAll()
     {
         $resultSet = $this->getDbTable()->fetchAll();
@@ -135,4 +140,22 @@ class Unwired_Model_Mapper {
         return $entries;
     }
 
+    protected function _rowToModel(Zend_Db_Table_Row $row)
+    {
+    	$model = new $this->_modelClass;
+
+    	$model->fromArray($row->toArray());
+
+    	return $model;
+    }
+
+    protected function _rowsetToModels(Zend_Db_Table_Rowset $rowset)
+    {
+    	$result = array();
+    	foreach ($rowset as $row) {
+    		$result[] = $this->_rowToModel($row);
+    	}
+
+    	return $result;
+    }
 }
