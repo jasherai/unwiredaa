@@ -7,6 +7,11 @@
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 
+	<link rel="stylesheet" media="screen,projection" href="themes/default/styles/blueprint/screen.css" />
+	<link rel="stylesheet" media="print" href="themes/default/styles/blueprint/print.css" />
+
+	<link rel="stylesheet" media="all" href="themes/default/styles/style.css" />
+
     <!--
     	All core meta, link, styles and scripts must be here.
     	Everything else is loaded as needed with the appropriate helpers below.
@@ -20,8 +25,11 @@
 	?>
   </head>
   <body>
+	<div id="wrapper">
+		<div id="header">
 
-	<?php echo $this->layout()->content; ?>
-
+		</div>
+		<?php echo $this->layout()->content; ?>
+	</div>
   </body>
 </html>

@@ -1,11 +1,19 @@
 <?php
 /**
+* Unwired AA GUI
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+* Licensed unter the terms of http://www.unwired.at/license.html
+*/
+
+/**
  * Application bootstrap class
  *
  * Resources initialization methods are currently in this class
  * but if specific resource initialization / code grows, it should
  * be moved to a separate resource class
  *
+ * @author B. Krastev <bkrastev@web-teh.net>
  */
 class Unwired_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {

@@ -1,4 +1,16 @@
 <?php
+/**
+* Unwired AA GUI
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+* Licensed unter the terms of http://www.unwired.at/license.html
+*/
+
+/**
+ *
+ * @author B. Krastev <bkrastev@web-teh.net>
+ */
+
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
