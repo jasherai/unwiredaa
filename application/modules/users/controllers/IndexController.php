@@ -12,11 +12,9 @@
  */
 
 class Users_IndexController extends Zend_Controller_Action {
-	/**
-	 * The default action - show the home page
-	 */
+
 	public function indexAction() {
-		$mapper = new Zend_Paginator(new Users_Model_AdminMapper());
+		$this->_helper->redirector->gotoRouteAndExit(array('controller' => 'admin'), null, false);
 	}
 
 	public function loginAction()
