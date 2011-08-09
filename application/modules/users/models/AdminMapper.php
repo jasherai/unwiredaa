@@ -13,8 +13,8 @@
 class Users_Model_AdminMapper extends Unwired_Model_Mapper
 {
 
-
-
+	protected $_modelClass = 'Users_Model_Admin';
+	protected $_dbTableClass = 'Users_Model_DbTable_AdminUsers';
 
 }
 

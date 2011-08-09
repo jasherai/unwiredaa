@@ -16,7 +16,7 @@ class Users_IndexController extends Zend_Controller_Action {
 	 * The default action - show the home page
 	 */
 	public function indexAction() {
-		// TODO Auto-generated IndexController::indexAction() default action
+		$mapper = new Zend_Paginator(new Users_Model_AdminMapper());
 	}
 
 	public function loginAction()
@@ -31,6 +31,18 @@ class Users_IndexController extends Zend_Controller_Action {
 			return;
 		}
 
+		$data = $form->getValues();
+
+		$service = new Users_Model_AdminService();
+
+		if (!$service->login($data['username'], $data['password'])) {
+			echo $this->view->uiMessage('user_login_failed', 'error');
+			return;
+		}
+
+		$this->view->uiMessage('user_login_success', 'success');
+
+		$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 	}
 
 }

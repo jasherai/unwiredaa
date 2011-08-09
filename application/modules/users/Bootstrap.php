@@ -12,7 +12,7 @@
  */
 class Users_Bootstrap extends Zend_Application_Module_Bootstrap
 {
-	public function _initViewHelperPath()
+/*	public function _initViewHelperPath()
 	{
 		if (!$this->hasPluginResource('view')) {
 			$this->registerPluginResource('view');
@@ -25,5 +25,5 @@ class Users_Bootstrap extends Zend_Application_Module_Bootstrap
 		$view->addHelperPath(APPLICATION_PATH . '/modules/users/views/helpers', 'Users_View_Helper');
 
 		return null;
-	}
+	}*/
 }
