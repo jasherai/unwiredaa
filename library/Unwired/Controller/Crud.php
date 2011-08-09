@@ -11,7 +11,7 @@
  * @author B. Krastev <bkrastev@web-teh.net>
  */
 
-class Unwired_Controller_Crud extends Zend_Controller_Action
+class Unwired_Controller_Crud extends Unwired_Controller_Action
 {
 	protected $_currentUser = null;
 

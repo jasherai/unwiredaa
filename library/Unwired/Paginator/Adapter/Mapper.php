@@ -17,6 +17,8 @@ class Unwired_Paginator_Adapter_Mapper extends Zend_Paginator_Adapter_DbSelect
 
 	public function __construct(Unwired_Model_Mapper $mapper, Zend_Db_Select $select = null)
 	{
+		$this->_mapper = $mapper;
+
 		if (null === $select) {
 			$select = $mapper->getDbTable()->select(true);
 		}
@@ -46,6 +48,8 @@ class Unwired_Paginator_Adapter_Mapper extends Zend_Paginator_Adapter_DbSelect
 			$entry = $this->getMapper()->getEmptyModel();
 
 			$entry->fromArray($item);
+
+			$result[] = $entry;
 		}
 
 		return $result;

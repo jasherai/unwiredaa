@@ -2,6 +2,8 @@
 
 class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_Interface
 {
+	protected $_userId = null;
+
 	protected $_password = null;
 
 	protected $_firstname = null;
@@ -19,6 +21,20 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	protected $_zip = null;
 
 	protected $_country = null;
+
+	/**
+	 * @return the $userId
+	 */
+	public function getUserId() {
+		return $this->_userId;
+	}
+
+	/**
+	 * @param integer $userId
+	 */
+	public function setUserId($userId) {
+		$this->_userId = $userId;
+	}
 
 	/**
 	 * ACL role unique identifier

@@ -32,7 +32,25 @@
 				<?php echo $this->logInOut(); ?>
 			</div>
 		</div>
-		<?php echo $this->layout()->content; ?>
+
+		<?php echo $this->uiMessage(); ?>
+
+		<?php if (Zend_Auth::getInstance()->hasIdentity()) :?>
+			<div id="sidenav">
+				<?php echo $this->navigation(); ?>
+				<a href="<?php echo $this->url(array('module' => 'users',
+													 'controller' => 'index',
+													 'action'	=> 'logout'),
+											   'default',
+												true); ?>"><?php echo $this->translate('navigation_link_logout'); ?></a>
+			</div>
+		<div id="content" class="ml220">
+		<?php else: ?>
+
+		<div id="content">
+		<?php endif;?>
+			<?php echo $this->layout()->content; ?>
+		</div>
 	</div>
   </body>
 </html>

@@ -1,5 +1,15 @@
 @CHARSET "UTF-8";
 
+a, a:visited {
+    color: #465A00;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #333333;
+}
+
 #wrapper {
 	width: 950px;
 	margin: 0 auto;
@@ -14,4 +24,57 @@
     -moz-box-shadow: 0px 10px 15px #ccc;
     -webkit-box-shadow:0px 10px 15px #ccc;
     box-shadow:0px 10px 10px #ccc;
+}
+
+.userblock {
+    margin-left: 710px;
+    padding-top: 10px;
+}
+
+.userblock form div label {
+	display: block;
+	color: #fff;
+}
+	
+#sidenav {
+	width: 200px;
+	float: left;
+	margin-right: 25px;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#cccccc, Direction=135, Strength=8);
+    -moz-box-shadow: 5px 5px 15px #ccc;
+    -webkit-box-shadow:5px 5px 15px #ccc;
+    box-shadow:0px 5px 10px #ccc;
+}
+
+table.listing {
+	border-collapse: separate;
+	border-spacing:2px;
+    background:#ffffff;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#cccccc, Direction=135, Strength=8);
+    -moz-box-shadow: 5px 5px 15px #ccc;
+    -webkit-box-shadow:5px 5px 15px #ccc;
+    box-shadow:0px 5px 15px #ccc;
+}
+
+table.listing th {
+	background: #465A00;
+	color: #fff;
+}
+
+table.listing td.tools {
+    text-align: center;	
+}
+
+table.listing td.tools a img{
+	margin-left: 3px;
+	padding: 2px;
+	border: 1px solid #fff;
+}
+
+table.listing td.tools a:hover img{
+	border: 1px solid #97B400;
+	background: #FCFFED;
+}
+.ml220 {
+	margin-left: 220px;
 }

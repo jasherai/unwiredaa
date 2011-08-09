@@ -1,0 +1,9 @@
+<h1><?php
+	if ($this->entity->getUserId()) {
+		echo sprintf($this->translate('admin_heading_user_edit'), $this->entity->getEmail());
+	} else {
+		echo $this->translate('admin_heading_user_add');
+	}
+?></h1>
+
+<?php echo $this->form;?>

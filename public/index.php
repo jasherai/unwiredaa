@@ -56,3 +56,6 @@ try {
         echo '<h1>Site temporary unavailable</h1>';
     }
 }
+if (APPLICATION_ENV == 'development') {
+    echo '<!-- Page time: ' . (microtime(true) - $startTime) . ' -->';
+}

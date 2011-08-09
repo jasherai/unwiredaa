@@ -1,0 +1,45 @@
+<h1><?php echo $this->translate('admin_users_listing'); ?></h1>
+
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('admin_users_listing_id');?></th>
+			<th><?php echo $this->translate('admin_users_listing_email');?></th>
+			<th><?php echo $this->translate('admin_users_listing_firstname');?></th>
+			<th><?php echo $this->translate('admin_users_listing_lastname');?></th>
+			<th><?php echo $this->translate('admin_users_listing_city');?></th>
+			<th><?php echo $this->translate('admin_users_listing_country');?></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->paginator as $user) :?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td><?php echo $user->getUserId(); ?></td>
+			<td><?php echo $user->getEmail(); ?></td>
+			<td><?php echo $user->getFirstname(); ?></td>
+			<td><?php echo $user->getLastname(); ?></td>
+			<td><?php echo $user->getCity(); ?></td>
+			<td><?php echo $user->getCountry(); ?></td>
+			<td class="tools">
+				<a class="edit" href="<?php
+				echo $this->url(array('module' => 'users',
+									  'controller' => 'admin',
+									  'action' => 'edit',
+									  'id'	=> $user->getUserId()), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/edit.png');
+				?>" alt="<?php echo $this->translate('action_edit_user'); ?>" /></a>
+
+				<a class="delete" href="<?php
+				echo $this->url(array('module' => 'users',
+									  'controller' => 'admin',
+									  'action' => 'delete',
+									  'id'	=> $user->getUserId()), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
+				?>" alt="<?php echo $this->translate('action_edit_user'); ?>" /></a>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>

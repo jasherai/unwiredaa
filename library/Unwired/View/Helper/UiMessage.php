@@ -25,13 +25,15 @@ class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 		$session = null;
 	}
 
-	public function uiMessage($message, $type = 'info')
+	public function uiMessage($message = null, $type = 'info')
 	{
-		if (!isset($this->_messages[$type])) {
-			$this->_messages[$type] = array();
-		}
+		if ($message) {
+			if (!isset($this->_messages[$type])) {
+				$this->_messages[$type] = array();
+			}
 
-		$this->_messages[$type][] = $message;
+			$this->_messages[$type][] = $message;
+		}
 
 		return $this;
 	}
@@ -49,8 +51,9 @@ class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 	public function __toString()
 	{
 		$result = '';
+
 		foreach ($this->_messages as $type => $messages) {
-			$result = "<div class=\"{$type}\">\n";
+			$result .= "<div class=\"{$type}\">\n";
 			foreach ($messages as $message) {
 				$result .= '<p>' . $message . "</p>\n";
 			}

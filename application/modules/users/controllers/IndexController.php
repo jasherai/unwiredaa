@@ -25,6 +25,8 @@ class Users_IndexController extends Zend_Controller_Action {
 
 		$form = new Users_Form_Login();
 
+		$this->view->form = $form;
+
 		if (!$form->isValid($this->getRequest()->getPost())) {
 			return;
 		}
@@ -34,11 +36,22 @@ class Users_IndexController extends Zend_Controller_Action {
 		$service = new Users_Model_AdminService();
 
 		if (!$service->login($data['username'], $data['password'])) {
-			echo $this->view->uiMessage('user_login_failed', 'error');
+			$this->view->uiMessage('user_login_failed', 'error');
 			return;
 		}
 
 		$this->view->uiMessage('user_login_success', 'success');
+
+		$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
+	}
+
+	public function logoutAction()
+	{
+		$service = new Users_Model_AdminService();
+
+		$service->logout();
+
+		$this->view->uiMessage('user_logout_success', 'success');
 
 		$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 	}

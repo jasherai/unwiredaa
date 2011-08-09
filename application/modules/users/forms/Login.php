@@ -28,7 +28,7 @@ class Users_Form_Login extends Zend_Form
 										'errors' => 'errors',
 										'htmltag' => array('decorator' => 'HtmlTag',
 							            				   'options' => array ('tag' => 'div',
-																			   'class' => 'cbox'))
+																			   'class' => 'formelement'))
 										));
 
 		$this->addElement('text', 'username', array('label' => 'form_element_label_username',
@@ -43,6 +43,7 @@ class Users_Form_Login extends Zend_Form
 
 		$this->addElement('submit', 'form_element_submit', array('label' => 'form_button_label_login',
 	 														 	 'tabindex' => 20,
+																 'class'	=> 'button',
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',
