@@ -7,13 +7,13 @@
 */
 
 /**
- * DB table gateway for admin_users
+ * DB table gateway for admin_user
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_DbTable_AdminUsers extends Zend_Db_Table_Abstract
+class Users_Model_DbTable_AdminUser extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'admin_users';
+    protected $_name = 'admin_user';
 
 
 }

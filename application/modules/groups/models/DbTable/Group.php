@@ -7,14 +7,14 @@
 */
 
 /**
- * DB table gateway for groups table
+ * DB table gateway for group table
  * @author B. Krastev <bkrastev@web-teh.net>
  */
 
-class Groups_Model_DbTable_Groups extends Zend_Db_Table_Abstract {
+class Groups_Model_DbTable_Group extends Zend_Db_Table_Abstract {
 	/**
 	 * The default table name
 	 */
-	protected $_name = 'groups';
+	protected $_name = 'group';
 
 }

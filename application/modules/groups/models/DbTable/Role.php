@@ -7,14 +7,14 @@
 */
 
 /**
- * DB table gateway for network_users
+ * DB table gateway for role table
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_DbTable_NetUsers extends Zend_Db_Table_Abstract
-{
 
-    protected $_name = 'network_users';
-
+class Groups_Model_DbTable_Role extends Zend_Db_Table_Abstract {
+	/**
+	 * The default table name
+	 */
+	protected $_name = 'role';
 
 }
-

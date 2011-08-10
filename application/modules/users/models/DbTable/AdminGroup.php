@@ -7,14 +7,16 @@
 */
 
 /**
- * DB table gateway for roles table
+ * DB table gateway for admin_user_group
  * @author B. Krastev <bkrastev@web-teh.net>
  */
+class Users_Model_DbTable_AdminGroup extends Zend_Db_Table_Abstract
+{
 
-class Groups_Model_DbTable_Roles extends Zend_Db_Table_Abstract {
-	/**
-	 * The default table name
-	 */
-	protected $_name = 'roles';
+    protected $_name = 'admin_user_group';
+
+
+
 
 }
+

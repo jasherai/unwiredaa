@@ -7,14 +7,14 @@
 */
 
 /**
- * Mapper for Users_Model_Admin
+ * DB table gateway for node table
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_AdminMapper extends Unwired_Model_Mapper
-{
 
-	protected $_modelClass = 'Users_Model_Admin';
-	protected $_dbTableClass = 'Users_Model_DbTable_AdminUser';
+class Groups_Model_DbTable_Node extends Zend_Db_Table_Abstract {
+	/**
+	 * The default table name
+	 */
+	protected $_name = 'role';
 
 }
-
