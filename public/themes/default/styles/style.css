@@ -39,11 +39,48 @@ a:hover {
 #sidenav {
 	width: 200px;
 	float: left;
-	margin-right: 25px;
+	margin-right: 20px;
 	filter:progid:DXImageTransform.Microsoft.Shadow(color=#cccccc, Direction=135, Strength=8);
     -moz-box-shadow: 5px 5px 15px #ccc;
     -webkit-box-shadow:5px 5px 15px #ccc;
     box-shadow:0px 5px 10px #ccc;
+}
+
+ul.navigation {
+	list-style: none;
+	margin: 0px;
+	padding: 10px 0px;
+}
+
+ul.navigation li {
+	font-size: 1.2em;
+	margin-bottom: 10px;
+	font-weight: bold;
+	text-indent: 7px;
+}
+
+ul.navigation li ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+ul.navigation li ul li {
+    font-size: 0.8em;
+	margin-bottom: 0px;
+	font-weight: normal;
+	margin: 3px 0px;
+}
+
+ul.navigation li ul li a {
+	display: block;
+	border-left: 5px solid #fff;
+	padding: 5px 5px 5px 15px
+}
+
+ul.navigation li ul li a:hover {
+    display: block;
+    border-left: 5px solid #465A00;
 }
 
 table.listing {
@@ -61,7 +98,39 @@ table.listing th {
 	color: #fff;
 }
 
-table.listing td.tools {
+table.listing th a {
+	color: #fff;
+}
+
+table.listing th a:hover {
+    color: #fff;
+	text-decoration: underline;
+}
+
+table.listing tr th img {
+	vertical-align: middle;
+}
+
+table.listing th.tools a {
+	padding: 5px 3px;
+	border: 1px solid #465A00; 
+}
+
+table.listing th.tools a:hover {
+	text-decoration: none;
+	background: #566620;
+	border: 1px solid #97B400;
+}
+
+table.listing tbody tr {
+	border-bottom: 1px solid #fff;
+}
+
+table.listing tbody tr:hover {
+	border-bottom: 1px solid #465A00;
+}
+
+table.listing tr .tools {
     text-align: center;	
 }
 

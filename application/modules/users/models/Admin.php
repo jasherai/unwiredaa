@@ -33,7 +33,7 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 * @param integer $userId
 	 */
 	public function setUserId($userId) {
-		$this->_userId = $userId;
+		$this->_userId = (int) $userId;
 	}
 
 	/**
@@ -54,10 +54,13 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $password
+	 * @param string $password
 	 */
 	public function setPassword($password) {
-		$this->_password = $password;
+		if (strlen($password) != 40) {
+			$this->_password = sha1($password);
+		}
+		return $this;
 	}
 
 	/**
@@ -68,10 +71,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $firstname
+	 * @param string $firstname
 	 */
 	public function setFirstname($firstname) {
 		$this->_firstname = $firstname;
+		return $this;
 	}
 
 	/**
@@ -82,10 +86,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $lastname
+	 * @param string $lastname
 	 */
 	public function setLastname($lastname) {
 		$this->_lastname = $lastname;
+		return $this;
 	}
 
 	/**
@@ -96,10 +101,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $email
+	 * @param string $email
 	 */
 	public function setEmail($email) {
 		$this->_email = $email;
+		return $this;
 	}
 
 	/**
@@ -107,10 +113,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 */
 	public function getPhone() {
 		return $this->_phone;
+
 	}
 
 	/**
-	 * @param field_type $phone
+	 * @param string $phone
 	 */
 	public function setPhone($phone) {
 		$this->_phone = $phone;
@@ -124,10 +131,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $address
+	 * @param string $address
 	 */
 	public function setAddress($address) {
 		$this->_address = $address;
+		return $this;
 	}
 
 	/**
@@ -138,10 +146,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $city
+	 * @param string $city
 	 */
 	public function setCity($city) {
 		$this->_city = $city;
+		return $this;
 	}
 
 	/**
@@ -152,10 +161,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $zip
+	 * @param string $zip
 	 */
 	public function setZip($zip) {
 		$this->_zip = $zip;
+		return $this;
 	}
 
 	/**
@@ -166,11 +176,11 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @param field_type $country
+	 * @param string $country Two character country code
 	 */
 	public function setCountry($country) {
 		$this->_country = $country;
+		return $this;
 	}
-
 
 }

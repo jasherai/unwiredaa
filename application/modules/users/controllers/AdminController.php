@@ -9,6 +9,7 @@ class Users_AdminController extends Unwired_Controller_Crud
 	public function addAction()
 	{
 		$this->_add();
+		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
 	public function editAction()
@@ -18,6 +19,7 @@ class Users_AdminController extends Unwired_Controller_Crud
 
 	public function deleteAction()
 	{
+		$this->_delete();
 		// @todo user deletion
 	}
 }

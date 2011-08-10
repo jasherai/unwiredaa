@@ -9,7 +9,15 @@
 			<th><?php echo $this->translate('admin_users_listing_lastname');?></th>
 			<th><?php echo $this->translate('admin_users_listing_city');?></th>
 			<th><?php echo $this->translate('admin_users_listing_country');?></th>
-			<th></th>
+			<th class="tools">
+			<a class="add" href="<?php
+				echo $this->url(array('module' => 'users',
+									  'controller' => 'admin',
+									  'action' => 'add'), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
+				?>" alt="<?php echo $this->translate('action_add_user'); ?>" /> <?php echo $this->translate('action_add_user'); ?></a>
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -39,6 +47,7 @@
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
 				?>" alt="<?php echo $this->translate('action_edit_user'); ?>" /></a>
+			</td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>

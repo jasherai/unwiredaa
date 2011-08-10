@@ -7,10 +7,14 @@
 */
 
 /**
- * Users module bootstrap
+ * DB table gateway for admin_user
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Bootstrap extends Unwired_Application_Module_Bootstrap
+class Users_Model_DbTable_AdminUser extends Zend_Db_Table_Abstract
 {
 
+    protected $_name = 'admin_user';
+
+
 }
+
