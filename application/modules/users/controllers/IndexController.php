@@ -11,7 +11,7 @@
  * @author B. Krastev <bkrastev@web-teh.net>
  */
 
-class Users_IndexController extends Zend_Controller_Action {
+class Users_IndexController extends Unwired_Controller_Action {
 
 	public function indexAction() {
 		$this->_helper->redirector->gotoRouteAndExit(array('controller' => 'admin'), null, false);

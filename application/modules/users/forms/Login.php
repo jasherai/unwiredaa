@@ -39,7 +39,7 @@ class Users_Form_Login extends Zend_Form
 		$this->addElement('password', 'password', array('label' => 'form_element_label_password',
 														'required' => true,
 														'validators' => array('len' => array('validator' => 'StringLength',
-																					     	 'options' => array('min' => 8)))));
+																					     	 'options' => array('min' => 6)))));
 
 		$this->addElement('submit', 'form_element_submit', array('label' => 'form_button_label_login',
 	 														 	 'tabindex' => 20,

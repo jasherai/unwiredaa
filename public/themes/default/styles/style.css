@@ -144,6 +144,10 @@ table.listing td.tools a:hover img{
 	border: 1px solid #97B400;
 	background: #FCFFED;
 }
+
+.message p {
+	margin-bottom: 5px;
+}
 .ml220 {
 	margin-left: 220px;
 }

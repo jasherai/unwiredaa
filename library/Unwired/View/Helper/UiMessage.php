@@ -12,7 +12,11 @@
  */
 class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 {
+	protected $_session = null;
+
 	protected $_messages = array();
+
+	protected $_translate = null;
 
 	public function __construct()
 	{
@@ -32,10 +36,35 @@ class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 				$this->_messages[$type] = array();
 			}
 
+			if ($this->getTranslate()) {
+				$message = $this->getTranslate()->translate($message);
+			}
+
 			$this->_messages[$type][] = $message;
 		}
 
+		$this->getSession()->messages = $this->_messages;
+
 		return $this;
+	}
+
+	public function getSession()
+	{
+		if (null === $this->_session) {
+			$session = new Zend_Session_Namespace('uiMessage');
+		}
+
+		return $session;
+	}
+
+	public function getTranslate()
+	{
+		if (null === $this->_translate) {
+			if (Zend_Registry::isRegistered('Zend_Translate')) {
+				$this->_translate = Zend_Registry::get('Zend_Translate');
+			}
+		}
+		return $this->_translate;
 	}
 
 	public function getMessages() {
@@ -45,6 +74,9 @@ class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 	public function clearMessages()
 	{
 		$this->_messages = array();
+
+		$this->getSession()->messages = null;
+
 		return $this;
 	}
 
@@ -53,7 +85,7 @@ class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 		$result = '';
 
 		foreach ($this->_messages as $type => $messages) {
-			$result .= "<div class=\"{$type}\">\n";
+			$result .= "<div class=\"message {$type}\">\n";
 			foreach ($messages as $message) {
 				$result .= '<p>' . $message . "</p>\n";
 			}
@@ -63,19 +95,5 @@ class Unwired_View_Helper_UiMessage extends Zend_View_Helper_Abstract
 		$this->clearMessages();
 
 		return $result;
-	}
-
-
-	public function __destruct()
-	{
-		$session = new Zend_Session_Namespace('uiMessage');
-
-		if (!empty($this->_messages)) {
-			$session->messages = $this->_messages;
-		} else {
-			$session->messages = null;
-		}
-
-		$session = null;
 	}
 }
