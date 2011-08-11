@@ -9,7 +9,7 @@ class Users_Model_AdminService
 	 */
 	public function login($username, $password)
 	{
-		$mapper = new Users_Model_AdminMapper();
+		$mapper = new Users_Model_Mapper_Admin();
 
 		$user = $mapper->findOneBy(array('email' => $username,
 										 'password' => sha1($password)));

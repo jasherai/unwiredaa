@@ -135,7 +135,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		if (null === $this->_defaultMapper) {
 			preg_match('/^(.*)_([a-z0-0]+)Controller$/i', get_class($this), $match);
 
-			$mapperClass = $match[1] . '_Model_' . $match[2] . 'Mapper';
+			$mapperClass = $match[1] . '_Model_Mapper_' . $match[2];
 			$this->_defaultMapper = new $mapperClass;
 		}
 

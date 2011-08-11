@@ -1,0 +1,9 @@
+<h1><?php
+	if ($this->entity->getGroupId()) {
+		echo sprintf($this->translate('groups_heading_group_edit'), $this->entity->getName());
+	} else {
+		echo $this->translate('groups_heading_group_add');
+	}
+?></h1>
+
+<?php echo $this->form;?>

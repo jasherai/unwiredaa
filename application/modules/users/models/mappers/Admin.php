@@ -10,7 +10,7 @@
  * Mapper for Users_Model_Admin
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_AdminMapper extends Unwired_Model_Mapper
+class Users_Model_Mapper_Admin extends Unwired_Model_Mapper
 {
 
 	protected $_modelClass = 'Users_Model_Admin';
