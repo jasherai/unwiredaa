@@ -33,7 +33,7 @@ class Users_IndexController extends Unwired_Controller_Action {
 
 		$data = $form->getValues();
 
-		$service = new Users_Model_AdminService();
+		$service = new Users_Service_Admin();
 
 		if (!$service->login($data['username'], $data['password'])) {
 			$this->view->uiMessage('user_login_failed', 'error');
@@ -47,7 +47,7 @@ class Users_IndexController extends Unwired_Controller_Action {
 
 	public function logoutAction()
 	{
-		$service = new Users_Model_AdminService();
+		$service = new Users_Service_Admin();
 
 		$service->logout();
 

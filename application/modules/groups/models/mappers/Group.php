@@ -16,8 +16,4 @@ class Groups_Model_Mapper_Group extends Unwired_Model_Mapper {
 
     protected $_modelClass = 'Groups_Model_Group';
 
-    public function getGroupsByAdmin(Users_Model_Admin $admin)
-    {
-    	//$relTable = new Users_Model_DbTable_AdminGroup();
-    }
 }

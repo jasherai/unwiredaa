@@ -21,12 +21,15 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     protected $_customSelect = null;
 
+    protected $_repository = array();
+
     public function __construct()
     {
     	if (null === $this->_modelClass) {
     		throw new Unwired_Exception('Model class not defined in mapper');
     	}
     }
+
     /**
      * Set the default db table gateway instance for mapper
      *
@@ -84,6 +87,15 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     {
         $data = $model->toArray();
 
+        /**
+         * Filter out stuff that's not in the table
+         */
+        $cols = $this->getDbTable()->info(Zend_Db_Table_Abstract::COLS);
+        $data = array_intersect_key($data, array_flip($cols));
+
+        /**
+         * Find the primary key cols
+         */
         $primary = $this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY);
 
         $primaryFilter = array();
@@ -137,18 +149,16 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
      */
     public function find($id)
     {
+    	if ($this->_hasInRepository($id)) {
+    		return $this->_getFromRepository($id);
+    	}
+
         $result = $this->getDbTable()->find($id);
         if (0 == count($result)) {
             return null;
         }
 
-        $row = $result->current();
-
-        $model = new $this->_modelClass;
-
-        $model->fromArray($row->toArray());
-
-        return $model;
+        return $this->_rowToModel($result->current());
     }
 
     /**
@@ -225,9 +235,17 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     protected function _rowToModel(Zend_Db_Table_Row $row)
     {
+    	$id = $row->{current($this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY))};
+
+    	if ($this->_hasInRepository($id)) {
+    		return $this->_getFromRepository($id);
+    	}
+
     	$model = $this->getEmptyModel();
 
     	$model->fromArray($row->toArray());
+
+    	$this->_addToRepository($model, $id);
 
     	return $model;
     }
@@ -240,6 +258,33 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     	}
 
     	return $result;
+    }
+
+    protected function _addToRepository(Unwired_Model_Generic $model, $id)
+    {
+    	$this->_repository[$id] = $model;
+    	return $this;
+    }
+
+    protected function _hasInRepository($id)
+    {
+		return isset($this->_repository[$id]);
+    }
+
+    protected function _getFromRepository($id)
+    {
+		if (!$this->_hasInRepository($id)) {
+			return null;
+		}
+
+		return $this->_repository[$id];
+    }
+
+    protected function _deleteFromRepository($id)
+    {
+		unset($this->_repository[$id]);
+
+    	return $this;
     }
 
 	/* (non-PHPdoc)

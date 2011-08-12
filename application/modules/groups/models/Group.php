@@ -10,6 +10,10 @@ class Groups_Model_Group extends Unwired_Model_Generic
 
 	protected $_name = null;
 
+	protected $_parent = null;
+
+	protected $_children = array();
+
 	/**
 	 * @return the $groupId
 	 */
@@ -77,12 +81,20 @@ class Groups_Model_Group extends Unwired_Model_Generic
 		return $this;
 	}
 
+	public function addChild(Groups_Model_Group $child) {
+		if (!in_array($child, $this->_children)) {
+			$this->_children[] = $child;
+		}
+
+		return $this;
+	}
+
 	public function getParent()
 	{
 		return $this->_parent;
 	}
 
-	public function setParent(Groups_Model_Group $parent)
+	public function setParent(Groups_Model_Group $parent = null)
 	{
 		$this->_parent = $parent;
 		return $this;

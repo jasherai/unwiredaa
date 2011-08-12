@@ -4,12 +4,17 @@ class Groups_IndexController extends Unwired_Controller_Crud
 {
 	public function init()
 	{
-		$this->_defaultMapper = new Groups_Model_Mapper_Group();
+
 	}
 
 	public function indexAction()
 	{
-		$this->_index();
+		$service = new Groups_Service_Group();
+
+		$rootGroup = $service->getGroupTreeByAdmin();
+
+		$this->view->rootGroup = $rootGroup;
+
 	}
 
 	public function addAction()

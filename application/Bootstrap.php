@@ -51,6 +51,12 @@ class Unwired_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initSession()
     {
+    	/**
+    	 * Ensure modules are being bootstrapped before session
+    	 * so classes from modules can be found
+    	 */
+    	$this->bootstrap('modules');
+
         $options = $this->getOption('resources');
 
         if (!$options || !isset($options['session']['namespace'])) {

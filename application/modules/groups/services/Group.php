@@ -17,23 +17,59 @@ class Groups_Service_Group {
 		return $this->_groupMapper;
 	}
 
+	public function getGroupTreeByAdmin(Users_Model_Admin $admin = null)
+	{
+		$groups = $this->getGroupsByAdmin($admin);
+
+		if (!$groups) {
+			return null;
+		}
+		/**
+		 * Assume that there's only one root group (network)
+		 */
+
+		$root = $groups[0];
+
+		while ($parent = $root->getParent()) {
+			$parent->addChild($root);
+			$root = $parent;
+		}
+
+		return $root;
+	}
+
+	/**
+	 * Get groups that the user belongs to
+	 *
+	 * @param Users_Model_Admin $admin
+	 * @return array()
+	 */
 	public function getGroupsByAdmin(Users_Model_Admin $admin = null)
 	{
 		if (null === $admin) {
 			$admin = Zend_Auth::getInstance()->getIdentity();
 		}
 
-		if (null === $admin->getGroupId()) {
-			$group = $this->getGroupMapper()->getEmptyModel();
-		} else {
-			$group = $this->getGroupMapper()->find($admin->getGroupId());
+		if (!$admin->getGroupIds()) {
+			return array();
 		}
 
-		$this->loadRelatedGroups($group);
+		$groups = array();
+		foreach ($admin->getGroupIds() as $id) {
+			$group = $this->getGroupMapper()->find($id);
+			$this->loadRelatedGroups($group);
+			$groups[] = $group;
+		}
 
-		return $group;
+		return $groups;
 	}
 
+	/**
+	 * Load both parent and child groups
+	 *
+	 * @param Groups_Model_Group $group
+	 * @return Groups_Service_Group
+	 */
 	public function loadRelatedGroups(Groups_Model_Group $group)
 	{
 		$group->setParent($this->getGroupParent($group));
@@ -42,6 +78,13 @@ class Groups_Service_Group {
 		return $this;
 	}
 
+	/**
+	 * Get group parent(s)
+	 *
+	 * @param Groups_Model_Group $group
+	 * @param bool $recursive
+	 * @return Groups_Model_Group
+	 */
 	public function getGroupParent(Groups_Model_Group $group, $recursive = true)
 	{
 		if (null === $group->getParentId()) {
@@ -63,6 +106,13 @@ class Groups_Service_Group {
 		return $parent;
 	}
 
+	/**
+	 * Get group children
+	 *
+	 * @param Groups_Model_Group $group
+	 * @param bool $recursive
+	 * @return array
+	 */
 	public function getGroupChildren(Groups_Model_Group $group = null, $recursive = true)
 	{
 		if (null == $group) {
@@ -73,7 +123,7 @@ class Groups_Service_Group {
 
 		if ($recursive) {
 			foreach ($children as $child) {
-				$this->setChildren($this->getGroupChildren($child));
+				$child->setChildren($this->getGroupChildren($child, $recursive));
 			}
 		}
 

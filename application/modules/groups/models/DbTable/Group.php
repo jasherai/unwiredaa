@@ -17,4 +17,18 @@ class Groups_Model_DbTable_Group extends Zend_Db_Table_Abstract {
 	 */
 	protected $_name = 'group';
 
+	protected $_dependentTables = array('Users_Model_DbTable_AdminGroup');
+
+	protected $_referenceMap = array(
+            'Role'  => array(
+                'columns'           => 'role_id',
+                'refTableClass'     => 'Groups_Model_DbTable_Role',
+                'refColumns'        => 'user_id'
+                ),
+             'Parent'  => array(
+                'columns'           => 'parent_id',
+                'refTableClass'     => 'Groups_Model_DbTable_Group',
+                'refColumns'        => 'group_id'
+                )
+             );
 }

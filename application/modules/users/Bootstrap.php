@@ -12,5 +12,29 @@
  */
 class Users_Bootstrap extends Unwired_Application_Module_Bootstrap
 {
+	public function _initIdentity()
+	{
+		$this->getApplication()->bootstrap('db');
 
+		$auth = Zend_Auth::getInstance();
+		if (!$auth->hasIdentity()) {
+			return null;
+		}
+
+		$identity = $auth->getIdentity();
+
+		$mapper = new Users_Model_Mapper_Admin();
+
+		$user = $mapper->find($identity->getUserId());
+
+		if (!$user) {
+			$auth->clearIdentity();
+
+			return;
+		}
+
+		$auth->getStorage()->write($user);
+
+		return $user;
+	}
 }

@@ -4,6 +4,8 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 {
 	protected $_userId = null;
 
+	protected $_groupIds = array();
+
 	protected $_password = null;
 
 	protected $_firstname = null;
@@ -34,6 +36,32 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 */
 	public function setUserId($userId) {
 		$this->_userId = (int) $userId;
+		return $this;
+	}
+
+	/**
+	 * @return the $groupIds
+	 */
+	public function getGroupIds() {
+		return $this->_groupIds;
+	}
+
+	/**
+	 * @param array $groupIds
+	 */
+	public function setGroupIds(array $groupIds) {
+		$this->_groupIds = $groupIds;
+		return $this;
+	}
+
+	/**
+	 * Check if user is direct member of a group
+	 * @param integer $groupId
+	 * @return boolean
+	 */
+	public function hasGroupId($groupId)
+	{
+		return in_array($groupId, $this->_groupIds);
 	}
 
 	/**
@@ -181,6 +209,13 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	public function setCountry($country) {
 		$this->_country = $country;
 		return $this;
+	}
+
+	public function __wakeup()
+	{
+		if (!class_exists('Users_Model_Admin')) {
+			require_once(APPLICATION_PATH . '/modules/users/models/Admin.php');
+		}
 	}
 
 }

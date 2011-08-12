@@ -16,7 +16,18 @@ class Users_Model_DbTable_AdminGroup extends Zend_Db_Table_Abstract
     protected $_name = 'admin_user_group';
 
 
-
+	protected $_referenceMap = array(
+            'Admin'  => array(
+                'columns'           => 'user_id',
+                'refTableClass'     => 'Users_Model_DbTable_AdminUser',
+                'refColumns'        => 'user_id'
+                ),
+             'Group'  => array(
+                'columns'           => 'group_id',
+                'refTableClass'     => 'Groups_Model_DbTable_Group',
+                'refColumns'        => 'group_id'
+                )
+             );
 
 }
 

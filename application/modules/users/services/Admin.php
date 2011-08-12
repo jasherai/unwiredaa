@@ -1,5 +1,5 @@
 <?php
-class Users_Model_AdminService
+class Users_Service_Admin
 {
 	/**
 	 * Try to authenticate user
@@ -23,7 +23,7 @@ class Users_Model_AdminService
 		 *
 		 */
 		$auth = Zend_Auth::getInstance();
-		$auth->getStorage()->write($auth);
+		$auth->getStorage()->write($user);
 
 		/**
 		 * @todo Set up ACL with user
