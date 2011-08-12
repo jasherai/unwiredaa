@@ -1,0 +1,29 @@
+<?php
+	$this->layout()->disableLayout();
+?>
+<div>
+	<span><?php echo $this->translate('groups_group_name')?>:</span>
+	<strong><?php echo $this->group->getName(); ?></strong>
+</div>
+
+<div>
+	<span><?php echo $this->translate('groups_group_parents')?>:</span>
+	<?php echo $this->groupTree($this->group->getParent()); ?>
+</div>
+
+<div>
+	<span><?php echo $this->translate('groups_group_role')?>:</span>
+	<?php echo $this->group->getRoleId(); ?>
+</div>
+
+<div class="buttons">
+	<a class="button small blue" href="<?php echo $this->url(array('action' => 'edit',
+									     					 'id' => $this->group->getGroupId()),
+										   null,
+										   false); ?>"><span><?php echo $this->translate('groups_group_button_edit');?></span></a>
+
+	<a class="button small red" href="<?php echo $this->url(array('action' => 'delete',
+											     'id' => $this->group->getGroupId()),
+										   null,
+										   false); ?>"><span><?php echo $this->translate('groups_group_button_delete');?></span></a>
+</div>

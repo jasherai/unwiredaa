@@ -17,6 +17,25 @@ class Groups_Service_Group {
 		return $this->_groupMapper;
 	}
 
+	public function findGroup($groupId, $parents = false, $children = false)
+	{
+		$group = $this->getGroupMapper()->find($groupId);
+
+		if (!$group) {
+			return false;
+		}
+
+		if ($parents) {
+			$group->setParent($this->getGroupParent($group, true));
+		}
+
+		if ($children) {
+			$group->setChildren($this->getGroupChildren($group, true));
+		}
+
+		return $group;
+	}
+
 	public function getGroupTreeByAdmin(Users_Model_Admin $admin = null)
 	{
 		$groups = $this->getGroupsByAdmin($admin);
@@ -93,12 +112,15 @@ class Groups_Service_Group {
 
 		$parent = $this->getGroupMapper()->find($group->getParentId());
 
+		$parent->addChild($group);
+
 		if ($recursive) {
 			$current = $parent;
 
 			while ($current->getParentId()) {
 				$prev = $current;
 				$current = $this->getGroupMapper()->find($prev->getParentId());
+				$current->addChild($prev);
 				$prev->setParent($current);
 			}
 		}

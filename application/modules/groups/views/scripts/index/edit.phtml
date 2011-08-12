@@ -5,5 +5,30 @@
 		echo $this->translate('groups_heading_group_add');
 	}
 ?></h1>
+<?php
+	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
+	$this->headLink()->appendStylesheet('scripts/jstree/themes/classic/style.css');
+	$this->headScript()->captureStart();
+?>
+$(function () {
+	$("input[name=parent_id]").hide().after($('.grouptree'));
 
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : [ "group_<?php echo ($this->entity->getParentId()); ?>" ] },
+            "ui" : { select_limit : 1,  "initially_select" : [ "group_<?php echo ($this->entity->getParentId()); ?>" ] }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$("input[name=parent_id]").val(groupId);
+	     })
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
 <?php echo $this->form;?>
+<div class="grouptree span-8">
+	<?php echo $this->groupTree($this->rootGroup, $this->entity); ?>
+</div>

@@ -2,29 +2,52 @@
 
 <?php
 	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
-	$this->headLink()->appendStylesheet('scripts/jstree/themes/default/style.css');
+	$this->headLink()->appendStylesheet('scripts/jstree/themes/classic/style.css');
 	$this->headScript()->captureStart();
 ?>
 $(function () {
-	    // TO CREATE AN INSTANCE
-	    // select the tree container using jQuery
-	    $(".grouptree")
-	        // call `.jstree` with the options object
-	        .jstree({
-	            // the `plugins` array allows you to configure the active plugins on this instance
-	            "plugins" : ["themes","html_data","ui","crrm"],
-	        })
-	        // EVENTS
-	        // each instance triggers its own events - to process those listen on the container
-	        // all events are in the `.jstree` namespace
-	        // so listen for `function_name`.`jstree` - you can function names from the docs
-	        .bind("loaded.jstree", function (event, data) {
-	            // you get two params - event & data - check the core docs for a detailed description
-	        });
-	});
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : [ "group_1" ] },
+            "ui" : { select_limit : 1 }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$.ajax({
+				url: '<?php echo $this->url(array('module' => 'groups',
+														  	  'controller' => 'index',
+														  	  'action' => 'view')); ?>/id/' + groupId,
+				'success' : function (viewdata) {
+					$('#groupview').html(viewdata);
+
+				},
+				'error' : function() {
+					/**
+					 * @todo Add error message
+					 */
+					$('#groupview').html('');
+				}
+			})
+	     })
+});
 <?php
 	$this->headScript()->captureEnd();
 ?>
-<div class="grouptree">
+<div class="grouptree span-8">
 	<?php echo $this->groupTree($this->rootGroup); ?>
+	<div class="formbuttons">
+		<span class="button"><button>Add</button></span>
+		<span class="button"><button>Edit</button></span>
+	</div>
+</div>
+<div id="groupview" class="span-9">
+
+</div>
+<div class="buttons span-18">
+	<a class="button small green" href="<?php echo $this->url(array('action' => 'add'),
+													   null,
+													   false);
+									?>"><span><?php echo $this->translate('groups_group_button_add');?></span></a>
 </div>

@@ -148,6 +148,78 @@ table.listing td.tools a:hover img{
 .message p {
 	margin-bottom: 5px;
 }
+
+div.formelement {
+	padding: 5px;
+	float: left;
+}
+
+div.formelement label {
+	display: block;
+	width: 120px;
+	float: left;
+	margin: 0.5em 0;
+}
+
+div.formelement input {
+	float: left;
+}
+
+div.formelement ul.errors {
+	clear: left;
+	float: left;
+	color: #AA0000;
+}
+
+div.buttons {
+	padding-top: 10px;
+}
+form div.buttons {
+	width: 100%;
+	float: left;
+}
+
+.jstree {
+	background: #fff !important;
+}
+
+/* buttons */
+span.button, a.button {display:inline-block;height:32px;color:#343434;font:bold 12px Tahoma,Helvetica,sans-serif !important;cursor:pointer !important;position:relative;left:5px;text-shadow:1px 1px 0px rgba(255,255,255,0.5);text-decoration:none;margin:0 5px 0 8px;padding-left:0px;vertical-align:middle;background:url("../images/buttons.png") top right no-repeat;white-space:nowrap;border:none;overflow:visible;}
+span.button button, span.button input {font-weight: bold;}
+a.button {margin-left:6px;}
+span.button button, span.button input, a.button span {cursor: pointer!important;border: 0px !important; float:left;margin:0 13px 0 -10px;padding-left:15px;line-height:32px;height:32px;position:relative;background:url("../images/buttons.png") top left no-repeat;overflow:visible;}
+span.button:hover, a.button:hover {background-position:100% -216px;}
+span.button:hover button, span.button:hover input, a.button:hover span {background-position:0 -216px;}
+span.button.small, a.button.small {height:22px;font:bold 11px Arial,Helvetica,sans-serif !important;background-position:100% -128px;}
+span.button.small button, span.button.small input, a.button.small span {line-height:22px;height:22px;background-position:0 -128px;}
+span.button.small:hover, a.button.small:hover {background-position:100% -344px;}
+span.button.small:hover button, span.button.small:hover input, a.button.small:hover span {background-position:0 -344px;}
+span.button.green, span.button.red, span.button.blue, a.button.green, a.button.red, a.button.blue {background-position:100% -32px;}
+span.button.green button, span.button.red button, span.button.blue button, span.button.green input, span.button.red input, span.button.blue input, a.button.green, a.button.red, a.button.blue {color:#fff !important;text-shadow:0 1px 0px rgba(0,0,0,0.5);}
+span.button.green button, span.button.green input, a.button.green span {background-position:0 -32px;}
+span.button.green:hover, a.button.green:hover {background-position:100% -248px;}
+span.button.green:hover button, span.button.green:hover input, a.button.green:hover span {background-position:0 -248px;}
+span.button.green.small, a.button.green.small {background-position:100% -150px;}
+span.button.green.small button, span.button.green.small input, a.button.green.small span {background-position:0 -150px;}
+span.button.green.small:hover, a.button.green.small:hover {background-position:100% -366px;}
+span.button.green.small:hover button, span.button.green.small:hover input, a.button.green.small:hover span {background-position:0 -366px;}
+span.button.red, a.button.red {background-position:100% -64px;}
+span.button.red button, span.button.red input, a.button.red span {background-position:0 -64px;}
+span.button.red:hover, a.button.red:hover {background-position:100% -280px;}
+span.button.red:hover button, span.button.red:hover input, a.button.red:hover span {background-position:0 -280px;}
+span.button.red.small, a.button.red.small {background-position:100% -172px;}
+span.button.red.small button, span.button.red.small input, a.button.red.small span {background-position:0 -172px;}
+span.button.red.small:hover, a.button.red.small:hover {background-position:100% -388px;}
+span.button.red.small:hover button, span.button.red.small:hover input, a.button.red.small:hover span {background-position:0 -388px;}
+span.button.blue, a.button.blue {background-position:100% -96px;}
+span.button.blue button, span.button.blue input, a.button.blue span {background-position:0 -96px;}
+span.button.blue:hover, a.button.blue:hover {background-position:100% -312px;}
+span.button.blue:hover button, span.button.blue:hover input, a.button.blue:hover span {background-position:0 -312px;}
+span.button.blue.small, a.button.blue.small {background-position:100% -194px;}
+span.button.blue.small button, span.button.blue.small input, a.button.blue.small span {background-position:0 -194px;}
+span.button.blue.small:hover, a.button.blue.small:hover {background-position:100% -410px;}
+span.button.blue.small:hover button, span.button.blue.small:hover input, a.button.blue.small:hover span {background-position:0 -410px;}
+
 .ml220 {
 	margin-left: 220px;
 }

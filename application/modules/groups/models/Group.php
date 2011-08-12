@@ -26,6 +26,7 @@ class Groups_Model_Group extends Unwired_Model_Generic
 	 */
 	public function setGroupId($groupId) {
 		$this->_groupId = $groupId;
+		return $this;
 	}
 
 	/**
@@ -40,6 +41,7 @@ class Groups_Model_Group extends Unwired_Model_Generic
 	 */
 	public function setParentId($parentId) {
 		$this->_parentId = $parentId;
+		return $this;
 	}
 
 	/**
@@ -54,6 +56,7 @@ class Groups_Model_Group extends Unwired_Model_Generic
 	 */
 	public function setRoleId($roleId) {
 		$this->_roleId = $roleId;
+		return $this;
 	}
 
 	/**
@@ -68,6 +71,7 @@ class Groups_Model_Group extends Unwired_Model_Generic
 	 */
 	public function setName($name) {
 		$this->_name = $name;
+		return $this;
 	}
 
 	public function getChildren()

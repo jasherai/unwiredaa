@@ -132,7 +132,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
 	        	$model->fromArray($data);
 	        } else {
-	        	$this->getDbTable()->update($data);
+	        	$this->getDbTable()->update($data, $primaryFilter);
 	        }
         } catch (Exception $e) {
         	throw new Unwired_Exception('Error saving the information', 500, $e);

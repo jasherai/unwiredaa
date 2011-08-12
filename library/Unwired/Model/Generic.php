@@ -38,19 +38,19 @@ class Unwired_Model_Generic
 
 		$result = array();
 
-		foreach ($props as $property) {
-			if ($property[0] != '_') {
+		foreach ($props as $key => $property) {
+			if ($key[0] != '_') {
 				continue;
 			}
 
-			$key = $filter->filter(str_replace('_', '', $property));
-			$method = 'get' . $key;
+			$key = str_replace('_', '', $key);
+			$method = 'get' . ucfirst($key);
 
 			if (!method_exists($this, $method)) {
 				continue;
 			}
 
-			$result[$key] = $this->$method();
+			$result[strtolower($filter->filter($key))] = $this->$method();
 		}
 
 		return $result;
