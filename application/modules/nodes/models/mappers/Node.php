@@ -7,14 +7,14 @@
 */
 
 /**
- * DB table gateway for node table
+ * Mapper for Nodes_Model_Node
  * @author B. Krastev <bkrastev@web-teh.net>
  */
+class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
+{
 
-class Nodes_Model_DbTable_Node extends Zend_Db_Table_Abstract {
-	/**
-	 * The default table name
-	 */
-	protected $_name = 'node';
+	protected $_modelClass = 'Nodes_Model_Node';
+	protected $_dbTableClass = 'Nodes_Model_DbTable_Node';
 
 }
+

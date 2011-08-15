@@ -7,14 +7,16 @@
 */
 
 /**
- * Admin user model
+ * Network user model
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_Interface
+class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role_Interface
 {
 	protected $_userId = null;
 
-	protected $_groupIds = array();
+	protected $_groupId = array();
+
+	protected $_username = null;
 
 	protected $_password = null;
 
@@ -34,6 +36,8 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 
 	protected $_country = null;
 
+	protected $_mac = null;
+
 	/**
 	 * @return the $userId
 	 */
@@ -50,28 +54,18 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @return the $groupIds
+	 * @return the $groupId
 	 */
-	public function getGroupIds() {
-		return $this->_groupIds;
+	public function getGroupId() {
+		return $this->_groupId;
 	}
 
 	/**
-	 * @param array $groupIds
-	 */
-	public function setGroupIds(array $groupIds) {
-		$this->_groupIds = $groupIds;
-		return $this;
-	}
-
-	/**
-	 * Check if user is direct member of a group
 	 * @param integer $groupId
-	 * @return boolean
 	 */
-	public function hasGroupId($groupId)
-	{
-		return in_array($groupId, $this->_groupIds);
+	public function setGroupId($groupId) {
+		$this->_groupId = (int) $groupId;
+		return $this;
 	}
 
 	/**
@@ -82,6 +76,21 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	public function getRoleId()
 	{
 		return $this->getEmail();
+	}
+
+	/**
+	 * @return the $username
+	 */
+	public function getUsername() {
+		return $this->_username;
+	}
+
+	/**
+	 * @param string $username
+	 */
+	public function setUsername($username) {
+		$this->_username = $username;
+		return $this;
 	}
 
 	/**
@@ -220,5 +229,21 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 		$this->_country = $country;
 		return $this;
 	}
+
+	/**
+	 * @return the $mac
+	 */
+	public function getMac() {
+		return $this->_mac;
+	}
+
+	/**
+	 * @param string $mac
+	 */
+	public function setMac($mac) {
+		$this->_mac = $mac;
+		return $this;
+	}
+
 
 }

@@ -1,0 +1,54 @@
+<h1><?php echo $this->translate('users_netuser_index_heading'); ?></h1>
+
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('users_netuser_index_id');?></th>
+			<th><?php echo $this->translate('users_netuser_index_email');?></th>
+			<th><?php echo $this->translate('users_netuser_index_firstname');?></th>
+			<th><?php echo $this->translate('users_netuser_index_lastname');?></th>
+			<th><?php echo $this->translate('users_netuser_index_city');?></th>
+			<th><?php echo $this->translate('users_netuser_index_country');?></th>
+			<th class="tools">
+			<a class="add" href="<?php
+				echo $this->url(array('module' => 'users',
+									  'controller' => 'net-user',
+									  'action' => 'add'), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
+				?>" alt="<?php echo $this->translate('users_netuser_index_button_add'); ?>" /> <?php echo $this->translate('users_netuser_index_button_add'); ?></a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->paginator as $user) :?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $user->getUserId(); ?></td>
+			<td><?php echo $user->getEmail(); ?></td>
+			<td><?php echo $user->getFirstname(); ?></td>
+			<td><?php echo $user->getLastname(); ?></td>
+			<td><?php echo $user->getCity(); ?></td>
+			<td><?php echo $user->getCountry(); ?></td>
+			<td class="tools">
+				<a class="edit" href="<?php
+				echo $this->url(array('module' => 'users',
+									  'controller' => 'net-user',
+									  'action' => 'edit',
+									  'id'	=> $user->getUserId()), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/edit.png');
+				?>" alt="<?php echo $this->translate('users_netuser_index_button_edit'); ?>" /></a>
+
+				<a class="delete" href="<?php
+				echo $this->url(array('module' => 'users',
+									  'controller' => 'net-user',
+									  'action' => 'delete',
+									  'id'	=> $user->getUserId()), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
+				?>" alt="<?php echo $this->translate('users_netuser_index_button_delete'); ?>" /></a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>

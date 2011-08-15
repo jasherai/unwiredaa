@@ -7,14 +7,14 @@
 */
 
 /**
- * DB table gateway for node table
+ * Mapper for Users_Model_NetUser
  * @author B. Krastev <bkrastev@web-teh.net>
  */
+class Users_Model_Mapper_NetUser extends Unwired_Model_Mapper
+{
 
-class Nodes_Model_DbTable_Node extends Zend_Db_Table_Abstract {
-	/**
-	 * The default table name
-	 */
-	protected $_name = 'node';
+	protected $_modelClass = 'Users_Model_NetUser';
+	protected $_dbTableClass = 'Users_Model_DbTable_NetworkUser';
 
 }
+

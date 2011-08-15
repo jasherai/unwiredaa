@@ -7,14 +7,14 @@
 */
 
 /**
- * DB table gateway for node table
+ * DB table gateway for node_settings table
  * @author B. Krastev <bkrastev@web-teh.net>
  */
 
-class Nodes_Model_DbTable_Node extends Zend_Db_Table_Abstract {
+class Nodes_Model_DbTable_NodeSettings extends Zend_Db_Table_Abstract {
 	/**
 	 * The default table name
 	 */
-	protected $_name = 'node';
+	protected $_name = 'node_settings';
 
 }

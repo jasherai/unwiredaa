@@ -10,6 +10,12 @@ a:hover {
 	color: #333333;
 }
 
+select {
+	background-color: #FFFFFF;
+    border: 1px solid #BBBBBB;
+    color: #000000;
+}
+
 #wrapper {
 	width: 950px;
 	margin: 0 auto;

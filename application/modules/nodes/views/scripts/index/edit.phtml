@@ -1,0 +1,9 @@
+<h1><?php
+	if ($this->entity->getNodeId()) {
+		echo sprintf($this->translate('nodes_index_edit_heading_edit'), $this->entity->getName());
+	} else {
+		echo $this->translate('nodes_index_edit_heading_add');
+	}
+?></h1>
+
+<?php echo $this->form;?>
