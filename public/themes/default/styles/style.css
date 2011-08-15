@@ -28,14 +28,19 @@ a:hover {
 
 .userblock {
     margin-left: 710px;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 .userblock form div label {
 	display: block;
 	color: #fff;
+	margin: 0px;
 }
-	
+
+.userblock form div input {
+	margin-top: 0px;
+}
+
 #sidenav {
 	width: 200px;
 	float: left;
@@ -132,6 +137,7 @@ table.listing tbody tr:hover {
 
 table.listing tr .tools {
     text-align: center;	
+	width: 130px;
 }
 
 table.listing td.tools a img{
@@ -143,6 +149,10 @@ table.listing td.tools a img{
 table.listing td.tools a:hover img{
 	border: 1px solid #97B400;
 	background: #FCFFED;
+}
+
+table.listing tr td.column_id {
+    width: 70px;
 }
 
 .message p {
@@ -219,6 +229,17 @@ span.button.blue.small, a.button.blue.small {background-position:100% -194px;}
 span.button.blue.small button, span.button.blue.small input, a.button.blue.small span {background-position:0 -194px;}
 span.button.blue.small:hover, a.button.blue.small:hover {background-position:100% -410px;}
 span.button.blue.small:hover button, span.button.blue.small:hover input, a.button.blue.small:hover span {background-position:0 -410px;}
+
+.message {
+	padding-left: 35px;
+    background-position: 5px 50%;
+    background-repeat: no-repeat;
+}
+
+.message.success {	background-image: url('../images/icons/24x24/accept.png'); }
+.message.info { background-image: url('../images/icons/24x24/info.png'); }
+.message.warning { background-image: url('../images/icons/24x24/warning.png'); }
+.message.error { background-image: url('../images/icons/24x24/block.png'); }
 
 .ml220 {
 	margin-left: 220px;
