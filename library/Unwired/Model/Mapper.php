@@ -85,7 +85,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
      */
     public function save(Unwired_Model_Generic $model)
     {
-        $data = $model->toArray();
+        $data = $this->_modelToRowdata($model);
 
         /**
          * Filter out stuff that's not in the table
@@ -258,6 +258,11 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     	}
 
     	return $result;
+    }
+
+    protected function _modelToRowdata(Unwired_Model_Generic $model)
+    {
+    	return $model->toArray();
     }
 
     protected function _addToRepository(Unwired_Model_Generic $model, $id)
