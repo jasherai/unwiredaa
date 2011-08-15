@@ -47,9 +47,9 @@ class Users_Form_Login extends Zend_Form
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',
-																		   				 		 	  'class' => 'button')),
+																		   				 		 	  'class' => 'button green small')),
 																						array(array('div' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'div',
-																		   				 			  'class' => 'formbuttons')))));
+																		   				 			  'class' => 'formelement')))));
 	}
 }

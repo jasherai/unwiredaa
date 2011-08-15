@@ -1,4 +1,4 @@
-<h1><?php echo $this->translate('groups_group_listing'); ?></h1>
+<h1><?php echo $this->translate('groups_group_index_heading'); ?></h1>
 
 <?php
 	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
@@ -37,10 +37,6 @@ $(function () {
 ?>
 <div class="grouptree span-8">
 	<?php echo $this->groupTree($this->rootGroup); ?>
-	<div class="formbuttons">
-		<span class="button"><button>Add</button></span>
-		<span class="button"><button>Edit</button></span>
-	</div>
 </div>
 <div id="groupview" class="span-9">
 
@@ -49,5 +45,5 @@ $(function () {
 	<a class="button small green" href="<?php echo $this->url(array('action' => 'add'),
 													   null,
 													   false);
-									?>"><span><?php echo $this->translate('groups_group_button_add');?></span></a>
+									?>"><span><?php echo $this->translate('groups_group_index_button_add');?></span></a>
 </div>

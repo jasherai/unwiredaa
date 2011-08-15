@@ -7,10 +7,10 @@
 */
 
 /**
- * System group form
+ * Policy group form
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Groups_Form_Group extends Zend_Form
+class Groups_Form_Policy extends Zend_Form
 {
 	public function init()
 	{
@@ -31,20 +31,13 @@ class Groups_Form_Group extends Zend_Form
 																			   'class' => 'formelement span-18'))
 										));
 
-		$this->addElement('text', 'name', array('label' => 'groups_group_edit_form_name',
+		$this->addElement('text', 'name', array('label' => 'groups_policy_edit_form_name',
 												'required' => true,
 												'validators' => array('len' => array('validator' => 'StringLength',
 																				     'options' => array('min' => 2)))));
 
-		$this->addElement('text', 'parent_id', array('label' => 'groups_group_edit_form_parent',
-													 'required' => true,
-													 'validators' => array('Int')));
 
-		$this->addElement('text', 'role_id', array('label' => 'groups_group_edit_form_role',
-													'required' => true,
-													'validators' => array('Int')));
-
-		$this->addElement('submit', 'form_element_submit', array('label' => 'groups_group_edit_form_save',
+		$this->addElement('submit', 'form_element_submit', array('label' => 'groups_policy_edit_form_save',
 	 														 	 'tabindex' => 20,
 																 'class'	=> 'button',
 															 	 'decorators' => array('ViewHelper',
@@ -52,7 +45,7 @@ class Groups_Form_Group extends Zend_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
-		$this->addElement('button', 'form_element_cancel', array('label' => 'groups_group_edit_form_cancel',
+		$this->addElement('button', 'form_element_cancel', array('label' => 'groups_policy_edit_form_cancel',
 	 														 	 'tabindex' => 20,
 																 'class'	=> 'button',
 															 	 'decorators' => array('ViewHelper',

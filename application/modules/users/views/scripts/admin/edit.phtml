@@ -1,8 +1,8 @@
 <h1><?php
 	if ($this->entity->getUserId()) {
-		echo sprintf($this->translate('admin_heading_user_edit'), $this->entity->getEmail());
+		echo sprintf($this->translate('users_admin_edit_heading_edit'), $this->entity->getEmail());
 	} else {
-		echo $this->translate('admin_heading_user_add');
+		echo $this->translate('users_admin_edit_heading_add');
 	}
 ?></h1>
 

@@ -2,17 +2,17 @@
 	$this->layout()->disableLayout();
 ?>
 <div>
-	<span><?php echo $this->translate('groups_group_name')?>:</span>
+	<span><?php echo $this->translate('groups_group_view_name')?>:</span>
 	<strong><?php echo $this->group->getName(); ?></strong>
 </div>
 
 <div>
-	<span><?php echo $this->translate('groups_group_parents')?>:</span>
+	<span><?php echo $this->translate('groups_group_view_parents')?>:</span>
 	<?php echo $this->groupTree($this->group->getParent()); ?>
 </div>
 
 <div>
-	<span><?php echo $this->translate('groups_group_role')?>:</span>
+	<span><?php echo $this->translate('groups_group_view_role')?>:</span>
 	<?php echo $this->group->getRoleId(); ?>
 </div>
 
@@ -20,10 +20,10 @@
 	<a class="button small blue" href="<?php echo $this->url(array('action' => 'edit',
 									     					 'id' => $this->group->getGroupId()),
 										   null,
-										   false); ?>"><span><?php echo $this->translate('groups_group_button_edit');?></span></a>
+										   false); ?>"><span><?php echo $this->translate('groups_group_view_button_edit');?></span></a>
 
 	<a class="button small red" href="<?php echo $this->url(array('action' => 'delete',
 											     'id' => $this->group->getGroupId()),
 										   null,
-										   false); ?>"><span><?php echo $this->translate('groups_group_button_delete');?></span></a>
+										   false); ?>"><span><?php echo $this->translate('groups_group_view_button_delete');?></span></a>
 </div>

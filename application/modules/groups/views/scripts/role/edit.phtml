@@ -1,0 +1,9 @@
+<h1><?php
+	if ($this->entity->getRoleId()) {
+		echo sprintf($this->translate('groups_role_edit_heading_edit'), $this->entity->getName());
+	} else {
+		echo $this->translate('groups_role_edit_heading_add');
+	}
+?></h1>
+
+<?php echo $this->form;?>

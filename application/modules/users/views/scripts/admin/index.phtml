@@ -1,14 +1,14 @@
-<h1><?php echo $this->translate('admin_users_listing'); ?></h1>
+<h1><?php echo $this->translate('users_admin_index_heading'); ?></h1>
 
 <table class="listing">
 	<thead>
 		<tr>
-			<th><?php echo $this->translate('admin_users_listing_id');?></th>
-			<th><?php echo $this->translate('admin_users_listing_email');?></th>
-			<th><?php echo $this->translate('admin_users_listing_firstname');?></th>
-			<th><?php echo $this->translate('admin_users_listing_lastname');?></th>
-			<th><?php echo $this->translate('admin_users_listing_city');?></th>
-			<th><?php echo $this->translate('admin_users_listing_country');?></th>
+			<th><?php echo $this->translate('users_admin_index_id');?></th>
+			<th><?php echo $this->translate('users_admin_index_email');?></th>
+			<th><?php echo $this->translate('users_admin_index_firstname');?></th>
+			<th><?php echo $this->translate('users_admin_index_lastname');?></th>
+			<th><?php echo $this->translate('users_admin_index_city');?></th>
+			<th><?php echo $this->translate('users_admin_index_country');?></th>
 			<th class="tools">
 			<a class="add" href="<?php
 				echo $this->url(array('module' => 'users',
@@ -16,14 +16,14 @@
 									  'action' => 'add'), null, true);
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
-				?>" alt="<?php echo $this->translate('action_add_user'); ?>" /> <?php echo $this->translate('action_add_user'); ?></a>
+				?>" alt="<?php echo $this->translate('users_admin_index_button_add'); ?>" /> <?php echo $this->translate('users_admin_index_button_add'); ?></a>
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php foreach ($this->paginator as $user) :?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-			<td><?php echo $user->getUserId(); ?></td>
+			<td class="column_id"><?php echo $user->getUserId(); ?></td>
 			<td><?php echo $user->getEmail(); ?></td>
 			<td><?php echo $user->getFirstname(); ?></td>
 			<td><?php echo $user->getLastname(); ?></td>
@@ -37,7 +37,7 @@
 									  'id'	=> $user->getUserId()), null, true);
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/edit.png');
-				?>" alt="<?php echo $this->translate('action_edit_user'); ?>" /></a>
+				?>" alt="<?php echo $this->translate('users_admin_index_button_edit'); ?>" /></a>
 
 				<a class="delete" href="<?php
 				echo $this->url(array('module' => 'users',
@@ -46,7 +46,7 @@
 									  'id'	=> $user->getUserId()), null, true);
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
-				?>" alt="<?php echo $this->translate('action_edit_user'); ?>" /></a>
+				?>" alt="<?php echo $this->translate('users_admin_index_button_delete'); ?>" /></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>

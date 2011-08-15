@@ -1,0 +1,46 @@
+<h1><?php echo $this->translate('groups_policy_index_heading'); ?></h1>
+
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('groups_policy_index_id');?></th>
+			<th><?php echo $this->translate('groups_policy_index_name');?></th>
+			<th class="tools">
+			<a class="add" href="<?php
+				echo $this->url(array('module' => 'groups',
+									  'controller' => 'policy',
+									  'action' => 'add'), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
+				?>" alt="<?php echo $this->translate('groups_policy_index_button_add'); ?>" /> <?php echo $this->translate('groups_policy_index_button_add'); ?></a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->paginator as $policy) :?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $policy->getPolicyId(); ?></td>
+			<td><?php echo $policy->getName(); ?></td>
+			<td class="tools">
+				<a class="edit" href="<?php
+				echo $this->url(array('module' => 'groups',
+									  'controller' => 'policy',
+									  'action' => 'edit',
+									  'id'	=> $policy->getPolicyId()), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/edit.png');
+				?>" alt="<?php echo $this->translate('groups_policy_index_button_edit'); ?>" /></a>
+
+				<a class="delete" href="<?php
+				echo $this->url(array('module' => 'groups',
+									  'controller' => 'policy',
+									  'action' => 'delete',
+									  'id'	=> $policy->getPolicyId()), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
+				?>" alt="<?php echo $this->translate('groups_policy_index_button_delete'); ?>" /></a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
