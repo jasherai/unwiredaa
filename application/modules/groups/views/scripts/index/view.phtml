@@ -13,7 +13,7 @@
 
 <div>
 	<span><?php echo $this->translate('groups_group_view_role')?>:</span>
-	<?php echo $this->group->getRoleId(); ?>
+	<strong><?php echo $this->group->getRole()->getName(); ?></strong>
 </div>
 
 <div class="buttons">

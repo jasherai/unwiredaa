@@ -5,5 +5,64 @@
 		echo $this->translate('users_admin_edit_heading_add');
 	}
 ?></h1>
+<?php
+	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
+	$this->headLink()->appendStylesheet('scripts/jstree/themes/default/style.css');
 
-<?php echo $this->form;?>
+	$groupIds = ($this->entity->getUserId()) ? $this->entity->getGroupIds() : array();
+	$this->headScript()->captureStart();
+
+?>
+var groupIds = <?php echo Zend_Json::encode($groupIds);?>;
+
+$(function () {
+	$("label[for=group_ids]").siblings().remove();
+	$("label[for=group_ids]").after($('.grouptree'));
+
+	var init_select = new Array();
+
+	$.each(groupIds, function (idx, data) {
+		init_select.push('group_' + data);
+	});
+
+	groupIds = [];
+
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : init_select },
+            "ui" : { select_multiple_modifier: 'on',
+            		 disable_selecting_children: true,
+					 select_limit : -1,
+					 "initially_select" : init_select
+					}
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			if (groupIds.indexOf(groupId) == -1) {
+				groupIds.push(groupId);
+				$("label[for=group_ids]").after('<input id="selgrp' + groupId + '" type="hidden" name="group_ids[]" value="' + groupId + '" />');
+			}
+	     })
+        .bind("deselect_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			var idx = groupIds.indexOf(groupId);
+
+			if (idx != -1) {
+				groupIds.splice(idx, 1);
+				$('#selgrp'+groupId).remove();
+			}
+	     })
+});
+<?php
+	$this->headScript()->captureEnd();
+
+
+	echo $this->form;
+?>
+
+<div class="grouptree span-8">
+	<?php echo $this->groupTree($this->rootGroup); ?>
+</div>

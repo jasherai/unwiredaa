@@ -14,7 +14,7 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 {
 	protected $_userId = null;
 
-	protected $_groupId = array();
+	protected $_groupId = null;
 
 	protected $_username = null;
 
@@ -37,6 +37,8 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 	protected $_country = null;
 
 	protected $_mac = null;
+
+	protected $_policyIds = array();
 
 	/**
 	 * @return the $userId
@@ -244,6 +246,23 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 		$this->_mac = $mac;
 		return $this;
 	}
+
+	/**
+	 * @return array $policyIds
+	 */
+	public function getPolicyIds() {
+		return $this->_policyIds;
+	}
+
+	/**
+	 * @param array $policyIds
+	 */
+	public function setPolicyIds(array $policyIds) {
+		$this->_policyIds = $policyIds;
+
+		return $this;
+	}
+
 
 
 }

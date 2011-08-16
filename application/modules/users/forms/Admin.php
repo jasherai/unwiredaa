@@ -46,13 +46,18 @@ class Users_Form_Admin extends Unwired_Form
 																					     'options' => array('pattern' => '/^[a-z0-9]+[a-z0-9\s]+$/i')))));
 
 		$this->addElement('CountrySelect', 'country', array('label' => 'users_admin_edit_form_country',
-															'required' => true));
+															'required' => true,
+															'class' => 'span-5'));
 
-		/**
-		 * @todo Add country, groups and check validation/messages
-		 */
+		$this->addElement('multiCheckbox', 'group_ids', array('label' => 'users_admin_edit_form_group',
+											  	 			  'required' => true));
 
 		$this->addElement('password', 'password', array('label' => 'users_admin_edit_form_password',
+														'required' => true,
+														'validators' => array('len' => array('validator' => 'StringLength',
+																					     	 'options' => array('min' => 6)))));
+
+		$this->addElement('password', 'cfmpassword', array('label' => 'users_admin_edit_form_cfmpassword',
 														'required' => true,
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 6)))));
@@ -73,11 +78,42 @@ class Users_Form_Admin extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button blue')),
 																						)));
+		$this->addDisplayGroup(array('firstname',
+									 'lastname',
+									 'email',
+									 'phone',
+									 'address',
+									 'city',
+									 'zip',
+									 'country'),
+				 			   'personal');
+
+		$this->addDisplayGroup(array('password',
+									 'cfmpassword',
+									 'group_ids'),
+				 			   'access');
+
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),
 							   'formbuttons');
+
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
+													 	     						  'class' => 'span-9'))));
+	    $this->getDisplayGroup('formbuttons')
+	    				 ->setDecorators(array('FormElements',
+		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
+	    														  'options' => array ('tag' => 'div',
 													 	     						  'class' => 'buttons span-18'))));
+	}
+
+	public function populate(array $values)
+	{
+		if (count($values['group_ids'])) {
+			foreach ($values['group_ids'] as $id) {
+				$this->getElement('group_ids')->addMultiOption($id, $id);
+			}
+		}
+		parent::populate($values);
 	}
 }

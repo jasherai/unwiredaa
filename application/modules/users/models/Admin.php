@@ -217,7 +217,7 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 * @param string $country Two character country code
 	 */
 	public function setCountry($country) {
-		$this->_country = $country;
+		$this->_country = strtoupper($country);
 		return $this;
 	}
 

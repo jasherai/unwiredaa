@@ -10,7 +10,7 @@
  * Network user form
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Form_NetUser extends Zend_Form
+class Users_Form_NetUser extends Unwired_Form
 {
 	public function init()
 	{
@@ -63,15 +63,38 @@ class Users_Form_NetUser extends Zend_Form
 													'required' => true,
 													'validators' => array('len' => array('validator' => 'Regex',
 																					     'options' => array('pattern' => '/^[a-z0-9]+[a-z0-9\s]+$/i')))));
+		$this->addElement('CountrySelect', 'country', array('label' => 'users_netuser_edit_form_country',
+															'required' => true,
+															'class' => 'span-5'));
 
-		/**
-		 * @todo Add country, groups and check validation/messages
-		 */
+		$this->addElement('hidden', 'group_id', array('label' => 'users_netuser_edit_form_group',
+											  	 	  'required' => true,
+													  'validators' => array('Int')));
+
 
 		$this->addElement('password', 'password', array('label' => 'users_netuser_edit_form_password',
 														'required' => true,
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 6)))));
+
+		$this->addElement('password', 'cfmpassword', array('label' => 'users_netuser_edit_form_cfmpassword',
+														'required' => true,
+														'validators' => array('len' => array('validator' => 'StringLength',
+																					     	 'options' => array('min' => 6)))));
+
+		$this->addElement('multiCheckbox', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
+															   'required' => true));
+
+		/**
+		 * Add policy groups as options
+		 */
+		$policyMapper = new Groups_Model_Mapper_Policy();
+
+		$policies = $policyMapper->fetchAll();
+
+		foreach ($policies as $policy) {
+			$this->getElement('policy_ids')->addMultiOption($policy->getPolicyId(), $policy->getName());
+		}
 
 		$this->addElement('submit', 'form_element_submit', array('label' => 'users_netuser_edit_form_save',
 	 														 	 'tabindex' => 20,
@@ -89,9 +112,32 @@ class Users_Form_NetUser extends Zend_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button blue')),
 																						)));
+		$this->addDisplayGroup(array('firstname',
+									 'lastname',
+									 'email',
+									 'phone',
+									 'address',
+									 'city',
+									 'zip',
+									 'country'),
+				 			   'personal');
+
+		$this->addDisplayGroup(array('username',
+									 'password',
+									 'cfmpassword',
+									 'group_id',
+									 'policy_ids'),
+				 			   'access');
+
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),
 							   'formbuttons');
+
 	    $this->setDisplayGroupDecorators(array('FormElements',
+		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
+	    														  'options' => array ('tag' => 'div',
+													 	     						  'class' => 'span-9'))));
+	    $this->getDisplayGroup('formbuttons')
+	    				 ->setDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
 													 	     						  'class' => 'buttons span-18'))));

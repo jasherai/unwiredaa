@@ -28,7 +28,21 @@ class Users_View_Helper_LogInOut extends Zend_View_Helper_Abstract {
 												   true));
 			return $loginForm;
 		}
-		return null;
+
+		$result = '<div class="userinfo"><p>'
+				. $auth->getIdentity()->getFirstname()
+				. ' ' . $auth->getIdentity()->getLastname() . '</p>';
+
+		$logoutUrl = $this->view->url(array('module' => 'users',
+											'controller' => 'index',
+											'action'	=> 'logout'),
+									  'default',
+									  'true');
+
+		$result .= '<a class="button small green" href="' . $logoutUrl . '"><span>'
+				. $this->view->translate('nav_logout') . '</span></a></div>';
+
+		return $result;
 	}
 
 	/**

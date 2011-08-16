@@ -18,7 +18,7 @@ class Groups_IndexController extends Unwired_Controller_Crud
 		$id = (int) $this->getRequest()->getParam('id', 0);
 
 		if (!$id) {
-			$this->view->uiMessage('groups_group_not_found', 'error');
+			$this->view->uiMessage('groups_index_view_group_not_found', 'error');
 			return;
 		}
 

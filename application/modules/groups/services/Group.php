@@ -33,9 +33,20 @@ class Groups_Service_Group {
 			$group->setChildren($this->getGroupChildren($group, true));
 		}
 
+		$roleMapper = new Groups_Model_Mapper_Role();
+
+		$role = $roleMapper->find($group->getRoleId());
+
+		$group->setRole($role);
+
 		return $group;
 	}
 
+	/**
+	 * Get root node with children which are applicable for an admin user
+	 * @param Users_Model_Admin $admin
+	 * @return Groups_Model_Group
+	 */
 	public function getGroupTreeByAdmin(Users_Model_Admin $admin = null)
 	{
 		$groups = $this->getGroupsByAdmin($admin);
