@@ -16,4 +16,18 @@ class Groups_Model_Mapper_Policy extends Unwired_Model_Mapper {
 
     protected $_modelClass = 'Groups_Model_Policy';
 
+    public function save(Unwired_Model_Generic $model)
+    {
+    	try {
+			$model = parent::save($model);
+
+			$this->_saveRadiusData($model);
+
+    	} catch (Unwired_Exception $e) {
+    		throw $e;
+    	}
+
+    	return $model;
+    }
+
 }
