@@ -30,4 +30,9 @@ class Groups_Model_Mapper_Policy extends Unwired_Model_Mapper {
     	return $model;
     }
 
+    protected function _saveRadiusData(Unwired_Model_Generic $model)
+    {
+    	$radgroup = new Groups_Model_DbTable_Group();
+    }
+
 }

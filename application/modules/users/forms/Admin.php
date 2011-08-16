@@ -50,7 +50,8 @@ class Users_Form_Admin extends Unwired_Form
 															'class' => 'span-5'));
 
 		$this->addElement('multiCheckbox', 'group_ids', array('label' => 'users_admin_edit_form_group',
-											  	 			  'required' => true));
+											  	 			  'required' => true,
+															  'registerInArrayValidator' => false));
 
 		$this->addElement('password', 'password', array('label' => 'users_admin_edit_form_password',
 														'required' => true,

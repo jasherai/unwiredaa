@@ -82,6 +82,12 @@ class Users_Form_NetUser extends Unwired_Form
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 6)))));
 
+		$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
+												'required' => true,
+												'validators' => array('len' => array('validator' => 'StringLength',
+																					     	 'options' => array('min' => 17,
+																												'max' => 17)))));
+
 		$this->addElement('multiCheckbox', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
 															   'required' => true));
 
@@ -126,7 +132,8 @@ class Users_Form_NetUser extends Unwired_Form
 									 'password',
 									 'cfmpassword',
 									 'group_id',
-									 'policy_ids'),
+									 'policy_ids',
+									 'mac'),
 				 			   'access');
 
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),
