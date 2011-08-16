@@ -13,8 +13,8 @@ class Unwired_Application_Module_Bootstrap extends Zend_Application_Module_Boots
 
 		$nav = $this->getApplication()->getResource('navigation');
 
-		$navConfigPath = APPLICATION_PATH . '/modules/' . $this->getModuleName()
-					   . '/configs/navigation.ini';
+		$navConfigPath = APPLICATION_PATH . '/modules/'
+					   . strtolower($this->getModuleName()) . '/configs/navigation.ini';
 
 		if (file_exists($navConfigPath)) {
 			$conf = new Zend_Config_Ini($navConfigPath,
@@ -29,8 +29,8 @@ class Unwired_Application_Module_Bootstrap extends Zend_Application_Module_Boots
 
 		$translate = $this->getApplication()->getResource('translate');
 
-		$path = APPLICATION_PATH . '/modules/' . $this->getModuleName()
-			  . '/languages/' . $translate->getLocale() . '/global.ini';
+		$path = APPLICATION_PATH . '/modules/'
+			  . strtolower($this->getModuleName() . '/languages/' . $translate->getLocale() . '/global.ini');
 
 		if (file_exists($path)) {
 			$translate->getAdapter()->addTranslation($path, $translate->getLocale());

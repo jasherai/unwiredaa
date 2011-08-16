@@ -91,9 +91,19 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 			$this->view->uiMessage('information_saved_successfully', 'success');
 
-			$this->_helper->redirector->gotoRouteAndExit(array('action' => 'index'), null, false);
+			$this->_gotoIndex();
 		} catch (Exception $e) {
 			$this->view->uiMessage('information_notsaved_error', 'error');
+
+			if ($e instanceof Unwired_Exception) {
+				$message = $e->getPrevious()->getMessage();
+			} else {
+				$message = $e->getMessage();
+			}
+
+			$this->getInvokeArg('bootstrap')
+					  ->getResource('log')
+					  	->error($message);
 		}
 	}
 
@@ -108,22 +118,53 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 		if (!$id) {
 			$this->view->uiMessage('entity_not_found', 'error');
-			$this->_helper->redirector->gotoRouteAndExit(array('action' => 'index'), null, false);
+			$this->_gotoIndex();
 		}
 
 		$entity = $mapper->find($id);
 
 		if (!$entity) {
 			$this->view->uiMessage('entity_not_found', 'error');
-			$this->_helper->redirector->gotoRouteAndExit(array('action' => 'index'), null, false);
+			$this->_gotoIndex();
 		}
 
 		$this->_add($mapper, $entity, $form);
 	}
 
-	protected function _delete()
+	protected function _delete(Unwired_Model_Mapper $mapper = null)
 	{
-		throw new Unwired_Exception(__METHOD__ . ' not implemented yet');
+		if (null === $mapper) {
+			$mapper = $this->_getDefaultMapper();
+		}
+
+		$id = (int) $this->getRequest()->getParam('id');
+
+		if (!$id) {
+			$this->view->uiMessage('entity_not_found', 'error');
+			$this->_gotoIndex();
+		}
+
+		$entity = $mapper->find($id);
+
+		if (!$entity) {
+			$this->view->uiMessage('entity_not_found', 'error');
+			$this->_gotoIndex();
+		}
+
+		try {
+			$mapper->delete($entity);
+			$this->view->uiMessage('information_deleted', 'success');
+		} catch (Unwired_Exception $e) {
+			$this->view->uiMessage('information_not_deleted', 'error');
+		}
+		$this->_gotoIndex();
+	}
+
+	protected function _gotoIndex()
+	{
+		$this->_helper->redirector->gotoRouteAndExit(array( 'module' => $this->getRequest()->getParam('module'),
+															'controller' => $this->getRequest()->getParam('controller'),
+															'action' => 'index'), 'default', true);
 	}
 
 	/**

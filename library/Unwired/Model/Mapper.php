@@ -142,6 +142,39 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     }
 
     /**
+     * Delete model entry from database
+     * @param Unwired_Model_Generic $model
+     * @return integer
+     */
+    public function delete(Unwired_Model_Generic $model)
+    {
+    	$data = $this->_modelToRowdata($model);
+
+        /**
+         * Find the primary key cols
+         */
+        $primary = $this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY);
+
+        $primaryFilter = array();
+
+		$nulled = 0;
+
+        foreach ($primary as $col) {
+        	if (null === $data[$col]) {
+        		if (count($primary) == 1) {
+        			break;
+        		}
+        		$primaryFilter[] = $col . ' IS NULL';
+        		$nulled++;
+        	} else {
+        		$primaryFilter[$col . ' = ?'] = $data[$col];
+        	}
+        }
+
+        return $this->getDbTable()->delete($primaryFilter);
+    }
+
+    /**
      * Find single entity by its ID
      *
      * @param mixed $id
