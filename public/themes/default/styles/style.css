@@ -16,6 +16,12 @@ select {
     color: #000000;
 }
 
+h1 {
+	font-size: 2.2em;
+	color: #465A00;
+	border-bottom: 1px dotted #465465;
+	padding-bottom: 5px;
+}
 #wrapper {
 	width: 950px;
 	margin: 0 auto;
@@ -185,10 +191,13 @@ div.formelement ul.errors {
 	clear: left;
 	float: left;
 	color: #AA0000;
+	margin-bottom: 0px;
 }
 
 div.buttons {
+	margin-top: 5px;
 	padding-top: 10px;
+	border-top: 1px dotted #465465;
 }
 form div.buttons {
 	width: 100%;
