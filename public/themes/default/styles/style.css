@@ -16,6 +16,23 @@ select {
     color: #000000;
 }
 
+form {
+	margin: 0px;
+	padding: 0px;
+}
+
+fieldset {
+	padding: 20px 0px;
+	border-bottom: 0px;
+	border-left: 0px;
+	border-right: 0px;
+}
+
+fieldset legend {
+	margin-left: 20px;
+	padding: 0px 5px;
+}
+
 h1 {
 	font-size: 2.2em;
 	color: #465A00;
@@ -54,19 +71,20 @@ h1 {
 }
 
 #sidenav {
-	width: 200px;
+	/*width: 200px;*/
 	float: left;
-	margin-right: 20px;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#cccccc, Direction=135, Strength=8);
-    -moz-box-shadow: 5px 5px 15px #ccc;
-    -webkit-box-shadow:5px 5px 15px #ccc;
-    box-shadow:0px 5px 10px #ccc;
+	/*margin-right: 20px;*/
+	
 }
 
 ul.navigation {
 	list-style: none;
-	margin: 0px;
+	margin: 0px 10px 0px 0px;
 	padding: 10px 0px;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#cccccc, Direction=135, Strength=8);
+    -moz-box-shadow: 5px 5px 15px #ccc;
+    -webkit-box-shadow:5px 5px 15px #ccc;
+    box-shadow:0px 5px 10px #ccc;
 }
 
 ul.navigation li {
@@ -176,6 +194,10 @@ div.formelement {
 	float: left;
 }
 
+fieldset div.formelement {
+    margin-left: 10px;	
+}
+
 div.formelement label {
 	display: block;
 	width: 120px;
@@ -244,6 +266,11 @@ span.button.blue.small, a.button.blue.small {background-position:100% -194px;}
 span.button.blue.small button, span.button.blue.small input, a.button.blue.small span {background-position:0 -194px;}
 span.button.blue.small:hover, a.button.blue.small:hover {background-position:100% -410px;}
 span.button.blue.small:hover button, span.button.blue.small:hover input, a.button.blue.small:hover span {background-position:0 -410px;}
+
+.fancymap {
+	width: 500px;
+	height: 450px;
+}
 
 .message {
 	padding-left: 35px;
