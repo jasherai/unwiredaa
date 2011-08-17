@@ -36,13 +36,13 @@
 		<?php echo $this->uiMessage(); ?>
 
 		<?php if (Zend_Auth::getInstance()->hasIdentity()) :?>
-			<div id="sidenav">
+			<div id="sidenav" class="span-5">
 				<?php echo $this->navigation(); ?>
 			</div>
-		<div id="content" class="ml220">
+		<div id="content" class="span-19 last">
 		<?php else: ?>
 
-		<div id="content">
+		<div id="content" class="span-24 last">
 		<?php endif;?>
 			<?php echo $this->layout()->content; ?>
 		</div>

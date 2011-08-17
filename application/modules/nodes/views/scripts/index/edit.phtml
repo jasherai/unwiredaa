@@ -5,5 +5,121 @@
 		echo $this->translate('nodes_index_edit_heading_add');
 	}
 ?></h1>
+<?php
+	$this->headScript()->appendFile('http://maps.googleapis.com/maps/api/js?sensor=false');
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
+	$this->headScript()->appendFile($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.pack.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.css'));
+	$this->headScript()->captureStart();
 
+	$openGroup = ($this->form->group_id->getValue()) ? $this->form->group_id->getValue() : 1;
+?>
+
+var map;
+var marker;
+var geocoder;
+var infowindow;
+
+$(function () {
+	$("input[name=group_id]").hide().after($('.grouptree'));
+
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : [ "group_<?php echo $openGroup; ?>" ] },
+            "ui" : { select_limit : 1,  "initially_select" : [ "group_<?php echo $openGroup; ?>" ] }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$("input[name=group_id]").val(groupId);
+	     });
+
+	$('#location-latitude').after('<a id="gmap" href="#map">map</a>');
+
+	var latlng = new google.maps.LatLng(48.208, 16.373);
+    var myOptions = {
+      		zoom: 12,
+      		center: latlng,
+      		mapTypeId: google.maps.MapTypeId.ROADMAP
+    	};
+
+    map = new google.maps.Map(document.getElementById("map"),
+        				      myOptions);
+
+	marker = new google.maps.Marker({
+        position: latlng,
+        draggable: true
+    });
+	marker.setMap(map);
+
+	infowindow = new google.maps.InfoWindow();
+
+	geocoder = new google.maps.Geocoder();
+	google.maps.event.addListener(marker, 'dragstart', function(){
+		infowindow.close();
+		return false;
+
+    });
+	google.maps.event.addListener(marker, 'dragend', function(){
+        var position = marker.getPosition();
+
+		geocoder.geocode({location: position, language: '<?php echo $this->translate()->getLocale();?>'},
+						 function(results, status){
+
+			if (status !== google.maps.GeocoderStatus.OK /* || results[0].types != 'street_address' */) {
+				marker.setTitle('<?php echo $this->translate('nodes_index_edit_unknown_address')?>');
+
+				return true;
+			}
+
+			marker.setTitle(results[0].formatted_address);
+			//map.setCenter(position);
+			infowindow.setContent('<h5>' + marker.getTitle() + '</h5><p>lat: ' + position.lat() + '</p><p>lng: ' + position.lng() + '</p>');
+			infowindow.open(map, marker);
+		});
+
+		return false;
+    });
+	$('#gmap').fancybox({
+						autoDimensions: false,
+						width: 500,
+						height: 450,
+						type: 'inline',
+						onStart: function() {
+									var lat = $('#location-latitude').val();
+									var lng = $('#location-longitude').val();
+
+									if (!lat.length) {
+										lat = marker.getPosition().lat();
+									}
+
+									if (!lng.length) {
+										lng = marker.getPosition().lng();
+									}
+
+									var pos = new google.maps.LatLng(lat,lng);
+
+									marker.setPosition(pos);
+								},
+						onComplete: function () {
+										google.maps.event.trigger(map, "resize");
+										map.setCenter(marker.getPosition());
+									},
+						onCleanup: function() {
+									$('#location-latitude').val(marker.getPosition().lat());
+									$('#location-longitude').val(marker.getPosition().lng());
+								 }
+						});
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
 <?php echo $this->form;?>
+<div class="grouptree span-8">
+	<?php echo $this->groupTree($this->rootGroup); ?>
+</div>
+<div style="display:none;">
+	<div id="map" class="fancymap"> </div>
+</div>

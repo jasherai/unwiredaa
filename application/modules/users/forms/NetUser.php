@@ -16,21 +16,6 @@ class Users_Form_NetUser extends Unwired_Form
 	{
 		parent::init();
 
-		$this->setDecorators(array('FormElements', 'Form'));
-
-		$this->setElementDecorators(array(
-										'element' => array('decorator' => 'ViewHelper'),
-							        	'label' => array('decorator' => 'Label',
-							            				 'options' => array('optionalSuffix' => ':',
-							                								'requiredSuffix' => ' * :',
-																			'placement' => 'prepend')
-														),
-										'errors' => 'errors',
-										'htmltag' => array('decorator' => 'HtmlTag',
-							            				   'options' => array ('tag' => 'div',
-																			   'class' => 'formelement'))
-										));
-
 		$this->addElement('text', 'username', array('label' => 'users_netuser_edit_form_username',
 													'required' => true,
 													'validators' => array('len' => array('validator' => 'StringLength',
