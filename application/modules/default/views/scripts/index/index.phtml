@@ -1,8 +1,15 @@
 <?php
 	$this->headScript()->appendFile('http://maps.googleapis.com/maps/api/js?sensor=false');
 
+	$nodes = array();
+	foreach ($this->nodes as $node) {
+		$nodes[] = $node->toArray();
+	}
 	$this->headScript()->captureStart();
 ?>
+	var nodes = <?php echo Zend_Json::encode($nodes);?>;
+	var map;
+	var infowindow;
 
 	$(document).ready(function(){
 		$('#nodemap').height(450);
@@ -14,9 +21,25 @@
       		mapTypeId: google.maps.MapTypeId.ROADMAP
     	};
 
-    	var map = new google.maps.Map(document.getElementById("nodemap"),
+    	map = new google.maps.Map(document.getElementById("nodemap"),
         							  myOptions);
 
+		infowindow = new google.maps.InfoWindow();
+
+		$.each(nodes, function(idx, data) {
+			var marker = new google.maps.Marker({
+		        position: new google.maps.LatLng(data.location.latitude, data.location.longitude),
+		        title: data.name,
+		        draggable: false
+		    });
+
+			marker.setMap(map);
+
+		    google.maps.event.addListener(marker, 'click', function(event) {
+				infowindow.setContent('<h5>' + marker.getTitle() +'</h5>');
+				infowindow.open(map, marker);
+		    });
+		});
 	});
 
 <?php

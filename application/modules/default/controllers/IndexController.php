@@ -21,7 +21,14 @@ class Default_IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
+    	/**
+    	 * @todo Make ajax calls to load nodes only in current viewport
+    	 */
+        $mapper = new Nodes_Model_Mapper_Node();
+
+        $nodes = $mapper->fetchAll();
+
+        $this->view->nodes = $nodes;
     }
 
 
