@@ -6,6 +6,7 @@
 			<th><?php echo $this->translate('nodes_index_index_id');?></th>
 			<th><?php echo $this->translate('nodes_index_index_name');?></th>
 			<th><?php echo $this->translate('nodes_index_index_mac');?></th>
+			<th><?php echo $this->translate('nodes_index_index_wanip');?></th>
 			<th><?php echo $this->translate('nodes_index_index_status');?></th>
 			<th class="tools">
 			<a class="add" href="<?php
@@ -24,6 +25,7 @@
 			<td class="column_id"><?php echo $node->getNodeId(); ?></td>
 			<td><?php echo $node->getName(); ?></td>
 			<td><?php echo $node->getMac(); ?></td>
+			<td><?php echo $node->getSettings()->getIpaddress(); ?></td>
 			<td><?php echo $node->getStatus(); ?></td>
 			<td class="tools">
 				<a class="edit" href="<?php

@@ -16,7 +16,7 @@ class Groups_Model_Mapper_Role extends Unwired_Model_Mapper {
 
     protected $_modelClass = 'Groups_Model_Role';
 
-    protected function _rowToModel(Zend_Db_Table_Row $row)
+    public function rowToModel(Zend_Db_Table_Row $row)
     {
     	$id = $row->{current($this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY))};
 

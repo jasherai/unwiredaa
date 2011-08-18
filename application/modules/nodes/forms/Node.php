@@ -24,8 +24,7 @@ class Nodes_Form_Node extends Unwired_Form
 		$this->addElement('text', 'mac', array('label' => 'nodes_index_edit_form_mac',
 											   'order' => 2,
 													'required' => true,
-													'validators' => array('len' => array('validator' => 'StringLength',
-																					     'options' => array('min' => 2)))));
+													'validators' => array('mac')));
 
 		$this->addElement('select', 'status', array('label' => 'nodes_index_edit_form_status',
 													'order' => 3,

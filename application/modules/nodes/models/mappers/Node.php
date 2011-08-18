@@ -56,6 +56,8 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 
 			$this->setDbTable($nodeTable);
 
+			$this->_writeUci($model);
+
 			$nodeTable->getAdapter()->commit();
 		} catch (Exception $e) {
 			$nodeTable->getAdapter()->rollBack();
@@ -66,9 +68,9 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 		return $model;
 	}
 
-	protected function _rowToModel(Zend_Db_Table_Row $row)
+	public function rowToModel(Zend_Db_Table_Row $row)
 	{
-		$model = parent::_rowToModel($row);
+		$model = parent::rowToModel($row);
 
 		$locationRow = $row->findDependentRowset($this->getLocationTable())->current();
 
@@ -83,6 +85,11 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 		}
 
 		return $model;
+	}
+
+	protected function _writeUci(Nodes_Model_Node $node)
+	{
+
 	}
 }
 

@@ -17,9 +17,9 @@ class Users_Model_Mapper_Admin extends Unwired_Model_Mapper
 	protected $_dbTableClass = 'Users_Model_DbTable_AdminUser';
 
 
-	protected function _rowToModel(Zend_Db_Table_Row $row)
+	public function rowToModel(Zend_Db_Table_Row $row)
 	{
-		$model = parent::_rowToModel($row);
+		$model = parent::rowToModel($row);
 
 		$groupRows = $row->findDependentRowset('Users_Model_DbTable_AdminGroup');
 
