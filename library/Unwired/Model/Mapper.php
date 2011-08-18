@@ -114,26 +114,25 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
         	}
         }
 
+        $row = null;
+
+        if (count($primaryFilter) && $nulled != count($primary)) {
+        	$row = $this->getDbTable()->fetchRow($primaryFilter);
+        }
+
+        if (!$row) {
+        	$row = $this->getDbTable()->fetchNew();
+        }
+
         try {
-        	if (!count($primaryFilter) || $nulled == count($primary)) {
-        		$data = array_diff_key($data, array_flip($primary));
+        	foreach ($data as $col => $value) {
+        		$row->$col = $value;
+        	}
 
-        		$pkData = $this->getDbTable()->insert($data);
+        	$row->save();
 
-	        	/**
-	        	 * Populate the model with primary key values from the inserted row
-	        	 */
-	        	if (is_array($pkData)) {
-	        		$data = array_merge($data, $pkData);
-	        	} else {
-	        		$primaryKey = array_pop($primary);
-	        		$data[$primaryKey] = $pkData;
-	        	}
+        	$model->fromArray($row->toArray());
 
-	        	$model->fromArray($data);
-	        } else {
-	        	$this->getDbTable()->update($data, $primaryFilter);
-	        }
         } catch (Exception $e) {
         	throw new Unwired_Exception('Error saving the information', 500, $e);
         }

@@ -9,6 +9,8 @@ class Unwired_Form extends Zend_Form
 
 		$this->addPrefixPath('Unwired_Form_', 'Unwired/Form');
 
+		$this->addElementPrefixPath('Unwired_Validate_', 'Unwired/Validate', Zend_Form_Element::VALIDATE);
+
 		$this->setDecorators(array('FormElements', 'Form'));
 
 		$this->setElementDecorators(array(

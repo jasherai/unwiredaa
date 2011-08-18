@@ -103,7 +103,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 			$this->getInvokeArg('bootstrap')
 					  ->getResource('log')
-					  	->error($message);
+					  	->err($message);
 		}
 	}
 
