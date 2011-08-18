@@ -17,4 +17,12 @@ class Nodes_Model_DbTable_NodeLocation extends Zend_Db_Table_Abstract {
 	 */
 	protected $_name = 'node_location';
 
+	protected $_referenceMap = array(
+            'Node'  => array(
+                'columns'           => 'node_id',
+                'refTableClass'     => 'Nodes_Model_DbTable_Node',
+                'refColumns'        => 'node_id'
+                )
+             );
+
 }

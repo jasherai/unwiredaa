@@ -17,4 +17,6 @@ class Nodes_Model_DbTable_Node extends Zend_Db_Table_Abstract {
 	 */
 	protected $_name = 'node';
 
+	protected $_dependentTables = array('Nodes_Model_DbTable_NodeLocation',
+										'Nodes_Model_DbTable_NodeSettings');
 }

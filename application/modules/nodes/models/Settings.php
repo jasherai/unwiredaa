@@ -12,7 +12,9 @@
  */
 class Nodes_Model_Settings extends Unwired_Model_Generic
 {
-	protected $_node_id = null;
+	protected $_nodeId = null;
+
+	protected $_ssid = null;
 
 	protected $_activefrom = null;
 
@@ -37,17 +39,17 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	protected $_roaming = null;
 
 	/**
-	 * @return the $node_id
+	 * @return the $nodeId
 	 */
-	public function getNode_id() {
-		return $this->_node_id;
+	public function getNodeId() {
+		return $this->_nodeId;
 	}
 
 	/**
-	 * @param field_type $node_id
+	 * @param integer $nodeId
 	 */
-	public function setNode_id($node_id) {
-		$this->_node_id = $node_id;
+	public function setNodeId($nodeId) {
+		$this->_nodeId = $nodeId;
 
 		return $this;
 	}
@@ -192,6 +194,22 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	 */
 	public function setTrafficlimit($trafficlimit) {
 		$this->_trafficlimit = $trafficlimit;
+
+		return $this;
+	}
+
+	/**
+	 * @return the $_ssid
+	 */
+	public function getSsid() {
+		return $this->_ssid;
+	}
+
+	/**
+	 * @param string $ssid
+	 */
+	public function setSsid($ssid) {
+		$this->_ssid = $ssid;
 
 		return $this;
 	}

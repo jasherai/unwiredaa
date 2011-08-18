@@ -40,8 +40,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 		$this->addElement('text', 'dnsservers', array('label' => 'nodes_index_edit_form_dnsservers',
 													'required' => true,
-													'validators' => array('len' => array('validator' => 'StringLength',
-																					     'options' => array('min' => 7)))));
+													'validators' => array('dns')));
 
 
 		$this->addElement('select', 'bandwidthup', array('label' => 'nodes_index_edit_form_bandwidthup',
@@ -61,12 +60,11 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 		$this->addElement('text', 'ssid', array('label' => 'nodes_index_edit_form_ssid',
 													'required' => true,
-													'validators' => array('len' => array('validator' => 'StringLength',
-																					     'options' => array('min' => 3)))));
+													'validators' => array('ssid')));
 
 		$this->addElement('text', 'channel', array('label' => 'nodes_index_edit_form_channel',
 													'required' => true,
-													'validators' => array('Int' => array('validator' => 'Int',
+													'validators' => array('ch' => array('validator' => 'Between',
 																						 'options' => array('min' => 1,
 																											'max' => 13)))));
 
@@ -90,5 +88,21 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 								    														  'options' => array ('tag' => 'div',
 																				 	     						  'class' => 'span-9 last')))));
 
+	}
+
+	public function isValid($data)
+	{
+		if (!parent::isValid($data)) {
+			return false;
+		}
+
+		$gateway = $this->getElement('gateway')->getValue();
+		$netmask = $this->getElement('netmask')->getValue();
+
+		$ipaddressElement = $this->getElement('ipaddress');
+
+		$ipaddressElement->addValidator(new Unwired_Validate_NetworkRange($gateway, $netmask));
+
+		return $ipaddressElement->isValid($ipaddressElement->getValue());
 	}
 }

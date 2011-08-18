@@ -12,7 +12,7 @@
  */
 class Nodes_Model_Location extends Unwired_Model_Generic
 {
-	protected $_node_id = null;
+	protected $_nodeId = null;
 
 	protected $_address = null;
 
@@ -22,22 +22,22 @@ class Nodes_Model_Location extends Unwired_Model_Generic
 
 	protected $_country = null;
 
-	protected $_lat = null;
+	protected $_latitude = null;
 
-	protected $_lng = null;
+	protected $_longitude = null;
 
 	/**
-	 * @return the $node_id
+	 * @return the $nodeId
 	 */
-	public function getNode_id() {
-		return $this->_node_id;
+	public function getNodeId() {
+		return $this->_nodeId;
 	}
 
 	/**
-	 * @param field_type $node_id
+	 * @param integer $nodeId
 	 */
-	public function setNode_id($node_id) {
-		$this->_node_id = $node_id;
+	public function setNodeId($nodeId) {
+		$this->_nodeId = $nodeId;
 
 		return $this;
 	}
@@ -98,7 +98,7 @@ class Nodes_Model_Location extends Unwired_Model_Generic
 	}
 
 	/**
-	 * @param field_type $country
+	 * @param string $country
 	 */
 	public function setCountry($country) {
 		$this->_country = $country;
@@ -107,17 +107,17 @@ class Nodes_Model_Location extends Unwired_Model_Generic
 	}
 
 	/**
-	 * @return the $lat
+	 * @return the $latitude
 	 */
-	public function getLat() {
-		return $this->_lat;
+	public function getLatitude() {
+		return $this->_latitude;
 	}
 
 	/**
-	 * @param field_type $lat
+	 * @param float $latitude
 	 */
-	public function setLat($lat) {
-		$this->_lat = $lat;
+	public function setLatitude($latitude) {
+		$this->_latitude = $latitude;
 
 		return $this;
 	}
@@ -125,15 +125,15 @@ class Nodes_Model_Location extends Unwired_Model_Generic
 	/**
 	 * @return the $lng
 	 */
-	public function getLng() {
-		return $this->_lng;
+	public function getLongitude() {
+		return $this->_longitude;
 	}
 
 	/**
-	 * @param field_type $lng
+	 * @param float $longitude
 	 */
-	public function setLng($lng) {
-		$this->_lng = $lng;
+	public function setLongitude($longitude) {
+		$this->_longitude = $longitude;
 
 		return $this;
 	}

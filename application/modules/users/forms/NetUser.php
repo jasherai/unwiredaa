@@ -69,9 +69,7 @@ class Users_Form_NetUser extends Unwired_Form
 
 		$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
 												'required' => true,
-												'validators' => array('len' => array('validator' => 'StringLength',
-																					     	 'options' => array('min' => 17,
-																												'max' => 17)))));
+												'validators' => array('mac')));
 
 		$this->addElement('multiCheckbox', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
 															   'required' => true));
@@ -95,9 +93,15 @@ class Users_Form_NetUser extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
-		$this->addElement('button', 'form_element_cancel', array('label' => 'users_netuser_edit_form_cancel',
+		$this->addElement('href', 'form_element_cancel', array('label' => 'users_netuser_edit_form_cancel',
 	 														 	 'tabindex' => 20,
-																 'class'	=> 'button',
+																 'data' => array(
+																				'params' => array('module' => 'users',
+																					  			  'controller' => 'net-user',
+																					  			  'action' => 'index'),
+																				'route' => 'default',
+																				'reset' => true
+																			),
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',

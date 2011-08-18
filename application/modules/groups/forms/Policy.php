@@ -10,7 +10,7 @@
  * Policy group form
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Groups_Form_Policy extends Zend_Form
+class Groups_Form_Policy extends Unwired_Form
 {
 	public function init()
 	{
@@ -45,9 +45,15 @@ class Groups_Form_Policy extends Zend_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
-		$this->addElement('button', 'form_element_cancel', array('label' => 'groups_policy_edit_form_cancel',
+		$this->addElement('href', 'form_element_cancel', array('label' => 'groups_policy_edit_form_cancel',
 	 														 	 'tabindex' => 20,
-																 'class'	=> 'button',
+																 'data' => array(
+																				'params' => array('module' => 'groups',
+																					  			  'controller' => 'policy',
+																					  			  'action' => 'index'),
+																				'route' => 'default',
+																				'reset' => true
+																			),
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',

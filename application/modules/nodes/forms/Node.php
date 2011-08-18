@@ -30,7 +30,9 @@ class Nodes_Form_Node extends Unwired_Form
 		$this->addElement('select', 'status', array('label' => 'nodes_index_edit_form_status',
 													'order' => 3,
 													'required' => true,
-													'multiOptions' => array('disabled', 'enabled')));
+													'multiOptions' => array('disabled' => 'disabled',
+																			'enabled' => 'enabled',
+																			'planning' => 'planning')));
 
 		$this->addElement('hidden', 'group_id', array('label' => 'nodes_index_edit_form_group',
 													  'order' => 4,
@@ -72,9 +74,15 @@ class Nodes_Form_Node extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
-		$settingsForm->addElement('button', 'form_element_cancel', array('label' => 'nodes_index_edit_form_cancel',
+		$settingsForm->addElement('href', 'form_element_cancel', array('label' => 'nodes_index_edit_form_cancel',
 	 														 	 'order' => 8,
-																 'class'	=> 'button',
+																 'data' => array(
+																				'params' => array('module' => 'nodes',
+																					  			  'controller' => 'index',
+																					  			  'action' => 'index'),
+																				'route' => 'default',
+																				'reset' => true
+																			),
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',

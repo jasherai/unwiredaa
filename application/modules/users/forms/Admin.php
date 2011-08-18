@@ -71,9 +71,15 @@ class Users_Form_Admin extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
-		$this->addElement('button', 'form_element_cancel', array('label' => 'users_admin_edit_form_cancel',
+		$this->addElement('href', 'form_element_cancel', array('label' => 'users_admin_edit_form_cancel',
 	 														 	 'tabindex' => 20,
-																 'class'	=> 'button',
+																 'data' => array(
+																				'params' => array('module' => 'users',
+																					  			  'controller' => 'admin',
+																					  			  'action' => 'index'),
+																				'route' => 'default',
+																				'reset' => true
+																			),
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',
