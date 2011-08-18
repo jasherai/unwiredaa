@@ -11,7 +11,7 @@
  * @author B. Krastev <bkrastev@web-teh.net>
  */
 
-class Unwired_Paginator_Adapter_Mapper extends Zend_Paginator_Adapter_DbSelect
+class Unwired_Paginator_Adapter_Mapper extends Zend_Paginator_Adapter_DbTableSelect
 {
 	protected $_mapper = null;
 
@@ -23,6 +23,7 @@ class Unwired_Paginator_Adapter_Mapper extends Zend_Paginator_Adapter_DbSelect
 			$select = $mapper->getDbTable()->select(true);
 		}
 
+		$select->setIntegrityCheck(false);
 		parent::__construct($select);
 	}
 
@@ -45,9 +46,7 @@ class Unwired_Paginator_Adapter_Mapper extends Zend_Paginator_Adapter_DbSelect
 		$result = array();
 
 		foreach ($items as $item) {
-			$entry = $this->getMapper()->getEmptyModel();
-
-			$entry->fromArray($item);
+			$entry = $this->getMapper()->rowToModel($item);
 
 			$result[] = $entry;
 		}

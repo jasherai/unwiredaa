@@ -190,7 +190,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
             return null;
         }
 
-        return $this->_rowToModel($result->current());
+        return $this->rowToModel($result->current());
     }
 
     /**
@@ -235,7 +235,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 			return null;
 		}
 
-		return $this->_rowsetToModels($result);
+		return $this->rowsetToModels($result);
     }
 
     /**
@@ -262,10 +262,10 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     {
         $resultSet = $this->getDbTable()->fetchAll();
 
-        return $this->_rowsetToModels($resultSet);
+        return $this->rowsetToModels($resultSet);
     }
 
-    protected function _rowToModel(Zend_Db_Table_Row $row)
+    public function rowToModel(Zend_Db_Table_Row $row)
     {
     	$id = $row->{current($this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY))};
 
@@ -282,11 +282,11 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     	return $model;
     }
 
-    protected function _rowsetToModels(Zend_Db_Table_Rowset $rowset)
+    public function rowsetToModels(Zend_Db_Table_Rowset $rowset)
     {
     	$result = array();
     	foreach ($rowset as $row) {
-    		$result[] = $this->_rowToModel($row);
+    		$result[] = $this->rowToModel($row);
     	}
 
     	return $result;
