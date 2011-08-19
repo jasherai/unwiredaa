@@ -7,7 +7,7 @@ class Nodes_Service_Node
 	protected $_authKeysCmd = '/opt/unwired/genconfig.sh';
 
 	public function writeUci(Nodes_Model_Node $node)
-	{ return false;
+	{
 		$view = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')
 														->view;
 
