@@ -10,12 +10,13 @@
  * Base class for a CRUD action controller
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-
 class Unwired_Controller_Crud extends Unwired_Controller_Action
 {
 	protected $_currentUser = null;
 
 	protected $_defaultMapper = null;
+
+	protected $_autoRedirect = true;
 
 	public function __construct(Zend_Controller_Request_Abstract $request,
 								Zend_Controller_Response_Abstract $response,
@@ -36,6 +37,21 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 	public function preDispatch()
 	{
 		if (null === $this->_currentUser) {
+			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
+		}
+
+		$permission = $this->getRequest()->getParam('action');
+
+		if ($permission == 'index') {
+			$permission = 'view';
+		}
+
+		if (!$this->getAcl()->hasRole($this->_currentUser) ||
+			!$this->getAcl()->isAllowed($this->_currentUser,
+			 						    $this->_getDefaultMapper()->getEmptyModel(),
+									    $permission)) {
+
+			$this->view->uiMessage('access_not_allowed_' . $permission, 'error');
 			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 		}
 	}
@@ -81,7 +97,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		$this->view->form = $form;
 
 		if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-			return;
+			return false;
 		}
 
 		try {
@@ -92,6 +108,9 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 			$this->view->uiMessage('information_saved_successfully', 'success');
 
 			$this->_gotoIndex();
+
+			return true;
+
 		} catch (Exception $e) {
 			$this->view->uiMessage('information_notsaved_error', 'error');
 
@@ -105,6 +124,8 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 					  ->getResource('log')
 					  	->err($message);
 		}
+
+		return false;
 	}
 
 	protected function _edit(Unwired_Model_Mapper $mapper = null,
@@ -128,7 +149,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 			$this->_gotoIndex();
 		}
 
-		$this->_add($mapper, $entity, $form);
+		return $this->_add($mapper, $entity, $form);
 	}
 
 	protected function _delete(Unwired_Model_Mapper $mapper = null)
@@ -160,8 +181,24 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		$this->_gotoIndex();
 	}
 
+	protected function _hasAutoRedirect()
+	{
+		return (bool) $this->_autoRedirect;
+	}
+
+	protected function _setAutoRedirect($flag = true)
+	{
+		$this->_autoRedirect = (bool) $flag;
+
+		return $this;
+	}
+
 	protected function _gotoIndex()
 	{
+		if (!$this->_hasAutoRedirect()) {
+			return;
+		}
+
 		$this->_helper->redirector->gotoRouteAndExit(array( 'module' => $this->getRequest()->getParam('module'),
 															'controller' => $this->getRequest()->getParam('controller'),
 															'action' => 'index'), 'default', true);
@@ -178,6 +215,8 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 			$mapperClass = $match[1] . '_Model_Mapper_' . $match[2];
 			$this->_defaultMapper = new $mapperClass;
+		} else if (is_string($this->_defaultMapper)) {
+			$this->_defaultMapper = new $this->_defaultMapper;
 		}
 
 		return $this->_defaultMapper;

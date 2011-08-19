@@ -37,5 +37,23 @@ class Unwired_Application_Module_Bootstrap extends Zend_Application_Module_Boots
 		}
 	}
 
+	protected function _initAclResources()
+	{
+		if (Zend_Registry::isRegistered('acl')) {
+			return Zend_Registry::get('acl');
+		}
+
+		$acl = new Zend_Acl();
+
+		/**
+		 * Deny everything to everyone by default
+		 */
+		$acl->deny(null, null, null);
+
+		Zend_Registry::set('acl', $acl);
+
+		return $acl;
+	}
+
 
 }

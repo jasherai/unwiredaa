@@ -2,9 +2,33 @@
 
 class Unwired_Controller_Action extends Zend_Controller_Action
 {
+	protected $_acl = null;
+
 	public function init()
 	{
 		$this->loadControllerTranslations();
+	}
+
+	/**
+	 * Get the system access list
+	 * @return Zend_Acl
+	 */
+	public function getAcl()
+	{
+		if (null === $this->_acl) {
+			if (Zend_Registry::isRegistered('acl')) {
+				$this->_acl = Zend_Registry::get('acl');
+			}
+		}
+
+		return $this->_acl;
+	}
+
+	public function setAcl(Zend_Acl $acl)
+	{
+		$this->_acl = $acl;
+
+		return $this;
 	}
 
 	/**
