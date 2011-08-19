@@ -35,7 +35,7 @@ class Nodes_Service_Node
 	public function getDestPath()
 	{
 		if (null === $this->_destPath) {
-			$this->_destPath = APPLICATION_PATH . '/tmp';
+			$this->_destPath = APPLICATION_PATH . '/data/uci';
 		}
 		return $this->_destPath;
 	}
