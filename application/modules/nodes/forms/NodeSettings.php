@@ -44,10 +44,12 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 
 		$this->addElement('select', 'bandwidthup', array('label' => 'nodes_index_edit_form_bandwidthup',
-													'required' => true));
+													'required' => true,
+													'class' => 'span-4'));
 
 		$this->addElement('select', 'bandwidthdown', array('label' => 'nodes_index_edit_form_bandwidthdown',
-													'required' => true));
+													'required' => true,
+													'class' => 'span-4'));
 
 		foreach (range(256, 4096, 256) as $speed) {
 			$this->getElement('bandwidthup')->addMultiOption($speed, $speed . ' kbit/s');
@@ -62,11 +64,13 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 													'required' => true,
 													'validators' => array('ssid')));
 
-		$this->addElement('text', 'channel', array('label' => 'nodes_index_edit_form_channel',
+		$this->addElement('select', 'channel', array('label' => 'nodes_index_edit_form_channel',
 													'required' => true,
-													'validators' => array('ch' => array('validator' => 'Between',
-																						 'options' => array('min' => 1,
-																											'max' => 13)))));
+													'class' => 'span-4'));
+
+		for ($i=1; $i<=13; $i++) {
+			$this->getElement('channel')->addMultiOption($i, $i);
+		}
 
 		$this->addElement('checkbox', 'roaming', array('label' => 'nodes_index_edit_form_roaming',
 													'required' => true));
@@ -92,6 +96,13 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 	public function isValid($data)
 	{
+		if ($data['settings']['dhcp']) {
+			$this->getElement('ipaddress')->setRequired(false);
+			$this->getElement('netmask')->setRequired(false);
+			$this->getElement('gateway')->setRequired(false);
+			$this->getElement('dnsservers')->setRequired(false);
+		}
+
 		if (!parent::isValid($data)) {
 			return false;
 		}

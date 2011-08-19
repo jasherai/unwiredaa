@@ -56,8 +56,6 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 
 			$this->setDbTable($nodeTable);
 
-			$this->_writeUci($model);
-
 			$nodeTable->getAdapter()->commit();
 		} catch (Exception $e) {
 			$nodeTable->getAdapter()->rollBack();
@@ -85,11 +83,6 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 		}
 
 		return $model;
-	}
-
-	protected function _writeUci(Nodes_Model_Node $node)
-	{
-
 	}
 }
 

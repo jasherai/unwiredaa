@@ -10,7 +10,7 @@
  * Node model (aggregates location and settings)
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Nodes_Model_Node extends Unwired_Model_Generic
+class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resource_Interface
 {
 	protected $_nodeId = null;
 
@@ -88,7 +88,7 @@ class Nodes_Model_Node extends Unwired_Model_Generic
 	 * @param integer $mac
 	 */
 	public function setMac($mac) {
-		$this->_mac = $mac;
+		$this->_mac = strtoupper($mac);
 
 		return $this;
 	}
@@ -173,4 +173,12 @@ class Nodes_Model_Node extends Unwired_Model_Generic
 
 		return $data;
 	}
+
+	/* Resource Id
+	 * @see Zend_Acl_Resource_Interface::getResourceId()
+	 */
+	public function getResourceId() {
+		return 'nodes-node';
+	}
+
 }

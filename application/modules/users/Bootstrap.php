@@ -37,4 +37,14 @@ class Users_Bootstrap extends Unwired_Application_Module_Bootstrap
 
 		return $user;
 	}
+
+	protected function _initAclResources()
+	{
+		$acl = parent::_initAclResources();
+
+		$acl->addResource(new Zend_Acl_Resource('users-admin'));
+		$acl->addResource(new Zend_Acl_Resource('users-netuser'));
+
+		return $acl;
+	}
 }

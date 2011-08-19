@@ -1,9 +1,15 @@
 <?php
 class Nodes_IndexController extends Unwired_Controller_Crud
 {
+	public function init()
+	{
+		parent::init();
+		$this->_defaultMapper = new Nodes_Model_Mapper_Node();
+	}
+
 	public function indexAction()
 	{
-		$this->_index(new Nodes_Model_Mapper_Node());
+		$this->_index();
 	}
 
 	protected function _add(Unwired_Model_Mapper $mapper = null,
@@ -15,23 +21,37 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 		$rootGroup = $groupService->getGroupTreeByAdmin();
 
 		$this->view->rootGroup = $rootGroup;
-		parent::_add($mapper, $entity, $form);
+
+		$this->_setAutoRedirect(false);
+		$result = parent::_add($mapper, $entity, $form);
+		if ($result) {
+			$nodeService = new Nodes_Service_Node();
+			if ($nodeService->writeUci($this->view->entity)) {
+				$this->_setAutoRedirect(true)
+					 ->_gotoIndex();
+			}
+
+			$this->view->uiMessage('nodes_index_edit_cannot_write_uci', 'warning');
+		}
+
+		return $result;
 	}
 
 	public function addAction()
 	{
-		$this->_add(new Nodes_Model_Mapper_Node());
+
+		$this->_add();
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
 	public function editAction()
 	{
-		$this->_edit(new Nodes_Model_Mapper_Node());
+		$this->_edit();
 	}
 
 	public function deleteAction()
 	{
-		$this->_delete(new Nodes_Model_Mapper_Node());
+		$this->_delete();
 		// @todo node deletion
 	}
 }

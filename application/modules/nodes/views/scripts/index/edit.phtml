@@ -24,6 +24,15 @@ var infowindow;
 $(function () {
 	$("input[name=group_id]").hide().after($('.grouptree'));
 
+	$('#settings-dhcp').change(function(){
+		if ($(this).is(':checked')) {
+			$(this).parent().siblings().find('input').attr('disabled','disabled');
+		} else {
+			$(this).parent().siblings().find('input').removeAttr('disabled');
+		}
+	}).change();
+
+
     $(".grouptree")
         .jstree({
             "plugins" : ["themes","html_data","ui"],

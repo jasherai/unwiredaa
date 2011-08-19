@@ -1,6 +1,7 @@
 <?php
 
-class Groups_Model_Role extends Unwired_Model_Generic
+class Groups_Model_Role extends Unwired_Model_Generic implements Zend_Acl_Role_Interface,
+																 Zend_Acl_Resource_Interface
 {
 	protected $_roleId = null;
 
@@ -53,4 +54,10 @@ class Groups_Model_Role extends Unwired_Model_Generic
 		return $this;
 	}
 
+	/* (non-PHPdoc)
+	 * @see Zend_Acl_Resource_Interface::getResourceId()
+	 */
+	public function getResourceId() {
+		return 'groups-role';
+	}
 }

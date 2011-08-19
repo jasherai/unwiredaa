@@ -8,10 +8,12 @@
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 
-	<link rel="stylesheet" media="screen,projection" href="<?php echo $this->baseUrl('themes/default/styles/blueprint/screen.css'); ?>" />
-	<link rel="stylesheet" media="print" href="<?php echo $this->baseUrl('themes/default/styles/blueprint/print.css'); ?>" />
-
-	<link rel="stylesheet" media="all" href="<?php echo $this->baseUrl('themes/default/styles/style.css'); ?>" />
+	<link rel="stylesheet" media="screen,projection" href="<?php echo $this->baseUrl("styles/blueprint/screen.css"); ?>" />
+	<link rel="stylesheet" media="print" href="<?php echo $this->baseUrl("styles/blueprint/print.css"); ?>" />
+	<!--[if lt IE 8]>
+    	<link rel="stylesheet" href="styles/blueprint/ie.css" type="text/css" media="screen, projection">
+  	<![endif]-->
+	<link rel="stylesheet" media="all" href="<?php echo $this->baseUrl("themes/{$this->theme}/styles/style.css"); ?>" />
 
     <!--
     	All core meta, link, styles and scripts must be here.

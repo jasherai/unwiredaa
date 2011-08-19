@@ -10,7 +10,8 @@
  * Network user model
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role_Interface
+class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role_Interface,
+																   Zend_Acl_Resource_Interface
 {
 	protected $_userId = null;
 
@@ -263,6 +264,8 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 		return $this;
 	}
 
-
-
+	public function getResourceId()
+	{
+		return 'users-netuser';
+	}
 }

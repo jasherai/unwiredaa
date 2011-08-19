@@ -20,6 +20,8 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 
 	protected $_activeto = null;
 
+	protected $_dhcp = null;
+
 	protected $_ipaddress = null;
 
 	protected $_netmask = null;
@@ -82,6 +84,33 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	 */
 	public function setActiveto($activeto) {
 		$this->_activeto = $activeto;
+
+		return $this;
+	}
+
+	/**
+	 * @return the $dhcp
+	 */
+	public function getDhcp() {
+		if (null === $this->_dhcp && empty($this->_ipaddress)) {
+			$this->_dhcp = true;
+		}
+
+		return (int) (bool) $this->_dhcp;
+	}
+
+	/**
+	 * @param bool $dhcp
+	 */
+	public function setDhcp($dhcp = false) {
+		$this->_dhcp = (int) (bool) $dhcp;
+
+		if (!$this->_dhcp) {
+			$this->setIpaddress(null);
+			$this->setNetmask(null);
+			$this->setGateway(null);
+			$this->setDnsservers(null);
+		}
 
 		return $this;
 	}

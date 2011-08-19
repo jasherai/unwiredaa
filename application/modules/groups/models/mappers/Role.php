@@ -28,7 +28,7 @@ class Groups_Model_Mapper_Role extends Unwired_Model_Mapper {
 
     	$data = $row->toArray();
 
-    	$data['permissions'] = empty($data['permission']) ? array() : unserialize($data['permissions']);
+    	$data['permissions'] = empty($data['permissions']) ? array() : unserialize($data['permissions']);
 
     	$model->fromArray($data);
 

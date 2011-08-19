@@ -52,6 +52,4 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
-<div class="paging span-18">
-	<?php echo $this->paginationControl($this->paginator); ?>
-</div>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

@@ -10,7 +10,8 @@
  * Admin user model
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_Interface
+class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_Interface,
+																 Zend_Acl_Resource_Interface
 {
 	protected $_userId = null;
 
@@ -219,6 +220,13 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	public function setCountry($country) {
 		$this->_country = strtoupper($country);
 		return $this;
+	}
+
+	/* (non-PHPdoc)
+	 * @see Zend_Acl_Resource_Interface::getResourceId()
+	 */
+	public function getResourceId() {
+		return 'users-admin';
 	}
 
 }
