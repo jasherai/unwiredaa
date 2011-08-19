@@ -19,7 +19,9 @@ class Nodes_Service_Node
 		/**
 		 * @todo Path check
 		 */
-		mkdir(dirname($path), 0777, true);
+		if (!file_exists($this->getDestPath())) {
+			@mkdir($this->getDestPath(), 0777, true);
+		}
 
 		if (!@file_put_contents($path, $uci)) {
 			return false;
