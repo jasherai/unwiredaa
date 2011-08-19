@@ -278,7 +278,9 @@ span.button.blue.small:hover button, span.button.blue.small:hover a, span.button
 	width: 500px;
 	height: 450px;
 }
-
+.pagination {
+	text-align: right;
+}
 .message {
 	padding-left: 35px;
     background-position: 5px 50%;
@@ -287,7 +289,13 @@ span.button.blue.small:hover button, span.button.blue.small:hover a, span.button
 
 .message.success {	background-image: url('../images/icons/24x24/accept.png'); }
 .message.info { background-image: url('../images/icons/24x24/info.png'); }
-.message.warning { background-image: url('../images/icons/24x24/warning.png'); }
+.message.warning { 
+	   background-image: url('../images/icons/24x24/warning.png');
+	   background-color: #FFE2A0;
+	   padding:0.8em 0.8em 0.8em 35px;
+	   margin-bottom:1em;
+	   border:2px solid #FFB200;
+}
 .message.error { background-image: url('../images/icons/24x24/block.png'); }
 
 .ml220 {
