@@ -274,6 +274,16 @@ span.button.blue.small button, span.button.blue.small a, span.button.blue.small 
 span.button.blue.small:hover, a.button.blue.small:hover {background-position:100% -410px;}
 span.button.blue.small:hover button, span.button.blue.small:hover a, span.button.blue.small:hover input, a.button.blue.small:hover span {background-position:0 -410px;}
 
+#gmap {
+	overflow: hidden;
+	text-indent: -1000px;
+	float: left;
+	display: block;
+	width: 24px;
+	height: 24px;
+	margin: 3px 0px 0px 1px;
+	background: transparent url('../images/icons/24x24/map.png') no-repeat left bottom;
+}
 .fancymap {
 	width: 500px;
 	height: 450px;
