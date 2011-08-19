@@ -16,6 +16,13 @@ select {
     color: #000000;
 }
 
+input[disabled], input[readonly], select[disabled], select[readonly], checkbox[disabled], checkbox[readonly], textarea[disabled], textarea[readonly]
+{
+ background-color: #dcdcdc;
+ color: #333;
+ cursor: default;
+}
+
 form {
 	margin: 0px;
 	padding: 0px;
