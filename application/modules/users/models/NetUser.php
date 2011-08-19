@@ -107,8 +107,8 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 	 * @param string $password
 	 */
 	public function setPassword($password) {
-		if (strlen($password) != 40) {
-			$this->_password = sha1($password);
+		if (strlen($password) != 32) {
+			$this->_password = md5($password);
 		}
 		return $this;
 	}

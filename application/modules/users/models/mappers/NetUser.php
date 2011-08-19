@@ -29,21 +29,19 @@ class Users_Model_Mapper_NetUser extends Unwired_Model_Mapper
 				$tableUserPolicy->insert(array('user_id' => $model->getUserId(),
 											   'policy_id' => $policy_id));
 			}
+			$adapter = $tableUserPolicy->getAdapter();
 			$tableUserPolicy = null;
+
+			$adapter->delete('radcheck', "`username`='{$model->getUsername()}' AND `attribute`='MD5-Password'");
+			$adapter->insert('radcheck', array('username' => $model->getUsername(),
+											   'attribute' => 'MD5-Password',
+											   'op' => ':=',
+											   'value' => $model->getPassword()));
 		} catch (Exception $e) {
 			throw $e;
 		}
 
 		return $model;
-	}
-
-	public function delete(Unwired_Model_Generic $model)
-	{
-		$result = parent::delete($model);
-
-		if ($result) {
-			//$
-		}
 	}
 }
 
