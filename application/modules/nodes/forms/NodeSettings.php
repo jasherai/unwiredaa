@@ -100,7 +100,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 								    														  'options' => array ('tag' => 'div',
 																				 	     						  'class' => 'span-9')))));
 
-		$this->addDisplayGroup(array('bandwidthup', 'bandwidthdown','trafficlimit','ssid','channel','roaming'),
+		$this->addDisplayGroup(array('bandwidthup', 'bandwidthdown','trafficlimit','ssid','channel','roaming','activefrom','activeto'),
 							   'node_wifi', array('decorators' => array('FormElements',
 									   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 								    														  'options' => array ('tag' => 'div',
