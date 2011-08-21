@@ -17,6 +17,27 @@ class Users_Model_Mapper_Admin extends Unwired_Model_Mapper
 	protected $_dbTableClass = 'Users_Model_DbTable_AdminUser';
 
 
+	public function save(Unwired_Model_Generic $model)
+	{
+		try {
+			$model = parent::save($model);
+
+			$tableAdminGroup = new Users_Model_DbTable_AdminGroup();
+
+			$tableAdminGroup->delete(array('user_id = ?' => $model->getUserId()));
+
+			foreach ($model->getGroupIds() as $groupId) {
+				$tableAdminGroup->insert(array('user_id' => $model->getUserId(),
+											   'group_id' => $groupId));
+			}
+			$tableAdminGroup = null;
+		} catch (Exception $e) {
+			throw $e;
+		}
+
+		return $model;
+	}
+
 	public function rowToModel(Zend_Db_Table_Row $row)
 	{
 		$model = parent::rowToModel($row);

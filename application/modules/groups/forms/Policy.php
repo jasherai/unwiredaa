@@ -37,6 +37,13 @@ class Groups_Form_Policy extends Unwired_Form
 																				     'options' => array('min' => 2)))));
 
 
+		$this->addElement('hidden', 'rules_reply', array('label' => 'groups_policy_edit_form_rules_reply',
+														 'required' => false,
+														 'isArray' => true));
+		$this->addElement('hidden', 'rules_check', array('label' => 'groups_policy_edit_form_rules_check',
+														 'required' => false,
+														 'isArray' => true));
+
 		$this->addElement('submit', 'form_element_submit', array('label' => 'groups_policy_edit_form_save',
 	 														 	 'tabindex' => 20,
 																 'class'	=> 'button',
@@ -59,11 +66,12 @@ class Groups_Form_Policy extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button blue')),
 																						)));
+
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),
 							   'formbuttons');
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
-													 	     						  'class' => 'formbuttons'))));
+													 	     						  'class' => 'buttons span-18'))));
 	}
 }

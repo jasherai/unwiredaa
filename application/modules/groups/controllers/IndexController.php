@@ -3,6 +3,8 @@
 class Groups_IndexController extends Unwired_Controller_Crud
 {
 
+	protected $_defaultMapper = 'Groups_Model_Mapper_Group';
+	
 	public function indexAction()
 	{
 		$service = new Groups_Service_Group();
@@ -44,17 +46,17 @@ class Groups_IndexController extends Unwired_Controller_Crud
 
 	public function addAction()
 	{
-		$this->_add(new Groups_Model_Mapper_Group());
+		$this->_add();
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
 	public function editAction()
 	{
-		$this->_edit(new Groups_Model_Mapper_Group());
+		$this->_edit();
 	}
 
 	public function deleteAction()
 	{
-		$this->_delete(new Groups_Model_Mapper_Group());
+		$this->_delete();
 	}
 }

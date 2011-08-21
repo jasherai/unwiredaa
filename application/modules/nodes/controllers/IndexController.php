@@ -39,7 +39,6 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 
 	public function addAction()
 	{
-
 		$this->_add();
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}

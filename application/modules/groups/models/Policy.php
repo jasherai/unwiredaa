@@ -8,7 +8,9 @@ class Groups_Model_Policy extends Unwired_Model_Generic implements Zend_Acl_Reso
 
 	protected $_roleId = null;
 
-	protected $_rules = array();
+	protected $_rulesReply = array();
+
+	protected $_rulesCheck = array();
 
 	/**
 	 * @return the $policyId
@@ -58,21 +60,59 @@ class Groups_Model_Policy extends Unwired_Model_Generic implements Zend_Acl_Reso
 	/**
 	 * @return the $rules
 	 */
-	public function getRules() {
-		return $this->_rules;
+	public function getRulesCheck() {
+		return $this->_rulesCheck;
 	}
 
 	/**
 	 * @param field_type $rules
 	 */
-	public function setRules($rules) {
-		$this->_rules = $rules;
+	public function setRulesCheck($rules) {
+		if (is_string($rules)) {
+			$rules = @unserialize($rules);
+		}
+
+		if (!is_array($rules)) {
+			$rules = array();
+		}
+		$this->_rulesCheck = $rules;
 		return $this;
 	}
 
-	public function addRule($rule, $value)
+	public function addRuleCheck($attribute, $value, $op = ':=')
 	{
-		$this->_rules[$rule] = $value;
+		$this->_rulesCheck[] = array ( 'attribute' => $attribute,
+									   'value' => $value,
+									   'op' => $op);
+		return $this;
+	}
+	/**
+	 * @return the $rules
+	 */
+	public function getRulesReply() {
+		return $this->_rulesReply;
+	}
+
+	/**
+	 * @param field_type $rules
+	 */
+	public function setRulesReply($rules) {
+		if (is_string($rules)) {
+			$rules = @unserialize($rules);
+		}
+
+		if (!is_array($rules)) {
+			$rules = array();
+		}
+		$this->_rulesReply = $rules;
+		return $this;
+	}
+
+	public function addRuleReply($attribute, $value, $op = ':=')
+	{
+		$this->_rulesReply[] = array ( 'attribute' => $attribute,
+									   'value' => $value,
+									   'op' => $op);
 		return $this;
 	}
 

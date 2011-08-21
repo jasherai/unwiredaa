@@ -24,7 +24,22 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		$mapper = new Groups_Model_Mapper_Role();
 
 		$roles = $mapper->fetchAll();
-
+/*Zend_Debug::dump(serialize(
+	array(
+		array('resource' => 'groups-group',
+			  'permissions' => array('view','add','edit','delete')),
+		array('resource' => 'groups-role',
+			  'permissions' => array('view','add','edit','delete')),
+		array('resource' => 'groups-policy',
+			  'permissions' => array('view','add','edit','delete')),
+		array('resource' => 'nodes-node',
+			  'permissions' => array('view','add','edit','delete')),
+		array('resource' => 'users-admin',
+			  'permissions' => array('view','add','edit','delete')),
+		array('resource' => 'users-admin',
+			  'permissions' => array('view','add','edit','delete'))
+	)
+)); die();*/
 		foreach ($roles as $role) {
 
 			$acl->addRole($role);
@@ -72,11 +87,24 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		$acl->addRole($admin, $policyGroups);
 
 		$acl->allow($admin, $groupsAllowed, 'access');
+
+		Zend_View_Helper_Navigation::setDefaultAcl($acl);
+		Zend_View_Helper_Navigation::setDefaultRole($admin);
 	}
 
 	protected function _addGroup(Groups_Model_Group $group, Zend_Acl_Resource $parent = null)
 	{
 		$resource = new Zend_Acl_Resource($group->getGroupResourceId());
+
+		$role = new Zend_Acl_Role($group->getGroupResourceId());
+
+		if (null === $parent) {
+			$parentRole = $group->getRoleId();
+		} else {
+			$parentRole = $parent->getResourceId();
+		}
+
+		$this->_acl->addRole($role, $parentRole);
 
 		$this->_acl->addResource($resource, $parent);
 

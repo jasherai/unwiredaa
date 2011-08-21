@@ -1,8 +1,8 @@
 <h1><?php
 	if ($this->entity->getGroupId()) {
-		echo sprintf($this->translate('groups_heading_group_edit'), $this->entity->getName());
+		echo sprintf($this->translate('groups_group_edit_heading_edit'), $this->entity->getName());
 	} else {
-		echo $this->translate('groups_heading_group_add');
+		echo $this->translate('groups_group_edit_heading_add');
 	}
 ?></h1>
 <?php

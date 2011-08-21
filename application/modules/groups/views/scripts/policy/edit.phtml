@@ -5,5 +5,94 @@
 		echo $this->translate('groups_policy_edit_heading_add');
 	}
 ?></h1>
+<?php
+	$json_reply = Zend_Json::encode($this->entity->getRulesReply());
+	$json_check = Zend_Json::encode($this->entity->getRulesCheck());
 
+	$this->form->getElement('rules_reply')->setValue('');
+	$this->form->getElement('rules_check')->setValue('');
+
+	$this->headScript()->captureStart();
+?>
+var rules_reply = <?php echo empty($json_reply) ? '[]' : $json_reply; ?>;
+var rules_check = <?php echo empty($json_check) ? '[]' : $json_check; ?>;
+
+var counter = 1;
+$(document).ready(function(){
+	$('#rules_reply').parent().after('<fieldset id="rules_reply_fs" class="span-9"></fieldset>');
+	$('#rules_check').parent().after('<fieldset id="rules_check_fs" class="span-9 last"></fieldset>');
+
+	$('#rules_reply_fs').append('<legend>' + $('#rules_reply').prev().text() + '</legend>');
+	$('#rules_check_fs').append('<legend>' + $('#rules_check').prev().text() + '</legend>');
+
+	$('input[type=hidden]').parent().remove();
+
+	$('#rules_reply_fs').append($('.attrib_template'));
+	$('#rules_check_fs').append('<div class="attrib_template">' + $('.attrib_template').html().replace(/rules_reply/gi, 'rules_check') + '</div>');
+
+	$('img.add').live('click', function(){
+
+		var parent = $(this).parents('.attrib_template');
+
+		parent.after(parent.clone());
+		$(parent.next()).find('input').val('');
+		counter++;
+		$(parent.next()).find('input').each(function(){
+			$(this).attr('name', $(this).attr('name').replace(/\d+/gi, counter));
+		});
+
+		parent.find('img.add').after('<img class="del" style="float: left" src="<?php echo $this->baseUrl('themes/' . $this->theme . '/images/icons/24x24/delete.png'); ?>" alt="Delete" />')
+							  .remove();
+	});
+
+	$('img.del').live('click', function(){
+		$(this).parents('.attrib_template').remove();
+	});
+
+	$.each(rules_reply, function (idx, data) {
+		$('#rules_reply_fs div.attrib_template:last div:first input').val(data.attribute);
+		$('#rules_reply_fs div.attrib_template:last div:eq(0) select').val(data.op);
+		$('#rules_reply_fs div.attrib_template:last div:last input').val(data.value);
+		$('#rules_reply_fs div.attrib_template:last div:last img.add').click();
+	});
+	$.each(rules_check, function (idx, data) {
+		$('#rules_check_fs div.attrib_template:last div:first input').val(data.attribute);
+		$('#rules_check_fs div.attrib_template:last div:eq(0) select').val(data.op);
+		$('#rules_check_fs div.attrib_template:last div:last input').val(data.value);
+		$('#rules_check_fs div.attrib_template:last div:last img.add').click();
+	});
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
 <?php echo $this->form;?>
+
+<div class="attrib_template">
+	<div class="span-3">
+		<label class="span-3 last"><?php echo $this->translate('groups_policy_edit_form_attribute');?></label>
+		<input type="text" class="span-3 last" name="rules_reply[1][attribute]" />
+	</div>
+	<div class="span-2">
+		<label class="span-2 last"><?php echo $this->translate('groups_policy_edit_form_operation');?></label>
+		<select name="rules_reply[1][op]">
+			<option value="=" selected="selected">=</option>
+			<option value=":=">:=</option>
+			<option value="+=">+=</option>
+			<option value="==">==</option>
+			<option value="!=">!=</option>
+			<option value="&gt;">&gt;</option>
+			<option value="&gt;=">&gt;=</option>
+			<option value="&lt;">&lt;</option>
+			<option value="&lt;=">&lt;=</option>
+			<option value="=~">=~</option>
+			<option value="!~">!~</option>
+			<option value="=*">=*</option>
+			<option value="!*">!*</option>
+		</select>
+	</div>
+	<div class="span-4 last">
+		<label class="span-3 last"><?php echo $this->translate('groups_policy_edit_form_value');?></label>
+		<input type="text" class="span-3 last" name="rules_reply[1][value]" />
+		<img class="add" style="float: left" src="<?php echo $this->baseUrl('themes/' . $this->theme . '/images/icons/24x24/add.png'); ?>" alt="Add" />
+	</div>
+</div>
