@@ -22,7 +22,7 @@ class Unwired_Acl_Assert_Proxy implements Zend_Acl_Assert_Interface
 			}
 		}
 
-		return null;
+		return $this->_assertInstance;
 	}
 
 	/* (non-PHPdoc)

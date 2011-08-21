@@ -36,22 +36,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 	public function preDispatch()
 	{
-		if (null === $this->_currentUser) {
-			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
-		}
-
-		$permission = $this->getRequest()->getParam('action');
-
-		if ($permission == 'index') {
-			$permission = 'view';
-		}
-
-		if (!$this->getAcl()->hasRole($this->_currentUser) ||
-			!$this->getAcl()->isAllowed($this->_currentUser,
-			 						    $this->_getDefaultMapper()->getEmptyModel(),
-									    $permission)) {
-
-			$this->view->uiMessage('access_not_allowed_' . $permission, 'error');
+		if (null === $this->_currentUser || !$this->getAcl()->hasRole($this->_currentUser)) {
 			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 		}
 	}
@@ -60,6 +45,11 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 	{
 		if (null === $mapper) {
 			$mapper = $this->_getDefaultMapper();
+		}
+
+		if (!$this->getAcl()->isAllowed($this->_currentUser, $mapper->getEmptyModel(), 'view')) {
+			$this->view->uiMessage('access_not_allowed_view', 'error');
+			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 		}
 
 		$paginator = new Zend_Paginator($mapper);
@@ -83,6 +73,12 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 		if (null === $entity) {
 			$entity = $mapper->getEmptyModel();
+		}
+
+		if (!$this->getAcl()->isAllowed($this->_currentUser, $entity, 'edit')) {
+			$this->view->uiMessage('access_not_allowed_add', 'error');
+			$this->_setAutoRedirect(true);
+			$this->_gotoIndex();
 		}
 
 		if (null === $form) {
@@ -156,6 +152,12 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 	{
 		if (null === $mapper) {
 			$mapper = $this->_getDefaultMapper();
+		}
+
+		if (!$this->getAcl()->isAllowed($this->_currentUser, $mapper->getEmptyModel(), 'delete')) {
+			$this->view->uiMessage('access_not_allowed_delete', 'error');
+			$this->_setAutoRedirect(true);
+			$this->_gotoIndex();
 		}
 
 		$id = (int) $this->getRequest()->getParam('id');
