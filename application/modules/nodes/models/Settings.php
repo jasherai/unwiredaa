@@ -67,6 +67,9 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	 * @param field_type $activefrom
 	 */
 	public function setActivefrom($activefrom) {
+		if ((int) $activefrom > 24 || (int) $activefrom < 1) {
+			$activefrom = null;
+		}
 		$this->_activefrom = $activefrom;
 
 		return $this;
@@ -83,6 +86,9 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	 * @param field_type $activeto
 	 */
 	public function setActiveto($activeto) {
+		if ((int) $activeto > 24 || (int) $activeto < 1) {
+			$activeto = null;
+		}
 		$this->_activeto = $activeto;
 
 		return $this;

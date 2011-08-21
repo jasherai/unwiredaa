@@ -75,6 +75,20 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 		$this->addElement('checkbox', 'roaming', array('label' => 'nodes_index_edit_form_roaming',
 													'required' => true));
 
+		$this->addElement('select', 'activefrom', array('label' => 'nodes_index_edit_form_activefrom',
+													'required' => false,
+													'class' => 'span-4'));
+		$this->addElement('select', 'activeto', array('label' => 'nodes_index_edit_form_activeto',
+													'required' => false,
+													'class' => 'span-4'));
+
+		$this->getElement('activefrom')->addMultiOption('', '');
+		$this->getElement('activeto')->addMultiOption('', '');
+		for ($i=1; $i<=24; $i++) {
+			$this->getElement('activefrom')->addMultiOption($i, $i . ':00');
+			$this->getElement('activeto')->addMultiOption($i, $i . ':00');
+		}
+
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
@@ -91,6 +105,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 									   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 								    														  'options' => array ('tag' => 'div',
 																				 	     						  'class' => 'span-9 last')))));
+
 
 	}
 
