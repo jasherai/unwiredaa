@@ -16,7 +16,7 @@ $(function () {
     $(".grouptree")
         .jstree({
             "plugins" : ["themes","html_data","ui"],
-            "core" : { "initially_open" : [ "group_<?php echo ($this->entity->getParentId()); ?>" ] },
+            "core" : { "initially_open" : [ "group_<?php echo ($this->entity->getParentId() ? $this->entity->getParentId() : 1); ?>" ] },
             "ui" : { select_limit : 1,  "initially_select" : [ "group_<?php echo ($this->entity->getParentId()); ?>" ] }
         })
         .bind("select_node.jstree", function (event, data) {
