@@ -40,20 +40,6 @@ class Groups_Form_Group extends Unwired_Form
 													 'required' => true,
 													 'validators' => array('Int')));
 
-		$this->addElement('select', 'role_id', array('label' => 'groups_group_edit_form_role',
-													'required' => true));
-
-		/**
-		 * Add roles as options to select
-		 */
-		$roleMapper = new Groups_Model_Mapper_Role();
-
-		$roles = $roleMapper->fetchAll();
-
-		foreach ($roles as $role) {
-			$this->getElement('role_id')->addMultiOption($role->getRoleId(), $role->getName());
-		}
-
 		$this->addElement('submit', 'form_element_submit', array('label' => 'groups_group_edit_form_save',
 	 														 	 'tabindex' => 20,
 																 'class'	=> 'button',
