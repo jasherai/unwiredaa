@@ -12,8 +12,6 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 
 	protected $_children = array();
 
-	protected $_role = null;
-
 	/**
 	 * @return the $groupId
 	 */
@@ -86,21 +84,6 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 	public function setParent(Groups_Model_Group $parent = null)
 	{
 		$this->_parent = $parent;
-		return $this;
-	}
-	/**
-	 * @return Groups_Model_Role $role
-	 */
-	public function getRole() {
-		return $this->_role;
-	}
-
-	/**
-	 * @param Groups_Model_Role $role
-	 */
-	public function setRole(Groups_Model_Role $role = null) {
-		$this->_role = $role;
-
 		return $this;
 	}
 
