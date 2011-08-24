@@ -11,11 +11,6 @@
 	<?php echo $this->groupTree($this->group->getParent()); ?>
 </div>
 
-<div>
-	<span><?php echo $this->translate('groups_group_view_role')?>:</span>
-	<strong><?php echo $this->group->getRole()->getName(); ?></strong>
-</div>
-
 <div class="buttons">
 	<a class="button small blue" href="<?php echo $this->url(array('action' => 'edit',
 									     					 'id' => $this->group->getGroupId()),
