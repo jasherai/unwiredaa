@@ -9,20 +9,21 @@
 	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
 	$this->headLink()->appendStylesheet('scripts/jstree/themes/default/style.css');
 
-	$groupIds = ($this->entity->getUserId()) ? $this->entity->getGroupIds() : array();
+	$groupsAssigned = ($this->entity->getUserId()) ? $this->entity->getGroupsAssigned() : array();
 	$this->headScript()->captureStart();
 
 ?>
-var groupIds = <?php echo Zend_Json::encode($groupIds);?>;
+var groupsAssigned = <?php echo Zend_Json::encode($groupsAssigned);?>;
 
 $(function () {
-	$("label[for=group_ids]").siblings().remove();
-	$("label[for=group_ids]").after($('.grouptree'));
+	$("label[for=groups_assigned]").siblings().remove();
+	$("label[for=groups_assigned]").after($('.grouptree'));
+	$("label[for=available_roles]").parent().hide();
 
 	var init_select = new Array();
 
-	$.each(groupIds, function (idx, data) {
-		init_select.push('group_' + data);
+	$.each(groupsAssigned, function (idx, data) {
+		init_select.push('group_' + idx);
 	});
 
 	groupIds = [];
@@ -42,7 +43,21 @@ $(function () {
 
 			if (groupIds.indexOf(groupId) == -1) {
 				groupIds.push(groupId);
-				$("label[for=group_ids]").after('<input id="selgrp' + groupId + '" type="hidden" name="group_ids[]" value="' + groupId + '" />');
+
+				var newRole = $("label[for=available_roles]").parent().clone();
+
+				$(newRole).children('label').attr('for', 'selgrp' + groupId)
+											.prepend(data.rslt.obj.children('a:first').text() + ' ');
+
+				$(newRole).children('select').attr('id', 'selgrp' + groupId)
+											 .attr('name', 'groups_assigned[' + groupId + ']')
+											 .val(groupsAssigned[groupId]);
+
+				$("label[for=available_roles]").parent().before(newRole);
+
+				newRole.show();
+
+				// $("label[for=group_ids]").after('<input id="selgrp' + groupId + '" type="hidden" name="groups_assigned[' + groupId + ']" value="' + groupId + '" />');
 			}
 	     })
         .bind("deselect_node.jstree", function (event, data) {
@@ -52,7 +67,7 @@ $(function () {
 
 			if (idx != -1) {
 				groupIds.splice(idx, 1);
-				$('#selgrp'+groupId).remove();
+				$('#selgrp'+groupId).parent().remove();
 			}
 	     })
 });

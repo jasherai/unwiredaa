@@ -6,8 +6,6 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 
 	protected $_parentId = null;
 
-	protected $_roleId = null;
-
 	protected $_name = null;
 
 	protected $_parent = null;
@@ -43,21 +41,6 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 	 */
 	public function setParentId($parentId) {
 		$this->_parentId = $parentId;
-		return $this;
-	}
-
-	/**
-	 * @return the $roleId
-	 */
-	public function getRoleId() {
-		return $this->_roleId;
-	}
-
-	/**
-	 * @param integer $roleId
-	 */
-	public function setRoleId($roleId) {
-		$this->_roleId = $roleId;
 		return $this;
 	}
 

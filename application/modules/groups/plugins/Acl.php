@@ -80,11 +80,12 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		$policyGroups = array();
 		$groupsAllowed = array();
 		foreach ($groups as $group) {
-			$groupsAllowed[] = $this->_addGroup($group);
-			$policyGroups[$group->getRoleId()] = "{$group->getRoleId()}";
+			$groupsAllowed[] = $this->_addGroup($group,
+												null,
+												$admin->getGroupAssignedRoleId($group->getGroupId()));
 		}
 
-		$acl->addRole($admin, $policyGroups);
+		$acl->addRole($admin, $admin->getGroupsAssigned());
 
 		$acl->allow($admin, $groupsAllowed, 'access');
 
@@ -92,21 +93,22 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		Zend_View_Helper_Navigation::setDefaultRole($admin);
 	}
 
-	protected function _addGroup(Groups_Model_Group $group, Zend_Acl_Resource $parent = null)
+	protected function _addGroup(Groups_Model_Group $group, Zend_Acl_Resource $parent = null, $parentRole = null)
 	{
 		$resource = new Zend_Acl_Resource($group->getGroupResourceId());
 
 		$role = new Zend_Acl_Role($group->getGroupResourceId());
 
-		if (null === $parent) {
-			$parentRole = $group->getRoleId();
-		} else {
+
+		if (null === $parentRole) {
 			$parentRole = $parent->getResourceId();
 		}
 
-		$this->_acl->addRole($role, $parentRole);
+		if (!$this->_acl->hasRole($role)) {
+			$this->_acl->addRole($role, $parentRole);
 
-		$this->_acl->addResource($resource, $parent);
+			$this->_acl->addResource($resource, $parent);
+		}
 
 		foreach ($group->getChildren() as $child) {
 			$this->_addGroup($child, $resource);

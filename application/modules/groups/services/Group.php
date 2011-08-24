@@ -80,13 +80,13 @@ class Groups_Service_Group {
 			$admin = Zend_Auth::getInstance()->getIdentity();
 		}
 
-		if (!$admin->getGroupIds()) {
+		if (!$admin->getGroupsAssigned()) {
 			return array();
 		}
 
 		$groups = array();
-		foreach ($admin->getGroupIds() as $id) {
-			$group = $this->getGroupMapper()->find($id);
+		foreach ($admin->getGroupsAssigned() as $groupId => $roleId) {
+			$group = $this->getGroupMapper()->find($groupId);
 			$this->loadRelatedGroups($group);
 			$groups[] = $group;
 		}

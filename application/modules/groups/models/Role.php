@@ -5,6 +5,8 @@ class Groups_Model_Role extends Unwired_Model_Generic implements Zend_Acl_Role_I
 {
 	protected $_roleId = null;
 
+	protected $_parentId = null;
+
 	protected $_name = null;
 
 	protected $_permissions = array();
@@ -21,6 +23,18 @@ class Groups_Model_Role extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 */
 	public function setRoleId($roleId) {
 		$this->_roleId = $roleId;
+		return $this;
+	}
+
+	public function getParentId()
+	{
+		return $this->_parentId;
+	}
+
+	public function setParentId($parentId)
+	{
+		$this->_parentId = $parentId;
+
 		return $this;
 	}
 

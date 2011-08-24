@@ -26,9 +26,10 @@ class Users_Model_Mapper_Admin extends Unwired_Model_Mapper
 
 			$tableAdminGroup->delete(array('user_id = ?' => $model->getUserId()));
 
-			foreach ($model->getGroupIds() as $groupId) {
+			foreach ($model->getGroupsAssigned() as $groupId => $roleId) {
 				$tableAdminGroup->insert(array('user_id' => $model->getUserId(),
-											   'group_id' => $groupId));
+											   'group_id' => $groupId,
+											   'role_id' => $roleId));
 			}
 			$tableAdminGroup = null;
 		} catch (Exception $e) {
@@ -44,12 +45,12 @@ class Users_Model_Mapper_Admin extends Unwired_Model_Mapper
 
 		$groupRows = $row->findDependentRowset('Users_Model_DbTable_AdminGroup');
 
-		$groupIds = array();
+		$groupsAssigned = array();
 		foreach ($groupRows as $groupRow) {
-			$groupIds[] = $groupRow->group_id;
+			$groupsAssigned[$groupRow->group_id] = $groupRow->role_id;
 		}
 
-		$model->setGroupIds($groupIds);
+		$model->setGroupsAssigned($groupsAssigned);
 
 		return $model;
 	}

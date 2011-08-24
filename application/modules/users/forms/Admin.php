@@ -49,9 +49,22 @@ class Users_Form_Admin extends Unwired_Form
 															'required' => true,
 															'class' => 'span-5'));
 
-		$this->addElement('multiCheckbox', 'group_ids', array('label' => 'users_admin_edit_form_group',
+		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'users_admin_edit_form_group',
 											  	 			  'required' => true,
 															  'registerInArrayValidator' => false));
+		$this->addElement('select', 'available_roles', array('label' => 'users_admin_edit_form_group_role',
+											  	 			  'required' => false,
+															  'registerInArrayValidator' => false));
+
+		$mapper = new Groups_Model_Mapper_Role();
+
+		$roles = $mapper->fetchAll();
+
+		foreach ($roles as $role) {
+			$this->getElement('available_roles')->addMultiOption($role->getRoleId(), $role->getName());
+		}
+
+		$mapper = null;
 
 		$this->addElement('password', 'password', array('label' => 'users_admin_edit_form_password',
 														'required' => true,
@@ -97,7 +110,8 @@ class Users_Form_Admin extends Unwired_Form
 
 		$this->addDisplayGroup(array('password',
 									 'cfmpassword',
-									 'group_ids'),
+									 'groups_assigned',
+									 'available_roles'),
 				 			   'access');
 
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),
@@ -116,9 +130,9 @@ class Users_Form_Admin extends Unwired_Form
 
 	public function populate(array $values)
 	{
-		if (count($values['group_ids'])) {
-			foreach ($values['group_ids'] as $id) {
-				$this->getElement('group_ids')->addMultiOption($id, $id);
+		if (count($values['groups_assigned'])) {
+			foreach ($values['groups_assigned'] as $key => $value) {
+				$this->getElement('groups_assigned')->addMultiOption($key, $value);
 			}
 		}
 		parent::populate($values);

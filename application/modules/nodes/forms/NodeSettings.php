@@ -57,7 +57,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 		}
 
 		$this->addElement('text', 'trafficlimit', array('label' => 'nodes_index_edit_form_trafficlimit',
-													'required' => true,
+													'required' => false,
 													'validators' => array('Int')));
 
 		$this->addElement('text', 'ssid', array('label' => 'nodes_index_edit_form_ssid',

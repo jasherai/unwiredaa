@@ -15,7 +15,7 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 {
 	protected $_userId = null;
 
-	protected $_groupIds = array();
+	protected $_groupsAssigned = array();
 
 	protected $_password = null;
 
@@ -51,28 +51,27 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	}
 
 	/**
-	 * @return the $groupIds
+	 * @return the $groupsAssigned
 	 */
-	public function getGroupIds() {
-		return $this->_groupIds;
+	public function getGroupsAssigned() {
+		return $this->_groupsAssigned;
 	}
 
 	/**
-	 * @param array $groupIds
+	 * key = group id, value = role id
+	 * @param array $groupsAssigned
 	 */
-	public function setGroupIds(array $groupIds) {
-		$this->_groupIds = $groupIds;
+	public function setGroupsAssigned(array $groupsAssigned) {
+		$this->_groupsAssigned = $groupsAssigned;
 		return $this;
 	}
 
-	/**
-	 * Check if user is direct member of a group
-	 * @param integer $groupId
-	 * @return boolean
-	 */
-	public function hasGroupId($groupId)
+	public function getGroupAssignedRoleId($groupId)
 	{
-		return in_array($groupId, $this->_groupIds);
+		/**
+		 * @todo Possible ACL problem with false as result
+		 */
+		return isset($this->_groupsAssigned[$groupId]) ? $this->_groupsAssigned[$groupId] : false;
 	}
 
 	/**
@@ -96,8 +95,12 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 * @param string $password
 	 */
 	public function setPassword($password) {
-		if (strlen($password) != 40) {
-			$this->_password = sha1($password);
+		if (!empty($password)) {
+			if (strlen($password) != 40) {
+				$password = sha1($password);
+			}
+
+			$this->_password = $password;
 		}
 		return $this;
 	}
