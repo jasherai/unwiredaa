@@ -105,6 +105,14 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 			$this->getElement('activeto')->addMultiOption($i, $i . ':00');
 		}
 
+		$acl = Zend_Registry::get('acl');
+		$admin = Zend_Auth::getInstance()->getIdentity();
+
+		if (!$acl->isAllowed($admin, new Nodes_Model_Node(), 'special')) {
+			$this->getElement('ssid')->setAttrib('disabled', 'disabled');
+			$this->getElement('channel')->setAttrib('disabled', 'disabled');
+		}
+
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',

@@ -9,6 +9,9 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 
 	public function indexAction()
 	{
+		$groupService = new Groups_Service_Group();
+
+		$groupService->prepareMapperListingByAdmin($this->_getDefaultMapper());
 		$this->_index();
 	}
 

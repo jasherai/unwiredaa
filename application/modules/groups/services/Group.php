@@ -60,7 +60,7 @@ class Groups_Service_Group extends Unwired_Service_Tree
 		return $groups;
 	}
 
-	public function prepareMapperListingByAdmin($mapper = null, $admin = null)
+	public function prepareMapperListingByAdmin($mapper = null, $admin = null, $lowerOnly = true)
 	{
 		if (null === $mapper) {
 			$mapper = $this->_getDefaultMapper();
@@ -83,13 +83,20 @@ class Groups_Service_Group extends Unwired_Service_Tree
 				continue;
 			}
 
-			$iterator = new RecursiveIteratorIterator($group);
+			if (!$lowerOnly || $acl->isAllowed($admin, null, 'super')) {
+				$accessibleGroupIds[] = $group->getGroupId();
+			}
+
+			$iterator = new RecursiveIteratorIterator($group, RecursiveIteratorIterator::SELF_FIRST);
 
 			foreach ($iterator as $child) {
 				$accessibleGroupIds[] = $child->getGroupId();
 			}
 		}
 
+		/**
+		 * @todo Auto join in findBy is slow... do something
+		 */
 		$mapper->findBy(array('group_id' => $accessibleGroupIds), 0);
 
 		return $mapper;

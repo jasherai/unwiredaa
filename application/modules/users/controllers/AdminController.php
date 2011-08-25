@@ -3,7 +3,13 @@ class Users_AdminController extends Unwired_Controller_Crud
 {
 	public function indexAction()
 	{
-		$this->_index();
+		$groupService = new Groups_Service_Group();
+
+		$adminMapper = new Users_Model_Mapper_Admin();
+
+		$groupService->prepareMapperListingByAdmin($adminMapper);
+
+		$this->_index($adminMapper);
 	}
 
 	protected function _add(Unwired_Model_Mapper $mapper = null,

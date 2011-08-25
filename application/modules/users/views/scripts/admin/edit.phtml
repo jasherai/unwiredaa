@@ -45,7 +45,7 @@ $(function () {
         	}
 
 			var result = false;
-			$.each(data, function(idx, role){
+			$.each(adminGroups, function(idx, role){
 			  	if ($(data.args).parents('#group_' + idx).length) {
 			  		result = true;
 			  		return false;

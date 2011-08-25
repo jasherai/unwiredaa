@@ -1,6 +1,7 @@
 <?php
 
-class Groups_Model_Group extends Unwired_Model_Tree implements Zend_Acl_Resource_Interface
+class Groups_Model_Group extends Unwired_Model_Tree implements Zend_Acl_Role_Interface,
+															   Zend_Acl_Resource_Interface
 {
 	protected $_groupId = null;
 
@@ -53,6 +54,14 @@ class Groups_Model_Group extends Unwired_Model_Tree implements Zend_Acl_Resource
 	public function setName($name) {
 		$this->_name = $name;
 		return $this;
+	}
+
+	/* (non-PHPdoc)
+	 * @see Zend_Acl_Role_Interface::getRoleId()
+	 */
+	public function getRoleId()
+	{
+		return $this->getGroupResourceId();
 	}
 
 	/* (non-PHPdoc)

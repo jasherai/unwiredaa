@@ -3,7 +3,13 @@ class Users_NetUserController extends Unwired_Controller_Crud
 {
 	public function indexAction()
 	{
-		$this->_index();
+		$groupService = new Groups_Service_Group();
+
+		$userMapper = new Users_Model_Mapper_NetUser();
+
+		$groupService->prepareMapperListingByAdmin($userMapper, null, false);
+
+		$this->_index($userMapper);
 	}
 
 	protected function _add(Unwired_Model_Mapper $mapper = null,

@@ -2,7 +2,6 @@
 
 class Nodes_Service_Acl implements Zend_Acl_Assert_Interface
 {
-	protected $_recursion = 0;
 	/* (non-PHPdoc)
 	 * @see Zend_Acl_Assert_Interface::assert()
 	 */
@@ -19,7 +18,7 @@ class Nodes_Service_Acl implements Zend_Acl_Assert_Interface
 			return true;
 		}
 
-		$groupRole = 'groups-group-' . $resource->getGroupId();
+		$groupRole = 'groups_group_' . $resource->getGroupId();
 		if (!$acl->hasRole($groupRole)) {
 			return false;
 		}
