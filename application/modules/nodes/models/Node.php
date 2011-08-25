@@ -178,7 +178,7 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	 */
 	public function getResourceId() {
-		return 'nodes-node';
+		return 'nodes_node';
 	}
 
 }

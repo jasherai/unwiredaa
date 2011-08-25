@@ -6,7 +6,7 @@ class Nodes_Bootstrap extends Unwired_Application_Module_Bootstrap
 	{
 		$acl = parent::_initAclResources();
 
-		$acl->addResource(new Zend_Acl_Resource('nodes-node'));
+		$acl->addResource(new Zend_Acl_Resource('nodes_node'));
 
 		return $acl;
 	}
