@@ -207,7 +207,38 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
 			$select = $this->getDbTable()->select(true);
 
+			$cols = $this->getDbTable()->info(Zend_Db_Table::COLS);
+
 			foreach ($conditions as $field => $value) {
+
+				if (!in_array($field, $cols)) {
+					$dependents = $this->getDbTable()->getDependentTables();
+					foreach ($dependents as $table) {
+						$tableInstance = (is_string($table)) ? new $table : $table;
+
+						if (!in_array($field, $tableInstance->info(Zend_Db_Table::COLS))) {
+							continue;
+						}
+
+						$joinTableName = $tableInstance->info(Zend_Db_Table::NAME);
+						$fromTableName = $this->getDbTable()->info(Zend_Db_Table::NAME);
+
+						$joinCols = array_intersect($this->getDbTable()->info(Zend_Db_Table::PRIMARY),
+													$tableInstance->info(Zend_Db_Table::PRIMARY));
+						$joinCondition = array();
+
+						foreach ($joinCols as $col) {
+							$joinCondition[] = "{$joinTableName}.{$col} = {$fromTableName}.{$col}";
+						}
+
+						$select->setIntegrityCheck(false)
+							   ->joinInner($joinTableName, implode(' AND ', $joinCondition));
+
+						$joinCols = null;
+						$joinCondition = null;
+					}
+				}
+
 				switch ($value) {
 					case (is_array($value)):
 						$select->where($field . ' IN (?)', $value);
