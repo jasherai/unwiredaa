@@ -19,6 +19,15 @@
     	All core meta, link, styles and scripts must be here.
     	Everything else is loaded as needed with the appropriate helpers below.
     -->
+    <script type="text/javascript">
+    $(document).ready(function(){
+		$('ul.navigation li a[href="javascript:;"]').each(function(){
+			if (!$(this).siblings().length) {
+				$(this).parent().remove();
+			}
+		});
+    });
+    </script>
 
 	<?php
 		echo $this->headLink();
