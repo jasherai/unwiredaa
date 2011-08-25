@@ -196,7 +196,7 @@ $(function () {
 ?>
 <?php echo $this->form;?>
 <div class="grouptree span-8">
-	<?php echo $this->groupTree($this->rootGroup); ?>
+	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
 </div>
 <div style="display:none;">
 	<div id="map" class="fancymap"> </div>

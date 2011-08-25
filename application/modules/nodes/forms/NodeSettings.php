@@ -51,9 +51,25 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 													'required' => true,
 													'class' => 'span-4'));
 
-		foreach (range(256, 4096, 256) as $speed) {
-			$this->getElement('bandwidthup')->addMultiOption($speed, $speed . ' kbit/s');
-			$this->getElement('bandwidthdown')->addMultiOption($speed, $speed . ' kbit/s');
+		/**
+		 * @todo Network speeds
+		 */
+		for ($i = 128; $i <= 1024; $i = $i*2) {
+			$this->getElement('bandwidthup')->addMultiOption($i, $i . ' kbit/s');
+			$this->getElement('bandwidthdown')->addMultiOption($i, $i . ' kbit/s');
+		}
+
+		$this->getElement('bandwidthup')->addMultiOption(1536, '1.5 Mbit/s');
+		$this->getElement('bandwidthdown')->addMultiOption(1536, '1.5 Mbit/s');
+
+		for ($i = 2; $i <= 8; $i++) {
+			$this->getElement('bandwidthup')->addMultiOption($i * 1024, $i . ' Mbit/s');
+			$this->getElement('bandwidthdown')->addMultiOption($i * 1024, $i . ' Mbit/s');
+		}
+
+		for ($i = 10; $i <= 20; $i+=5) {
+			$this->getElement('bandwidthup')->addMultiOption($i * 1024, $i . ' Mbit/s');
+			$this->getElement('bandwidthdown')->addMultiOption($i * 1024, $i . ' Mbit/s');
 		}
 
 		$this->addElement('text', 'trafficlimit', array('label' => 'nodes_index_edit_form_trafficlimit',

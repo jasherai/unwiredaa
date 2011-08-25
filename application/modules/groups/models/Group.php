@@ -1,6 +1,6 @@
 <?php
 
-class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resource_Interface
+class Groups_Model_Group extends Unwired_Model_Tree implements Zend_Acl_Resource_Interface
 {
 	protected $_groupId = null;
 
@@ -9,8 +9,6 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 	protected $_name = null;
 
 	protected $_parent = null;
-
-	protected $_children = array();
 
 	/**
 	 * @return the $groupId
@@ -57,36 +55,6 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 		return $this;
 	}
 
-	public function getChildren()
-	{
-		return $this->_children;
-	}
-
-	public function setChildren(array $children)
-	{
-		$this->_children = $children;
-		return $this;
-	}
-
-	public function addChild(Groups_Model_Group $child) {
-		if (!in_array($child, $this->_children)) {
-			$this->_children[] = $child;
-		}
-
-		return $this;
-	}
-
-	public function getParent()
-	{
-		return $this->_parent;
-	}
-
-	public function setParent(Groups_Model_Group $parent = null)
-	{
-		$this->_parent = $parent;
-		return $this;
-	}
-
 	/* (non-PHPdoc)
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	 */
@@ -99,4 +67,18 @@ class Groups_Model_Group extends Unwired_Model_Generic implements Zend_Acl_Resou
 		return $this->getResourceId() . '-' . $this->getGroupId();
 	}
 
+	/* (non-PHPdoc)
+	 * @see Unwired_Model_Tree::getTreeBranchId()
+	 */
+	public function getTreeBranchId() {
+		return $this->getGroupId();
+
+	}
+
+	/* (non-PHPdoc)
+	 * @see Unwired_Model_Tree::getTreeBranchName()
+	 */
+	public function getTreeBranchName() {
+		return $this->getName();
+	}
 }

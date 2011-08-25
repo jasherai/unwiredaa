@@ -36,7 +36,7 @@ $(function () {
 	$this->headScript()->captureEnd();
 ?>
 <div class="grouptree span-8">
-	<?php echo $this->groupTree($this->rootGroup); ?>
+	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
 </div>
 <div id="groupview" class="span-9">
 

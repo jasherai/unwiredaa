@@ -36,6 +36,10 @@ class Groups_Form_Role extends Unwired_Form
 												'validators' => array('len' => array('validator' => 'StringLength',
 																				     'options' => array('min' => 2)))));
 
+		$this->addElement('select', 'parent_id', array('label' => 'groups_role_edit_form_parent',
+												'required' => true,
+												'validators' => array('Int')));
+
 
 		$this->addElement('submit', 'form_element_submit', array('label' => 'groups_role_edit_form_save',
 	 														 	 'tabindex' => 20,

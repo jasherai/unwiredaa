@@ -8,7 +8,14 @@
 
 <div>
 	<span><?php echo $this->translate('groups_group_view_parents')?>:</span>
-	<?php echo $this->groupTree($this->group->getParent()); ?>
+	<?php
+		$group = $this->group;
+		while ($parent = $group->getParent()) {
+			$top = $parent;
+			$group = $parent;
+		}
+		echo $this->tree($top, $this->group, array('prefix' => 'group_'));
+	?>
 </div>
 
 <div class="buttons">
