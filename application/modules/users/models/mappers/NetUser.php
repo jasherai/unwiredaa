@@ -43,5 +43,34 @@ class Users_Model_Mapper_NetUser extends Unwired_Model_Mapper
 
 		return $model;
 	}
+
+	public function rowToModel(Zend_Db_Table_Row $row)
+	{
+		$model = parent::rowToModel($row);
+
+		$adapter = $this->getDbTable()->getAdapter();
+
+		$select = $adapter->select();
+
+		$select->from('radcheck', 'value')
+			   ->where('username = ?', $model->getUsername())
+			   ->where('attribute = ?', 'MD5-Password');
+
+		$password = $adapter->fetchOne($select);
+
+		$model->setPassword($password);
+
+		$result = $row->findDependentRowset('Users_Model_DbTable_NetworkUserPolicy');
+
+		$policyIds = array();
+
+		foreach ($result as $policyRow) {
+			$policyIds[] = $policyRow->policy_id;
+		}
+
+		$model->setPolicyIds($policyIds);
+
+		return $model;
+	}
 }
 

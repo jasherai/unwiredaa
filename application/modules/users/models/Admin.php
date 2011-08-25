@@ -229,7 +229,7 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	 */
 	public function getResourceId() {
-		return 'users-admin';
+		return 'users_admin';
 	}
 
 }

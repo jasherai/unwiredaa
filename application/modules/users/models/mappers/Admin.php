@@ -16,6 +16,14 @@ class Users_Model_Mapper_Admin extends Unwired_Model_Mapper
 	protected $_modelClass = 'Users_Model_Admin';
 	protected $_dbTableClass = 'Users_Model_DbTable_AdminUser';
 
+	public function findBy($conditions, $limit = null)
+	{
+		/*if (!is_array($conditions) || !isset($conditions['group_id']))	{
+			return parent::findBy($conditions, $limit);
+		}*/
+
+		return parent::findBy($conditions, $limit);
+	}
 
 	public function save(Unwired_Model_Generic $model)
 	{

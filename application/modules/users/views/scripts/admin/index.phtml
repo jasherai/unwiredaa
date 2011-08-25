@@ -1,5 +1,6 @@
 <h1><?php echo $this->translate('users_admin_index_heading'); ?></h1>
 
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
 <table class="listing">
 	<thead>
 		<tr>

@@ -25,7 +25,11 @@ class Users_NetUserController extends Unwired_Controller_Crud
 
 	public function editAction()
 	{
-		$this->_edit();
+		$form = new Users_Form_NetUser();
+
+		$form->getElement('password')->setRequired(false);
+		$form->getElement('cfmpassword')->setRequired(false);
+		$this->_edit(null, $form);
 	}
 
 	public function deleteAction()

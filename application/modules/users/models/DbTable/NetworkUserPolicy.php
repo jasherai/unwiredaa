@@ -15,5 +15,17 @@ class Users_Model_DbTable_NetworkUserPolicy extends Zend_Db_Table_Abstract
 
     protected $_name = 'network_user_policy';
 
+   	protected $_referenceMap = array(
+            'User'  => array(
+                'columns'           => 'user_id',
+                'refTableClass'     => 'Users_Model_DbTable_NetworkUser',
+                'refColumns'        => 'user_id'
+                ),
+            'Policy'  => array(
+                'columns'           => 'policy_id',
+                'refTableClass'     => 'Groups_Model_DbTable_Policy',
+                'refColumns'        => 'policy_id'
+                ),
+             );
 }
 

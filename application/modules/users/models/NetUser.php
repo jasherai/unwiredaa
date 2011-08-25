@@ -107,8 +107,12 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 	 * @param string $password
 	 */
 	public function setPassword($password) {
-		if (strlen($password) != 32) {
-			$this->_password = md5($password);
+		if (!empty($password)) {
+			if (strlen($password) != 32) {
+				$password = md5($password);
+			}
+
+			$this->_password = $password;
 		}
 		return $this;
 	}
@@ -266,6 +270,6 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 
 	public function getResourceId()
 	{
-		return 'users-netuser';
+		return 'users_netuser';
 	}
 }
