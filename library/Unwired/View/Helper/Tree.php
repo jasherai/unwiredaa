@@ -39,7 +39,7 @@ class Unwired_View_Helper_Tree {
 		}
 
 		$result = "<ul class=\"{$this->getOption('class')}\">";
-		$result .= '<li id="group_' . $tree->getTreeBranchId() . '"><a href="javascript:;">'
+		$result .= '<li id="' . $this->getOption('prefix') . $tree->getTreeBranchId() . '"><a href="javascript:;">'
 				. $tree->getTreeBranchName() . '</a>' . $this->_renderChildren($tree) . '</li>';
 		$result .= '</ul>';
 

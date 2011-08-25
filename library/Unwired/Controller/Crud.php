@@ -39,6 +39,18 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		if (null === $this->_currentUser || !$this->getAcl()->hasRole($this->_currentUser)) {
 			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 		}
+
+		if (!$this->getAcl()->isAllowed($this->_currentUser, $this->_getDefaultMapper()->getEmptyModel(), 'view')) {
+			$this->view->uiMessage('access_not_allowed_view', 'error');
+			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
+		}
+	}
+
+	public function postDispatch()
+	{
+		if (!isset($this->view->currentUser)) {
+			$this->view->currentUser = $this->getCurrentUser();
+		}
 	}
 
 	protected function _index(Unwired_Model_Mapper $mapper = null)

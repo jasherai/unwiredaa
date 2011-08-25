@@ -196,28 +196,39 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     /**
      * Find entities by criteria
      *
-     * @param array $conditions
+     * @param Zend_Db_Select|array $conditions
      * @param int|null $limit
      */
-    public function findBy(array $conditions, $limit = null)
+    public function findBy($conditions, $limit = null)
     {
-		$select = $this->getDbTable()->select(true);
+    	if ($conditions instanceof Zend_Db_Select) {
+    		$select = $conditions;
+    	} elseif (is_array($conditions)) {
 
-		foreach ($conditions as $field => $value) {
-			switch ($value) {
-				case null:
-					$select->where($field . ' IS NULL');
-				break;
+			$select = $this->getDbTable()->select(true);
 
-				case preg_match('/\%/i', $value):
-					$select->where($field . ' LIKE ?', $value);
-				break;
+			foreach ($conditions as $field => $value) {
+				switch ($value) {
+					case (is_array($value)):
+						$select->where($field . ' IN (?)', $value);
+					break;
 
-				default:
-					$select->where($field . ' = ?', $value);
-				break;
+					case null:
+						$select->where($field . ' IS NULL');
+					break;
+
+					case preg_match('/\%/i', $value):
+						$select->where($field . ' LIKE ?', $value);
+					break;
+
+					default:
+						$select->where($field . ' = ?', $value);
+					break;
+				}
 			}
-		}
+    	} else {
+    		throw new Unwired_Exception('Unwired_Model_Mapper::findBy expects array with conditions or select instance');
+    	}
 
 		if ($limit === 0) {
 			$this->_customSelect = $select;
@@ -265,11 +276,11 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
         return $this->rowsetToModels($resultSet);
     }
 
-    public function rowToModel(Zend_Db_Table_Row $row)
+    public function rowToModel(Zend_Db_Table_Row $row, $updateRepo = false)
     {
     	$id = $row->{current($this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY))};
 
-    	if ($this->_hasInRepository($id)) {
+    	if (!$updateRepo && $this->_hasInRepository($id)) {
     		return $this->_getFromRepository($id);
     	}
 

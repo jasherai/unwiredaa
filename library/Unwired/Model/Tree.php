@@ -25,8 +25,14 @@ abstract class Unwired_Model_Tree extends Unwired_Model_Generic implements Recur
 		return $this->current();
 	}
 
-	public function setChildren(array $children)
+	public function setChildren( $children)
 	{
+		if (null !== $children && !is_array($children)) {
+			throw new Unwired_Exception('$children must be null or array');
+		}
+
+		$children = (null === $children) ? array() : $children;
+
 		$this->_children = $children;
 		$this->rewind();
 
