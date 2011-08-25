@@ -30,6 +30,9 @@ class Groups_Model_Mapper_Role extends Unwired_Model_Mapper {
 
     	$data['permissions'] = empty($data['permissions']) ? array() : unserialize($data['permissions']);
 
+    	if (!is_array($data['permissions'])) {
+    		Zend_Debug::dump($data['permissions']); die();
+    	}
     	$model->fromArray($data);
 
     	$this->_addToRepository($model, $id);

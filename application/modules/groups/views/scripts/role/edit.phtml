@@ -5,5 +5,30 @@
 		echo $this->translate('groups_role_edit_heading_add');
 	}
 ?></h1>
+<?php
+	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
+	$this->headLink()->appendStylesheet('scripts/jstree/themes/default/style.css');
+	$this->headScript()->captureStart();
+?>
+$(function () {
+	$("input[name=parent_id]").hide().after($('.roletree'));
 
+    $(".roletree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : [ "role_<?php echo ($this->entity->getParentId() ? $this->entity->getParentId() : 1); ?>" ] },
+            "ui" : { select_limit : 1,  "initially_select" : [ "role_<?php echo ($this->entity->getParentId()); ?>" ] }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var roleId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$("input[name=parent_id]").val(roleId);
+	     })
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
 <?php echo $this->form;?>
+<div class="roletree span-8">
+	<?php echo $this->tree($this->rootRole, $this->entity, array('prefix' => 'role_')); ?>
+</div>

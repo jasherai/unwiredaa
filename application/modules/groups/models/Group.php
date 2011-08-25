@@ -59,12 +59,12 @@ class Groups_Model_Group extends Unwired_Model_Tree implements Zend_Acl_Resource
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	 */
 	public function getResourceId() {
-		return 'groups-group';
+		return 'groups_group';
 	}
 
 	public function getGroupResourceId()
 	{
-		return $this->getResourceId() . '-' . $this->getGroupId();
+		return $this->getResourceId() . '_' . $this->getGroupId();
 	}
 
 	/* (non-PHPdoc)

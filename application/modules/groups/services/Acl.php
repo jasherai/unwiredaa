@@ -19,7 +19,7 @@ class Groups_Service_Acl implements Zend_Acl_Assert_Interface
 			return true;
 		}
 
-		$groupRole = 'groups-group-' . $resource->getParentId();
+		$groupRole = 'groups_group_' . $resource->getParentId();
 		if (!$acl->hasRole($groupRole)) {
 			return false;
 		}

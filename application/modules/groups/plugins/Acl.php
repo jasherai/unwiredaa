@@ -12,7 +12,6 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 	public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
 	{
-
 		/**
 		 * The access list
 		 * @var Zend_Acl
@@ -24,33 +23,42 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		$mapper = new Groups_Model_Mapper_Role();
 
 		$roles = $mapper->fetchAll();
-/*Zend_Debug::dump(serialize(
-	array(
-		array('resource' => 'groups-group',
-			  'permissions' => array('view','add','edit','delete')),
-		array('resource' => 'groups-role',
-			  'permissions' => array('view','add','edit','delete')),
-		array('resource' => 'groups-policy',
-			  'permissions' => array('view','add','edit','delete')),
-		array('resource' => 'nodes-node',
-			  'permissions' => array('view','add','edit','delete')),
-		array('resource' => 'users-admin',
-			  'permissions' => array('view','add','edit','delete')),
-		array('resource' => 'users-admin',
-			  'permissions' => array('view','add','edit','delete'))
-	)
-)); die();*/
+
 		foreach ($roles as $role) {
 
-			$acl->addRole($role);
-			foreach ($role->getPermissions() as $rule) {
+			$acl->addRole($role, $role->getParentId());
+
+			/**
+			 * The hierarchy is not inheritable
+			 */
+			$acl->deny($role);
+
+			foreach ($role->getPermissions() as $key => $rule) {
 				$assertInstance = null;
+				/**
+				 * No permissions assigned for resource
+				 */
+				if (null === $rule) {
+					continue;
+				}
+
+				/**
+				 * Resource is the key
+				 */
+				if (!array_key_exists('resource', $rule)) {
+					$rule = array('resource' => $key,
+								  'permissions' => $rule);
+				}
+
+				/**
+				 * Null resource.. system role only!
+				 */
 				if (null !== $rule['resource']) {
 					if (!$acl->has($rule['resource'])) {
 						continue;
 					}
 
-					$parts = explode('-', $rule['resource']);
+					$parts = explode('_', $rule['resource']);
 
 					$className = ucfirst($parts[0]) .'_Service_Acl';
 
@@ -110,8 +118,10 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 			$this->_acl->addResource($resource, $parent);
 		}
 
-		foreach ($group->getChildren() as $child) {
-			$this->_addGroup($child, $resource);
+		if ($group->hasChildren()) {
+			foreach (new RecursiveIteratorIterator($group, RecursiveIteratorIterator::SELF_FIRST) as $child) {
+				$this->_addGroup($child, $resource);
+			}
 		}
 
 		return $resource;

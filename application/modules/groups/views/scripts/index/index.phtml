@@ -1,8 +1,8 @@
 <h1><?php echo $this->translate('groups_group_index_heading'); ?></h1>
 
 <?php
-	$this->headScript()->appendFile('scripts/jstree/jquery.jstree.js');
-	$this->headLink()->appendStylesheet('scripts/jstree/themes/default/style.css');
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
 	$this->headScript()->captureStart();
 ?>
 $(function () {

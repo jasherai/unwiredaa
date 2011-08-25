@@ -17,7 +17,7 @@
 var rules_reply = <?php echo empty($json_reply) ? '[]' : $json_reply; ?>;
 var rules_check = <?php echo empty($json_check) ? '[]' : $json_check; ?>;
 
-var counter = 1;
+var counter = rules_reply.length + rules_check.length;
 $(document).ready(function(){
 	$('#rules_reply').parent().after('<fieldset id="rules_reply_fs" class="span-9"></fieldset>');
 	$('#rules_check').parent().after('<fieldset id="rules_check_fs" class="span-9 last"></fieldset>');
@@ -37,7 +37,7 @@ $(document).ready(function(){
 		parent.after(parent.clone());
 		$(parent.next()).find('input').val('');
 		counter++;
-		$(parent.next()).find('input').each(function(){
+		$(parent.next()).find('input,select').each(function(){
 			$(this).attr('name', $(this).attr('name').replace(/\d+/gi, counter));
 		});
 
@@ -51,13 +51,13 @@ $(document).ready(function(){
 
 	$.each(rules_reply, function (idx, data) {
 		$('#rules_reply_fs div.attrib_template:last div:first input').val(data.attribute);
-		$('#rules_reply_fs div.attrib_template:last div:eq(0) select').val(data.op);
+		$('#rules_reply_fs div.attrib_template:last div select').val(data.op);
 		$('#rules_reply_fs div.attrib_template:last div:last input').val(data.value);
 		$('#rules_reply_fs div.attrib_template:last div:last img.add').click();
 	});
 	$.each(rules_check, function (idx, data) {
 		$('#rules_check_fs div.attrib_template:last div:first input').val(data.attribute);
-		$('#rules_check_fs div.attrib_template:last div:eq(0) select').val(data.op);
+		$('#rules_check_fs div.attrib_template:last div select').val(data.op);
 		$('#rules_check_fs div.attrib_template:last div:last input').val(data.value);
 		$('#rules_check_fs div.attrib_template:last div:last img.add').click();
 	});

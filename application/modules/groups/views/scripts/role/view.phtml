@@ -1,0 +1,34 @@
+<?php
+	$this->layout()->disableLayout();
+?>
+<div>
+	<span><?php echo $this->translate('groups_role_view_name')?>:</span>
+	<strong><?php echo $this->role->getName(); ?></strong>
+</div>
+
+<div>
+	<span><?php echo $this->translate('groups_role_view_parents')?>:</span>
+	<?php
+		$role = $this->role;
+		$top = null;
+		while ($parent = $role->getParent()) {
+			$top = $parent;
+			$role = $parent;
+		}
+		echo $this->tree($top, $this->role, array('prefix' => 'role_'));
+	?>
+</div>
+
+<?php if ($this->role->getParentId()) :?>
+<div class="buttons">
+	<a class="button small blue" href="<?php echo $this->url(array('action' => 'edit',
+									     					 'id' => $this->role->getRoleId()),
+										   null,
+										   false); ?>"><span><?php echo $this->translate('groups_role_view_button_edit');?></span></a>
+
+	<a class="button small red" href="<?php echo $this->url(array('action' => 'delete',
+											     'id' => $this->role->getRoleId()),
+										   null,
+										   false); ?>"><span><?php echo $this->translate('groups_role_view_button_delete');?></span></a>
+</div>
+<?php endif; ?>

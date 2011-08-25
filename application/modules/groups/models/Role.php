@@ -64,6 +64,11 @@ class Groups_Model_Role extends Unwired_Model_Tree implements Zend_Acl_Role_Inte
 	 * @param array $permissions
 	 */
 	public function setPermissions($permissions) {
+
+		if (is_string($permissions)) {
+			$permissions = @unserialize($permissions);
+		}
+
 		$this->_permissions = $permissions;
 		return $this;
 	}
@@ -72,7 +77,7 @@ class Groups_Model_Role extends Unwired_Model_Tree implements Zend_Acl_Role_Inte
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	 */
 	public function getResourceId() {
-		return 'groups-role';
+		return 'groups_role';
 	}
 
 	/* (non-PHPdoc)

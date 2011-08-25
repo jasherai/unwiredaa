@@ -6,9 +6,9 @@ class Groups_Bootstrap extends Unwired_Application_Module_Bootstrap
 	{
 		$acl = parent::_initAclResources();
 
-		$acl->addResource(new Zend_Acl_Resource('groups-group'));
-		$acl->addResource(new Zend_Acl_Resource('groups-policy'));
-		$acl->addResource(new Zend_Acl_Resource('groups-role'));
+		$acl->addResource(new Zend_Acl_Resource('groups_group'));
+		$acl->addResource(new Zend_Acl_Resource('groups_policy'));
+		$acl->addResource(new Zend_Acl_Resource('groups_role'));
 
 		$front = $this->getApplication()->getResource('frontcontroller');
 

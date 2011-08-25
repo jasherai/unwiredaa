@@ -1,47 +1,55 @@
 <h1><?php echo $this->translate('groups_role_index_heading'); ?></h1>
 
-<table class="listing">
-	<thead>
-		<tr>
-			<th><?php echo $this->translate('groups_role_index_id');?></th>
-			<th><?php echo $this->translate('groups_role_index_name');?></th>
-			<th class="tools">
-			<a class="add" href="<?php
-				echo $this->url(array('module' => 'groups',
-									  'controller' => 'role',
-									  'action' => 'add'), null, true);
-				?>"><img src="<?php
-					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
-				?>" alt="<?php echo $this->translate('groups_role_index_button_add'); ?>" /> <?php echo $this->translate('groups_role_index_button_add'); ?></a>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<?php foreach ($this->paginator as $role) :?>
-		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-			<td class="column_id"><?php echo $role->getRoleId(); ?></td>
-			<td><?php echo $role->getName(); ?></td>
-			<td class="tools">
-				<a class="edit" href="<?php
-				echo $this->url(array('module' => 'groups',
-									  'controller' => 'role',
-									  'action' => 'edit',
-									  'id'	=> $role->getRoleId()), null, true);
-				?>"><img src="<?php
-					echo $this->baseUrl('themes/default/images/icons/24x24/edit.png');
-				?>" alt="<?php echo $this->translate('groups_role_index_button_edit'); ?>" /></a>
+<?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
+	$this->headScript()->captureStart();
+?>
+$(function () {
+	var roleIds = new Array();
 
-				<a class="delete" href="<?php
-				echo $this->url(array('module' => 'groups',
-									  'controller' => 'role',
-									  'action' => 'delete',
-									  'id'	=> $role->getRoleId()), null, true);
-				?>"><img src="<?php
-					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
-				?>" alt="<?php echo $this->translate('groups_role_index_button_delete'); ?>" /></a>
-			</td>
-		</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table>
-<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
+	$('li[id^=role_]').each(function(){
+		roleIds.push($(this).attr('id'));
+	});
+
+    $(".roletree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : roleIds },
+            "ui" : { select_limit : 1 }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var roleId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$.ajax({
+				url: '<?php echo $this->url(array('module' => 'groups',
+														  	  'controller' => 'role',
+														  	  'action' => 'view')); ?>/id/' + roleId,
+				'success' : function (viewdata) {
+					$('#roleview').html(viewdata);
+
+				},
+				'error' : function() {
+					/**
+					 * @todo Add error message
+					 */
+					$('#roleview').html('');
+				}
+			})
+	     })
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
+<div class="roletree span-8">
+	<?php echo $this->tree($this->rootRole, null, array('prefix' => 'role_')); ?>
+</div>
+<div id="roleview" class="span-9">
+
+</div>
+<div class="buttons span-18">
+	<a class="button small green" href="<?php echo $this->url(array('action' => 'add'),
+													   null,
+													   false);
+									?>"><span><?php echo $this->translate('groups_role_index_button_add');?></span></a>
+</div>

@@ -10,6 +10,7 @@
 	<span><?php echo $this->translate('groups_group_view_parents')?>:</span>
 	<?php
 		$group = $this->group;
+		$top = null;
 		while ($parent = $group->getParent()) {
 			$top = $parent;
 			$group = $parent;

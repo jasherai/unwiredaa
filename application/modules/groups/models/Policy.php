@@ -120,6 +120,6 @@ class Groups_Model_Policy extends Unwired_Model_Generic implements Zend_Acl_Reso
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	 */
 	public function getResourceId() {
-		return 'groups-policy';
+		return 'groups_policy';
 	}
 }

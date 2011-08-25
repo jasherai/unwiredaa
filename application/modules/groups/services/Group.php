@@ -1,39 +1,11 @@
 <?php
 
-class Groups_Service_Group {
-
-	protected $_groupMapper = null;
-
-	/**
-	 * Get the group mapper
-	 * @return Groups_Model_Mapper_Group
-	 */
-	public function getGroupMapper()
-	{
-		if (null === $this->_groupMapper) {
-			$this->_groupMapper = new Groups_Model_Mapper_Group();
-		}
-
-		return $this->_groupMapper;
-	}
+class Groups_Service_Group extends Unwired_Service_Tree
+{
 
 	public function findGroup($groupId, $parents = false, $children = false)
 	{
-		$group = $this->getGroupMapper()->find($groupId);
-
-		if (!$group) {
-			return false;
-		}
-
-		if ($parents) {
-			$group->setParent($this->getGroupParent($group, true));
-		}
-
-		if ($children) {
-			$group->setChildren($this->getGroupChildren($group, true));
-		}
-
-		return $group;
+		return parent::findNode($groupId);
 	}
 
 	/**
@@ -80,80 +52,46 @@ class Groups_Service_Group {
 
 		$groups = array();
 		foreach ($admin->getGroupsAssigned() as $groupId => $roleId) {
-			$group = $this->getGroupMapper()->find($groupId);
-			$this->loadRelatedGroups($group);
+			$group = $this->_getDefaultMapper()->find($groupId);
+			$this->loadTree($group);
 			$groups[] = $group;
 		}
 
 		return $groups;
 	}
 
-	/**
-	 * Load both parent and child groups
-	 *
-	 * @param Groups_Model_Group $group
-	 * @return Groups_Service_Group
-	 */
-	public function loadRelatedGroups(Groups_Model_Group $group)
+	public function prepareMapperListingByAdmin($mapper = null, $admin = null)
 	{
-		$group->setParent($this->getGroupParent($group));
-		$group->setChildren($this->getGroupChildren($group));
-
-		return $this;
-	}
-
-	/**
-	 * Get group parent(s)
-	 *
-	 * @param Groups_Model_Group $group
-	 * @param bool $recursive
-	 * @return Groups_Model_Group
-	 */
-	public function getGroupParent(Groups_Model_Group $group, $recursive = true)
-	{
-		if (null === $group->getParentId()) {
-			return null;
+		if (null === $mapper) {
+			$mapper = $this->_getDefaultMapper();
 		}
 
-		$parent = $this->getGroupMapper()->find($group->getParentId());
+		if (null === $admin) {
+			$admin = Zend_Auth::getInstance()->getIdentity();
+		}
 
-		$parent->addChild($group);
+		$acl = Zend_Registry::get('acl');
 
-		if ($recursive) {
-			$current = $parent;
+		$groups = $this->getGroupsByAdmin($admin);
 
-			while ($current->getParentId()) {
-				$prev = $current;
-				$current = $this->getGroupMapper()->find($prev->getParentId());
-				$current->addChild($prev);
-				$prev->setParent($current);
+		$resource = $mapper->getEmptyModel();
+
+		$accessibleGroupIds = array();
+
+		foreach ($groups as $group) {
+			if (!$acl->isAllowed($group, $resource, 'view')) {
+				continue;
+			}
+
+			$iterator = new RecursiveIteratorIterator($group);
+
+			foreach ($iterator as $child) {
+				$accessibleGroupIds[] = $child->getGroupId();
 			}
 		}
 
-		return $parent;
-	}
+		$mapper->findBy(array('group_id' => $accessibleGroupIds), 0);
 
-	/**
-	 * Get group children
-	 *
-	 * @param Groups_Model_Group $group
-	 * @param bool $recursive
-	 * @return array
-	 */
-	public function getGroupChildren(Groups_Model_Group $group = null, $recursive = true)
-	{
-		if (null == $group) {
-			$children = $this->getGroupMapper()->findBy(array('parent_id' => null));
-		} else {
-			$children = $this->getGroupMapper()->findBy(array('parent_id' => $group->getGroupId()));
-		}
-
-		if ($recursive) {
-			foreach ($children as $child) {
-				$child->setChildren($this->getGroupChildren($child, $recursive));
-			}
-		}
-
-		return $children;
+		return $mapper;
 	}
 }

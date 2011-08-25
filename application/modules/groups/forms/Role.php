@@ -28,7 +28,7 @@ class Groups_Form_Role extends Unwired_Form
 										'errors' => 'errors',
 										'htmltag' => array('decorator' => 'HtmlTag',
 							            				   'options' => array ('tag' => 'div',
-																			   'class' => 'formelement span-18'))
+																			   'class' => 'formelement span-19 last'))
 										));
 
 		$this->addElement('text', 'name', array('label' => 'groups_role_edit_form_name',
@@ -36,10 +36,45 @@ class Groups_Form_Role extends Unwired_Form
 												'validators' => array('len' => array('validator' => 'StringLength',
 																				     'options' => array('min' => 2)))));
 
-		$this->addElement('select', 'parent_id', array('label' => 'groups_role_edit_form_parent',
+		$this->addElement('hidden', 'parent_id', array('label' => 'groups_role_edit_form_parent',
 												'required' => true,
 												'validators' => array('Int')));
 
+
+
+
+		$acl = Zend_Registry::get('acl');
+
+
+		$resources = array();
+		foreach ($acl->getResources() as $resource) {
+			if (preg_match('/\d+/', $resource)) {
+				continue;
+			}
+
+			$resources[] = $resource;
+
+			$multiOptions = array('view' => 'view',
+								  'add'	 => 'add',
+								  'edit' => 'edit',
+								  'delete' => 'delete',
+								  'special' => 'special');
+
+			foreach ($multiOptions as $idx => $option) {
+				if (!$acl->isAllowed(Zend_Auth::getInstance()->getIdentity(), $resource, $option)) {
+					unset($multiOptions[$idx]);
+				}
+			}
+
+			$this->addElement('multiCheckbox', $resource, array('label' => 'resource_' . $resource,
+															    'required' => false,
+															    'separator' => '',
+															    'multiOptions' => $multiOptions));
+			$this->getElement($resource)->setBelongsTo('permissions');
+		}
+
+
+		//Zend_Debug::dump($resources); die();
 
 		$this->addElement('submit', 'form_element_submit', array('label' => 'groups_role_edit_form_save',
 	 														 	 'tabindex' => 20,
@@ -68,6 +103,6 @@ class Groups_Form_Role extends Unwired_Form
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
-													 	     						  'class' => 'formbuttons'))));
+													 	     						  'class' => 'buttons'))));
 	}
 }

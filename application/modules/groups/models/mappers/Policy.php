@@ -34,7 +34,7 @@ class Groups_Model_Mapper_Policy extends Unwired_Model_Mapper {
     {
     	$db = $this->getDbTable()->getAdapter();
 
-    	$db->delete('radgroupcheck', "groupname = '{$model->getName()}'");
+    	$db->delete('radgroupreply', "groupname = '{$model->getName()}'");
 
 		foreach ($model->getRulesReply() as $rule) {
 			if (empty($rule['attribute'])) {
@@ -44,7 +44,7 @@ class Groups_Model_Mapper_Policy extends Unwired_Model_Mapper {
 			$db->insert('radgroupreply', $rule);
 		}
 
-    	$db->delete('radgroupreply', "groupname = '{$model->getName()}'");
+    	$db->delete('radgroupcheck', "groupname = '{$model->getName()}'");
 
 		foreach ($model->getRulesCheck() as $rule) {
 			if (empty($rule['attribute'])) {
