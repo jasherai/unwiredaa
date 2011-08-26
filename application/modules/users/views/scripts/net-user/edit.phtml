@@ -1,6 +1,6 @@
 <h1><?php
 	if ($this->entity->getUserId()) {
-		echo sprintf($this->translate('users_netuser_edit_heading_edit'), $this->entity->getEmail());
+		echo sprintf($this->translate('users_netuser_edit_heading_edit'), $this->entity->getUsername());
 	} else {
 		echo $this->translate('users_netuser_edit_heading_add');
 	}
