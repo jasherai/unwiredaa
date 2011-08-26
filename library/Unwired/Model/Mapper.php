@@ -234,8 +234,12 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 						$select->setIntegrityCheck(false)
 							   ->joinInner($joinTableName, implode(' AND ', $joinCondition));
 
+						$select->group("{$joinTableName}.{$field}");
+
 						$joinCols = null;
 						$joinCondition = null;
+
+						break;
 					}
 				}
 
