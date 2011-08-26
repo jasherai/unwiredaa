@@ -5,7 +5,7 @@
 	<thead>
 		<tr>
 			<th><?php echo $this->translate('users_netuser_index_id');?></th>
-			<th><?php echo $this->translate('users_netuser_index_email');?></th>
+			<th><?php echo $this->translate('users_netuser_index_username');?></th>
 			<th><?php echo $this->translate('users_netuser_index_firstname');?></th>
 			<th><?php echo $this->translate('users_netuser_index_lastname');?></th>
 			<th><?php echo $this->translate('users_netuser_index_city');?></th>
@@ -25,7 +25,7 @@
 		<?php foreach ($this->paginator as $user) :?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
 			<td class="column_id"><?php echo $user->getUserId(); ?></td>
-			<td><?php echo $user->getEmail(); ?></td>
+			<td><?php echo $user->getUsername(); ?></td>
 			<td><?php echo $user->getFirstname(); ?></td>
 			<td><?php echo $user->getLastname(); ?></td>
 			<td><?php echo $user->getCity(); ?></td>

@@ -71,7 +71,7 @@ class Users_Form_NetUser extends Unwired_Form
 												'required' => true,
 												'validators' => array('mac')));
 
-		$this->addElement('multiSelect', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
+		$this->addElement('multiselect', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
 															 'required' => true));
 
 		/**
