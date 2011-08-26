@@ -18,28 +18,36 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($this->paginator as $policy) :?>
+		<?php
+			$acl = Zend_Registry::get('acl');
+
+			foreach ($this->paginator as $policy) :
+		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
 			<td class="column_id"><?php echo $policy->getPolicyId(); ?></td>
 			<td><?php echo $policy->getName(); ?></td>
 			<td class="tools">
-				<a class="edit" href="<?php
-				echo $this->url(array('module' => 'groups',
-									  'controller' => 'policy',
-									  'action' => 'edit',
-									  'id'	=> $policy->getPolicyId()), null, true);
-				?>"><img src="<?php
-					echo $this->baseUrl('themes/default/images/icons/24x24/edit.png');
-				?>" alt="<?php echo $this->translate('groups_policy_index_button_edit'); ?>" /></a>
+				<?php
+					$actions = array(/*'view',*/ 'edit', 'delete');
 
-				<a class="delete" href="<?php
-				echo $this->url(array('module' => 'groups',
-									  'controller' => 'policy',
-									  'action' => 'delete',
-									  'id'	=> $policy->getPolicyId()), null, true);
-				?>"><img src="<?php
-					echo $this->baseUrl('themes/default/images/icons/24x24/delete.png');
-				?>" alt="<?php echo $this->translate('groups_policy_index_button_delete'); ?>" /></a>
+					foreach ($actions as $action) :
+						if (!$acl->isAllowed($this->currentUser, $policy->getResourceId(), $action)) {
+							continue;
+						}
+
+						?>
+					<a href="<?php echo $this->url(array('module' => 'groups',
+													     'controller' => 'policy',
+													     'action' => $action,
+													     'id'	=> $policy->getPolicyId()),
+												   null,
+												   true); ?>" class="icon <?php echo $action; ?>"><?php
+
+						echo $this->translate('nodes_index_index_button_' . $action);
+				   ?></a>
+				   <?php
+					endforeach;
+				?>
 			</td>
 		</tr>
 		<?php endforeach; ?>
