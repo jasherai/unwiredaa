@@ -176,7 +176,7 @@ table.listing tr .tools {
     text-align: center;	
 	width: 130px;
 }
-
+/*
 table.listing td.tools a img{
 	margin-left: 3px;
 	padding: 2px;
@@ -187,7 +187,7 @@ table.listing td.tools a:hover img{
 	border: 1px solid #97B400;
 	background: #FCFFED;
 }
-
+*/
 table.listing tr td.column_id {
     width: 70px;
 }
@@ -235,6 +235,46 @@ form div.buttons {
 
 .jstree {
 	background: #fff !important;
+}
+
+.tools a {
+    margin-left: 4px;
+    padding: 2px;
+    border: 1px solid #fff;
+}
+
+.tools a:hover {
+    border: 1px solid #97B400;
+    background: #FCFFED;
+}
+
+.tools a.icon {
+	text-indent: -1000px;
+	overflow: hidden;
+	background-repeat: no-repeat;
+    background-position: 50% 50%;
+	width: 28px;
+	height: 28px;
+	display: block;
+	float: left;
+}
+
+.tools a.icontext {
+    padding: 15px 3px 10px 32px;
+    background-repeat: no-repeat;
+    background-position: 3px 50%;
+}
+
+.tools a.view {
+	background-image: url('../images/icons/24x24/view.png');
+}
+
+.tools a.edit {
+	background-image: url('../images/icons/24x24/edit.png');
+}
+
+.tools a.delete {
+	background-image: url('../images/icons/24x24/delete.png');
 }
 
 /* buttons */
