@@ -39,24 +39,6 @@ $(function () {
 					 "initially_select" : init_select
 					}
         })
-        .bind("before.jstree", function (event, data){
-        	if (data.func != 'select_node') {
-        		return;
-        	}
-
-			var result = false;
-			$.each(adminGroups, function(idx, role){
-			  	if ($(data.args).parents('#group_' + idx).length) {
-			  		result = true;
-			  		return false;
-			  	}
-			});
-
-			if (!result) {
-				event.stopImmediatePropagation();
-			}
-
-        })
         .bind("select_node.jstree", function (event, data) {
 			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
 

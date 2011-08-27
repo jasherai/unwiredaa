@@ -11,13 +11,8 @@
  *
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Default_IndexController extends Zend_Controller_Action
+class Default_IndexController extends Unwired_Controller_Action
 {
-
-    public function init()
-    {
-        /* Initialize action controller here */
-    }
 
     public function indexAction()
     {

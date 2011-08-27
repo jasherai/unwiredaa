@@ -84,5 +84,17 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 
 		return $model;
 	}
+
+	/* (non-PHPdoc)
+	 * @see Zend_Paginator_AdapterAggregate::getPaginatorAdapter()
+	 * @return Unwired_Paginator_Adapter_Mapper
+	 */
+	public function getPaginatorAdapter() {
+		if (null === $this->_paginatorAdapter) {
+			$this->_paginatorAdapter = new Nodes_Model_Mapper_NodePaginator($this, $this->_customSelect);
+		}
+
+		return $this->_paginatorAdapter;
+	}
 }
 

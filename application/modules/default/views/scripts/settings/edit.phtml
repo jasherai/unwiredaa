@@ -1,0 +1,9 @@
+<h1><?php
+	if ($this->entity->getSettingId()) {
+		echo sprintf($this->translate('default_settings_edit_heading_edit'), $this->entity->getKey());
+	} else {
+		echo $this->translate('default_settings_edit_heading_add');
+	}
+?></h1>
+
+<?php echo $this->form;?>

@@ -20,6 +20,7 @@ var map;
 var marker;
 var geocoder;
 var infowindow;
+var adminGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
 
 $(function () {
 	$("input[name=group_id]").hide().after($('.grouptree'));

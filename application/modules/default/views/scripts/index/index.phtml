@@ -14,9 +14,10 @@
 	$(document).ready(function(){
 		$('#nodemap').height(450);
 
-		var latlng = new google.maps.LatLng(48.208, 16.373);
+		var latlng = new google.maps.LatLng(<?php echo $this->systemSettings['node_map_center_lat']->getValue(); ?>,
+										    <?php echo $this->systemSettings['node_map_center_lng']->getValue(); ?>);
     	var myOptions = {
-      		zoom: 12,
+      		zoom: <?php echo (int) $this->systemSettings['node_map_zoom']->getValue(); ?>,
       		center: latlng,
       		mapTypeId: google.maps.MapTypeId.ROADMAP
     	};

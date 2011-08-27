@@ -4,7 +4,7 @@
 <table class="listing">
 	<thead>
 		<tr>
-			<th><?php echo $this->translate('nodes_index_index_id');?></th>
+			<th><?php echo $this->translate('nodes_index_index_operator');?></th>
 			<th><?php echo $this->translate('nodes_index_index_name');?></th>
 			<th><?php echo $this->translate('nodes_index_index_mac');?></th>
 			<th><?php echo $this->translate('nodes_index_index_wanip');?></th>
@@ -27,7 +27,15 @@
 			foreach ($this->paginator as $node) :
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-			<td class="column_id"><?php echo $node->getNodeId(); ?></td>
+			<?php
+				$parent = $last = $operator = $node->getGroup();
+
+				while ($parent = $parent->getParent()) {
+					$operator = $last;
+					$last = $parent;
+				}
+			?>
+			<td class="column_id"><?php echo $operator->getName(); ?></td>
 			<td><?php echo $node->getName(); ?></td>
 			<td><?php echo $node->getMac(); ?></td>
 			<td><?php echo $node->getSettings()->getIpaddress(); ?></td>

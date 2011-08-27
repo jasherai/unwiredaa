@@ -99,6 +99,13 @@ class Groups_Service_Group extends Unwired_Service_Tree
 		 */
 		$mapper->findBy(array('group_id' => $accessibleGroupIds), 0);
 
+		/**
+		 * @todo Fix this! It is _UGLY_
+		 */
+		if ($mapper instanceof Nodes_Model_Mapper_Node) {
+			$mapper->getPaginatorAdapter()->setGroups($groups);
+		}
+
 		return $mapper;
 	}
 }

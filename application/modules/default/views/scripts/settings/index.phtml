@@ -1,0 +1,38 @@
+<h1><?php echo $this->translate('default_settings_index_heading'); ?></h1>
+
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('default_settings_index_id');?></th>
+			<th><?php echo $this->translate('default_settings_index_key');?></th>
+			<th><?php echo $this->translate('default_settings_index_value');?></th>
+			<th class="tools">
+
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		foreach ($this->paginator as $setting) :
+		?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $setting->getSettingId(); ?></td>
+			<td><?php echo $this->translate($setting->getKey()); ?></td>
+			<td><?php echo $setting->getValue(); ?></td>
+			<td class="tools">
+				<a href="<?php echo $this->url(array('module' => 'default',
+												     'controller' => 'settings',
+												     'action' => 'edit',
+												     'id'	=> $setting->getSettingId()),
+											   null,
+											   true); ?>" class="icon edit"><?php
+
+					echo $this->translate('default_settings_index_button_edit');
+			   ?></a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

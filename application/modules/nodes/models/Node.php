@@ -26,6 +26,8 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 	protected $_settings = null;
 
+	protected $_group = null;
+
 	/**
 	 * @return the $nodeId
 	 */
@@ -58,6 +60,17 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	public function setGroupId($groupId) {
 		$this->_groupId = $groupId;
 
+		return $this;
+	}
+
+	public function getGroup()
+	{
+		return $this->_group;
+	}
+
+	public function setGroup(Groups_Model_Group $group)
+	{
+		$this->_group = $group;
 		return $this;
 	}
 
