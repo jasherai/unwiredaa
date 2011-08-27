@@ -4,7 +4,7 @@ class Groups_IndexController extends Unwired_Controller_Crud
 {
 
 	protected $_defaultMapper = 'Groups_Model_Mapper_Group';
-	
+
 	public function indexAction()
 	{
 		$service = new Groups_Service_Group();
@@ -46,7 +46,14 @@ class Groups_IndexController extends Unwired_Controller_Crud
 
 	public function addAction()
 	{
-		$this->_add();
+		$parent = (int) $this->getRequest()->getParam('parent', 1);
+
+		$entity = $this->_getDefaultMapper()->getEmptyModel();
+
+		$entity->setParentId($parent);
+
+		$this->_add(null, $entity);
+
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
