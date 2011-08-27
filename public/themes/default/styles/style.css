@@ -82,6 +82,11 @@ h1 {
 
 .userblock form div input {
 	margin-top: 0px;
+	width: 120px;
+}
+
+.userblock form div span.button input {
+	width: 100px;
 }
 
 #sidenav {
