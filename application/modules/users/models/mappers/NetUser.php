@@ -33,10 +33,16 @@ class Users_Model_Mapper_NetUser extends Unwired_Model_Mapper
 			$tableUserPolicy = null;
 
 			$adapter->delete('radcheck', "`username`='{$model->getUsername()}' AND `attribute`='MD5-Password'");
-			$adapter->insert('radcheck', array('username' => $model->getUsername(),
-											   'attribute' => 'MD5-Password',
-											   'op' => ':=',
-											   'value' => $model->getPassword()));
+
+			if ($model->getPassword() !== null) {
+				/**
+				 * @todo This shouldn't be possibe! (null password)
+				 */
+				$adapter->insert('radcheck', array('username' => $model->getUsername(),
+												   'attribute' => 'MD5-Password',
+												   'op' => ':=',
+												   'value' => $model->getPassword()));
+			}
 		} catch (Exception $e) {
 			throw $e;
 		}

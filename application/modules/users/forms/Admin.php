@@ -51,7 +51,10 @@ class Users_Form_Admin extends Unwired_Form
 
 		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'users_admin_edit_form_group',
 											  	 			  'required' => true,
+															  'separator' => '',
 															  'registerInArrayValidator' => false));
+		$this->getElement('groups_assigned')->addErrorMessage('users_admin_edit_form_error_group');
+
 		$this->addElement('select', 'available_roles', array('label' => 'users_admin_edit_form_group_role',
 											  	 			  'required' => false,
 															  'registerInArrayValidator' => false));
@@ -149,5 +152,26 @@ class Users_Form_Admin extends Unwired_Form
 			}
 		}
 		parent::populate($values);
+	}
+
+	public function isValid($data)
+	{
+		$valid = parent::isValid($data);
+
+		if (!$valid) {
+			return false;
+		}
+
+		$password = $this->getElement('password')->getValue();
+		$cfmpassword = $this->getElement('cfmpassword')->getValue();
+
+		if ((!empty($password) || !empty($cfmpassword)) &&
+			 $password != $cfmpassword) {
+
+			 $this->getElement('cfmpassword')->addError('users_admin_edit_form_error_password_match');
+			 $this->markAsError();
+			 return false;
+		}
+		return true;
 	}
 }

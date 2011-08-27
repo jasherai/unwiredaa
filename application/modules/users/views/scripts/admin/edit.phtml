@@ -17,7 +17,7 @@ var adminGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssi
 var groupsAssigned = <?php echo Zend_Json::encode($groupsAssigned);?>;
 
 $(function () {
-	$("label[for=groups_assigned]").siblings().remove();
+	$("label[for=groups_assigned]").siblings('label').remove();
 	$("label[for=groups_assigned]").after($('.grouptree'));
 	$("label[for=available_roles]").parent().hide();
 

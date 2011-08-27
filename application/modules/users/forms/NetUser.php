@@ -55,7 +55,7 @@ class Users_Form_NetUser extends Unwired_Form
 		$this->addElement('hidden', 'group_id', array('label' => 'users_netuser_edit_form_group',
 											  	 	  'required' => true,
 													  'validators' => array('Int')));
-
+		$this->getElement('group_id')->addErrorMessage('users_netuser_edit_form_error_group');
 
 		$this->addElement('password', 'password', array('label' => 'users_netuser_edit_form_password',
 														'required' => true,
@@ -137,5 +137,26 @@ class Users_Form_NetUser extends Unwired_Form
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
 													 	     						  'class' => 'buttons span-18'))));
+	}
+
+	public function isValid($data)
+	{
+		$valid = parent::isValid($data);
+
+		if (!$valid) {
+			return false;
+		}
+
+		$password = $this->getElement('password')->getValue();
+		$cfmpassword = $this->getElement('cfmpassword')->getValue();
+
+		if ((!empty($password) || !empty($cfmpassword)) &&
+			 $password != $cfmpassword) {
+
+			 $this->getElement('cfmpassword')->addError('users_netuser_edit_form_error_password_match');
+			 $this->markAsError();
+			 return false;
+		}
+		return true;
 	}
 }
