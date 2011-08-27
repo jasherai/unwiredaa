@@ -37,15 +37,17 @@ class Nodes_Form_NodeLocation extends Unwired_Form
 																					     'options' => array('pattern' => '/^[a-z0-9]+[a-z0-9\s]+$/i')))));
 		$this->addElement('CountrySelect', 'country', array('label' => 'nodes_index_edit_form_country',
 															'required' => true,
-															'class' => 'span-4'));
+															'class' => 'span-5'));
 
 		$this->addElement('text', 'latitude', array('label' => 'nodes_index_edit_form_latitude',
 													'required' => true,
+													'class' => 'latlng',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
 
 		$this->addElement('text', 'longitude', array('label' => 'nodes_index_edit_form_longitude',
 													'required' => true,
+													'class' => 'latlng',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
 		$this->addDisplayGroup($this->getElements(),
@@ -54,6 +56,6 @@ class Nodes_Form_NodeLocation extends Unwired_Form
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
-													 	     						  'class' => 'span-8'))));
+													 	     						  'class' => 'span-9 last'))));
 	}
 }
