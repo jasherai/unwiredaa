@@ -33,7 +33,14 @@ abstract class Unwired_Model_Tree extends Unwired_Model_Generic implements Recur
 
 		$children = (null === $children) ? array() : $children;
 
-		$this->_children = $children;
+		if (is_array($children)) {
+			foreach ($children as $child) {
+				$this->addChild($child);
+			}
+		} else {
+			$this->_children = $children;
+		}
+
 		$this->rewind();
 
 		return $this;
@@ -41,6 +48,7 @@ abstract class Unwired_Model_Tree extends Unwired_Model_Generic implements Recur
 
 	public function addChild(Unwired_Model_Tree $child) {
 		if (!in_array($child, $this->_children)) {
+			$child->setParent($this);
 			$this->_children[] = $child;
 		}
 

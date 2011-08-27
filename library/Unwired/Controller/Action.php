@@ -7,6 +7,7 @@ class Unwired_Controller_Action extends Zend_Controller_Action
 	public function init()
 	{
 		$this->loadControllerTranslations();
+		$this->view->systemSettings = $this->getInvokeArg('settings');
 	}
 
 	/**

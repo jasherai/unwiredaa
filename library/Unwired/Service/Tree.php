@@ -34,7 +34,8 @@ class Unwired_Service_Tree
 	 */
 	public function loadTree(Unwired_Model_Tree $node)
 	{
-		$node->setParent($this->getNodeParent($node));
+		$this->getNodeParent($node);
+		// $node->setParent($this->getNodeParent($node));
 		$node->setChildren($this->getNodeChildren($node));
 
 		return $this;

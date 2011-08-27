@@ -23,6 +23,8 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     protected $_repository = array();
 
+    protected $_paginatorAdapter = null;
+
     public function __construct()
     {
     	if (null === $this->_modelClass) {
@@ -373,12 +375,23 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     	return $this;
     }
 
+    public function setPaginatorAdapter(Zend_Paginator_Adapter_Interface $adapter = null)
+    {
+    	$this->_paginatorAdapter = $adapter;
+
+    	return $this;
+    }
+
 	/* (non-PHPdoc)
 	 * @see Zend_Paginator_AdapterAggregate::getPaginatorAdapter()
 	 * @return Unwired_Paginator_Adapter_Mapper
 	 */
 	public function getPaginatorAdapter() {
-		return new Unwired_Paginator_Adapter_Mapper($this, $this->_customSelect);
+		if ($this->_paginatorAdapter == null) {
+			$this->_paginatorAdapter = new Unwired_Paginator_Adapter_Mapper($this, $this->_customSelect);
+		}
+
+		return $this->_paginatorAdapter;
 	}
 
 }
