@@ -1,3 +1,4 @@
+@import url("jqueryui/jquery-ui-1.8.16.custom.css");
 @CHARSET "UTF-8";
 
 a, a:visited {
@@ -21,6 +22,12 @@ input[disabled], input[readonly], select[disabled], select[readonly], checkbox[d
  background-color: #dcdcdc;
  color: #333;
  cursor: default;
+}
+input[type="text"],
+input[type="password"],
+input[type="url"],
+input[type="email"] {
+	width: 190px;	
 }
 
 form {
@@ -207,13 +214,17 @@ fieldset div.formelement {
 
 div.formelement label {
 	display: block;
-	width: 120px;
+	width: 130px;
 	float: left;
 	margin: 0.5em 0;
 }
 
 div.formelement input {
 	float: left;
+}
+
+div.formelement input.latlng {
+	width: 150px;
 }
 
 div.formelement ul.errors {
@@ -321,7 +332,7 @@ span.button.blue.small:hover button, span.button.blue.small:hover a, span.button
 	display: block;
 	width: 24px;
 	height: 24px;
-	margin: 3px 0px 0px 1px;
+	margin: 3px 0px 0px 5px;
 	background: transparent url('../images/icons/24x24/map.png') no-repeat left bottom;
 }
 .fancymap {
