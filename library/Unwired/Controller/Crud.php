@@ -189,7 +189,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		try {
 			$mapper->delete($entity);
 			$this->view->uiMessage('information_deleted', 'success');
-		} catch (Unwired_Exception $e) {
+		} catch (Exception $e) {
 			$this->view->uiMessage('information_not_deleted', 'error');
 		}
 		$this->_gotoIndex();
