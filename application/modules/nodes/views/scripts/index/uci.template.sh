@@ -179,4 +179,12 @@ set qos.Normal_down.avgrate=20
 set qos.Bulk=class
 set qos.Bulk.avgrate=1
 set qos.Bulk.packetdelay=200
+<?php
+	if ($this->node->getSettings()->getTrafficlimit() > 0) :
+?>
+set custom.limits=traffic
+set custom.limits.traffic=4000
+<?php
+	endif;
+?>
 EOF
