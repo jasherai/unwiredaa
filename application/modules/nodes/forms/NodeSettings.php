@@ -109,8 +109,10 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 		$admin = Zend_Auth::getInstance()->getIdentity();
 
 		if (!$acl->isAllowed($admin, new Nodes_Model_Node(), 'special')) {
-			$this->getElement('ssid')->setAttrib('disabled', 'disabled');
-			$this->getElement('channel')->setAttrib('disabled', 'disabled');
+			$this->getElement('ssid')->setAttrib('disabled', true)
+									 ->setRequired(false);
+			$this->getElement('channel')->setAttrib('disabled', true)
+										->setRequired(false);
 		}
 
 	    $this->setDisplayGroupDecorators(array('FormElements',
@@ -140,6 +142,11 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 			$this->getElement('netmask')->setRequired(false);
 			$this->getElement('gateway')->setRequired(false);
 			$this->getElement('dnsservers')->setRequired(false);
+		}
+
+		if (!$this->getElement('ssid')->isRequired()) {
+			$data['settings']['ssid'] = $this->getElement('ssid')->getValue();
+			$data['settings']['channel'] = $this->getElement('channel')->getValue();
 		}
 
 		if (!parent::isValid($data)) {

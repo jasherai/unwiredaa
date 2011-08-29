@@ -15,9 +15,12 @@ class Groups_Service_Acl implements Zend_Acl_Assert_Interface
 			return true;
 		}
 
-		if (!$resource instanceof Groups_Model_Group || null === $resource->getParentId()) {
+		if (!$resource instanceof Groups_Model_Group) {
 			return true;
+		} else if (null === $resource->getParentId()) {
+			return false;
 		}
+
 
 		$groupRole = 'groups_group_' . $resource->getParentId();
 		if (!$acl->hasRole($groupRole)) {

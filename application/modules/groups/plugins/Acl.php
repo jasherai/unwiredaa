@@ -20,6 +20,8 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 		$this->_acl = $acl;
 
+		$acl->deny();
+
 		$mapper = new Groups_Model_Mapper_Role();
 
 		$roles = $mapper->fetchAll();
@@ -31,7 +33,7 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 			/**
 			 * The hierarchy is not inheritable
 			 */
-			$acl->deny($role);
+			$acl->deny($role, $acl->getResources());
 
 			foreach ($role->getPermissions() as $key => $rule) {
 				$assertInstance = null;
@@ -67,10 +69,14 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 					}
 
 					$assertInstance = $this->_assertInstances[$className];
+				} else {
+					$rule['resource'] = $acl->getResources();
+					$acl->allow($role, null, 'super');
 				}
 
 				$acl->allow($role, $rule['resource'], $rule['permissions'], $assertInstance);
 			}
+
 		}
 
 		$auth = Zend_Auth::getInstance();

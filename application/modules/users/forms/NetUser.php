@@ -33,19 +33,19 @@ class Users_Form_NetUser extends Unwired_Form
 													'validators' => array('len' => array('validator' => 'EmailAddress'))));
 
 		$this->addElement('text', 'phone', array('label' => 'users_netuser_edit_form_phone',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'Regex',
 																					     'options' => array('pattern' => '/^\+[0-9]+[0-9\s]+[0-9]+$/')))));
 		$this->addElement('text', 'address', array('label' => 'users_netuser_edit_form_address',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 5)))));
 		$this->addElement('text', 'city', array('label' => 'users_netuser_edit_form_city',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
 		$this->addElement('text', 'zip', array('label' => 'users_netuser_edit_form_zip',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'Regex',
 																					     'options' => array('pattern' => '/^[a-z0-9]+[a-z0-9\s]+$/i')))));
 		$this->addElement('CountrySelect', 'country', array('label' => 'users_netuser_edit_form_country',

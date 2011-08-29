@@ -50,8 +50,16 @@ $(function () {
 
 </div>
 <div class="buttons span-18">
+	<?php
+		$acl = Zend_Registry::get('acl');
+		if ($acl->isAllowed($this->currentUser, $this->rootGroup, 'add')) :
+	?>
+
 	<a id="addlink" class="button small green" href="<?php echo $this->url(array('action' => 'add'),
 													   null,
 													   false);
 									?>"><span><?php echo $this->translate('groups_group_index_button_add');?></span></a>
+	<?php
+		endif;
+	?>
 </div>

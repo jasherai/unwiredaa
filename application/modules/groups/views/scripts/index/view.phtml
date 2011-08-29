@@ -20,13 +20,24 @@
 </div>
 
 <div class="buttons">
+	<?php
+		$acl = Zend_Registry::get('acl');
+		if ($acl->isAllowed($this->currentUser, $this->group, 'edit')) :
+	?>
 	<a class="button small blue" href="<?php echo $this->url(array('action' => 'edit',
 									     					 'id' => $this->group->getGroupId()),
 										   null,
 										   false); ?>"><span><?php echo $this->translate('groups_group_view_button_edit');?></span></a>
+	<?php
+		endif;
 
+		if ($acl->isAllowed($this->currentUser, $this->group, 'delete')) :
+	?>
 	<a class="button small red" href="<?php echo $this->url(array('action' => 'delete',
 											     'id' => $this->group->getGroupId()),
 										   null,
 										   false); ?>"><span><?php echo $this->translate('groups_group_view_button_delete');?></span></a>
+	<?php
+		endif;
+	?>
 </div>

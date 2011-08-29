@@ -24,15 +24,15 @@ class Nodes_Form_NodeLocation extends Unwired_Form
 								   'Form'));
 
 		$this->addElement('text', 'address', array('label' => 'nodes_index_edit_form_address',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 5)))));
 		$this->addElement('text', 'city', array('label' => 'nodes_index_edit_form_city',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
 		$this->addElement('text', 'zip', array('label' => 'nodes_index_edit_form_zip',
-													'required' => true,
+													'required' => false,
 													'validators' => array('len' => array('validator' => 'Regex',
 																					     'options' => array('pattern' => '/^[a-z0-9]+[a-z0-9\s]+$/i')))));
 		$this->addElement('CountrySelect', 'country', array('label' => 'nodes_index_edit_form_country',
@@ -40,13 +40,13 @@ class Nodes_Form_NodeLocation extends Unwired_Form
 															'class' => 'span-5'));
 
 		$this->addElement('text', 'latitude', array('label' => 'nodes_index_edit_form_latitude',
-													'required' => true,
+													'required' => false,
 													'class' => 'latlng',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
 
 		$this->addElement('text', 'longitude', array('label' => 'nodes_index_edit_form_longitude',
-													'required' => true,
+													'required' => false,
 													'class' => 'latlng',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
