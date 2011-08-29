@@ -240,5 +240,7 @@ class Unwired_Form_Element_CountrySelect extends Zend_Form_Element_Select
 			'ZW' => 'country_ZW');
 
 		$this->addMultiOptions($codes);
+
+		$this->setValue('AT');
 	}
 }
