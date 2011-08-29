@@ -1,6 +1,9 @@
 <h1><?php echo $this->translate('nodes_index_index_heading'); ?></h1>
 
-<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+	$acl = Zend_Registry::get('acl');
+?>
 <table class="listing">
 	<thead>
 		<tr>
@@ -10,6 +13,9 @@
 			<th><?php echo $this->translate('nodes_index_index_wanip');?></th>
 			<th><?php echo $this->translate('nodes_index_index_status');?></th>
 			<th class="tools">
+			<?php
+			if ($acl->isAllowed($this->currentUser, 'nodes_node', 'add')) :
+			?>
 			<a class="add" href="<?php
 				echo $this->url(array('module' => 'nodes',
 									  'controller' => 'index',
@@ -17,13 +23,14 @@
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
 				?>" alt="<?php echo $this->translate('nodes_index_index_button_add'); ?>" /> <?php echo $this->translate('nodes_index_index_button_add'); ?></a>
+			<?php
+			endif;
+			?>
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-			$acl = Zend_Registry::get('acl');
-
 			foreach ($this->paginator as $node) :
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">

@@ -1,12 +1,19 @@
 <h1><?php echo $this->translate('groups_policy_index_heading'); ?></h1>
 
-<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+
+	$acl = Zend_Registry::get('acl');
+?>
 <table class="listing">
 	<thead>
 		<tr>
 			<th><?php echo $this->translate('groups_policy_index_id');?></th>
 			<th><?php echo $this->translate('groups_policy_index_name');?></th>
 			<th class="tools">
+			<?php
+			if ($acl->isAllowed($this->currentUser, 'groups_policy', 'add')) :
+			?>
 			<a class="add" href="<?php
 				echo $this->url(array('module' => 'groups',
 									  'controller' => 'policy',
@@ -14,13 +21,15 @@
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
 				?>" alt="<?php echo $this->translate('groups_policy_index_button_add'); ?>" /> <?php echo $this->translate('groups_policy_index_button_add'); ?></a>
+
+			<?php
+			endif;
+			?>
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-			$acl = Zend_Registry::get('acl');
-
 			foreach ($this->paginator as $policy) :
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">

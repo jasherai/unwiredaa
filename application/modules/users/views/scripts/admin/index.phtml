@@ -1,6 +1,10 @@
 <h1><?php echo $this->translate('users_admin_index_heading'); ?></h1>
 
-<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+
+	$acl = Zend_Registry::get('acl');
+?>
 <table class="listing">
 	<thead>
 		<tr>
@@ -11,6 +15,9 @@
 			<th><?php echo $this->translate('users_admin_index_city');?></th>
 			<th><?php echo $this->translate('users_admin_index_country');?></th>
 			<th class="tools">
+			<?php
+			if ($acl->isAllowed($this->currentUser, 'users_admin', 'add')) :
+			?>
 			<a class="add" href="<?php
 				echo $this->url(array('module' => 'users',
 									  'controller' => 'admin',
@@ -18,12 +25,14 @@
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
 				?>" alt="<?php echo $this->translate('users_admin_index_button_add'); ?>" /> <?php echo $this->translate('users_admin_index_button_add'); ?></a>
+			<?php
+			endif;
+			?>
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php
-			$acl = Zend_Registry::get('acl');
 			foreach ($this->paginator as $user) :
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
