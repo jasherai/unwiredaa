@@ -102,4 +102,27 @@ $(document).ready(function(){
 	  		return false;
 	  	}
     });
+	
+	$('table.listing thead tr th span.button button:last').click(function(){
+		var url = $(this).parents('form:first').attr('action');
+		
+		var action = $(this).attr('name');
+
+		var regexp = new RegExp(action.replace('/', '\/'), 'gi');
+		if (action.length && !regexp.test(url)) {
+			url = url + '/' + action;
+		}
+		
+		$(this).parents('tr:first').find('th input').each(function(){
+			var attr_name = $(this).attr('name');
+			var value = $(this).val();
+			
+			if (!value.length) {
+				return true;
+			}
+			url = url + '/' + attr_name + '/' + value;
+		})
+		
+		window.location.href=url;
+	});
 });

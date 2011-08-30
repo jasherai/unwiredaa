@@ -152,6 +152,9 @@ table.listing th {
 	color: #fff;
 }
 
+table.listing th input {
+	width: auto;
+}
 table.listing th a {
 	color: #fff;
 }
