@@ -34,11 +34,16 @@ class Nodes_Model_Mapper_NodePaginator extends Unwired_Paginator_Adapter_Mapper
 
 		foreach ($items as $item) {
 			foreach ($groups as $group) {
+				if ($group->getGroupId() == $item->getGroupId()) {
+					$item->setGroup($group);
+					break;
+				}
 				$iterator = new RecursiveIteratorIterator($group, RecursiveIteratorIterator::SELF_FIRST);
 
 				foreach ($iterator as $child) {
 					if ($item->getGroupId() == $child->getGroupId()) {
 						$item->setGroup($child);
+						break;
 					}
 				}
 			}
