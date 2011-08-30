@@ -72,6 +72,12 @@ h1 {
 .userblock {
     margin-left: 710px;
     padding-top: 5px;
+    width: 220px;
+}
+
+.userblock div {
+	float: left;
+	width: 100%;
 }
 
 .userblock form div label {
@@ -82,11 +88,20 @@ h1 {
 
 .userblock form div input {
 	margin-top: 0px;
+	position: relative !important;
 	width: 120px;
 }
 
-.userblock form div span.button input {
+.userblock form div span.button {
+	position: relative;
+}
+
+.userblock form div span.button input,
+.userblock form div span.button input.button {
 	width: 100px;
+	position: relative;
+	top: 0px;
+	margin-top: 0px !important;
 }
 
 #sidenav {
