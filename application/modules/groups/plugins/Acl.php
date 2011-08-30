@@ -33,6 +33,7 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 			/**
 			 * The hierarchy is not inheritable
 			 */
+			$acl->deny($role);
 			$acl->deny($role, $acl->getResources());
 
 			foreach ($role->getPermissions() as $key => $rule) {
