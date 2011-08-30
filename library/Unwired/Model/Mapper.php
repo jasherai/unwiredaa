@@ -257,7 +257,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 						$select->where($field . ' IS NULL');
 					break;
 
-					case preg_match('/\%/i', $value):
+					case (strpos($value, '%') !== false):
 						$select->where($field . ' LIKE ?', $value);
 					break;
 
