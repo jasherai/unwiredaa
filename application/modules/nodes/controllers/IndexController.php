@@ -28,7 +28,7 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 
 		$groupService->prepareMapperListingByAdmin($this->_getDefaultMapper(),
 													null,
-													true,
+													false,
 													$filter);
 		$this->_index();
 	}
