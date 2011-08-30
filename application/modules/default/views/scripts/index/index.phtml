@@ -1,5 +1,5 @@
 <?php
-	$this->headScript()->appendFile('http://maps.googleapis.com/maps/api/js?sensor=false');
+	$this->headScript()->appendFile($this->httpScheme() . '://maps.googleapis.com/maps/api/js?sensor=false');
 
 	$nodes = array();
 	foreach ($this->nodes as $node) {

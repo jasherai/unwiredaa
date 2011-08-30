@@ -6,13 +6,13 @@
     <base href="<?php echo $this->baseUrl(); ?>/" />
     <?php echo $this->headTitle('UnwiredAA')?>
 
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="<?php echo $this->httpScheme(); ?>://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script type="text/javascript" src="<?php echo $this->httpScheme(); ?>://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 
 	<link rel="stylesheet" media="screen,projection" href="<?php echo $this->baseUrl("styles/blueprint/screen.css"); ?>" />
 	<link rel="stylesheet" media="print" href="<?php echo $this->baseUrl("styles/blueprint/print.css"); ?>" />
 	<!--[if lt IE 8]>
-    	<link rel="stylesheet" href="styles/blueprint/ie.css" type="text/css" media="screen, projection">
+    	<link rel="stylesheet" href="<?php echo $this->baseUrl("styles/blueprint/ie.css"); ?>" type="text/css" media="screen, projection">
   	<![endif]-->
 	<link rel="stylesheet" media="all" href="<?php echo $this->baseUrl("themes/{$this->theme}/styles/style.css"); ?>" />
 
