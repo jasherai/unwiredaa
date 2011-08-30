@@ -11,7 +11,25 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 	{
 		$groupService = new Groups_Service_Group();
 
-		$groupService->prepareMapperListingByAdmin($this->_getDefaultMapper());
+		$filter['name'] = $this->getRequest()->getParam('name', null);
+		$filter['mac'] = $this->getRequest()->getParam('mac', null);
+		$filter['ipaddress'] = $this->getRequest()->getParam('ipaddress', null);
+
+		$this->view->filter = $filter;
+
+		foreach ($filter as $key => $value) {
+			if (null == $value || empty($value)) {
+				unset($filter[$key]);
+				continue;
+			}
+
+			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\-\:\.]+/iu', '', $value) . '%';
+		}
+
+		$groupService->prepareMapperListingByAdmin($this->_getDefaultMapper(),
+													null,
+													true,
+													$filter);
 		$this->_index();
 	}
 
@@ -26,6 +44,11 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 		$this->view->rootGroup = $rootGroup;
 
 		$this->_setAutoRedirect(false);
+
+		if (null !== $entity) {
+			$entity->setToUpdate(true);
+		}
+
 		$result = parent::_add($mapper, $entity, $form);
 		if ($result) {
 			$nodeService = new Nodes_Service_Node();

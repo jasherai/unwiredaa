@@ -60,7 +60,7 @@ class Groups_Service_Group extends Unwired_Service_Tree
 		return $groups;
 	}
 
-	public function prepareMapperListingByAdmin($mapper = null, $admin = null, $lowerOnly = true)
+	public function prepareMapperListingByAdmin($mapper = null, $admin = null, $lowerOnly = true, $params = array())
 	{
 		if (null === $mapper) {
 			$mapper = $this->_getDefaultMapper();
@@ -94,10 +94,11 @@ class Groups_Service_Group extends Unwired_Service_Tree
 			}
 		}
 
+		$params['group_id'] = $accessibleGroupIds;
 		/**
 		 * @todo Auto join in findBy is slow... do something
 		 */
-		$mapper->findBy(array('group_id' => $accessibleGroupIds), 0);
+		$mapper->findBy($params, 0);
 
 		/**
 		 * @todo Fix this! It is _UGLY_

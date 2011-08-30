@@ -73,7 +73,7 @@ class Users_Form_Admin extends Unwired_Form
 		$adminRoles = array_unique($admin->getGroupsAssigned());
 		foreach ($roles as $role) {
 			foreach ($adminRoles as $parentRoleId) {
-				if ($acl->inheritsRole($role, $parentRoleId)) {
+				if ($acl->isAllowed($admin, null, 'super') || $acl->inheritsRole($role, $parentRoleId)) {
 					$this->getElement('available_roles')->addMultiOption($role->getRoleId(), $role->getName());
 					break;
 				}

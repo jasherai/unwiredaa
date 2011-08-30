@@ -4,6 +4,11 @@
 	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
 	$acl = Zend_Registry::get('acl');
 ?>
+<form class="span-19 last" method="GET" action="<?php echo $this->url(array('module' => 'nodes',
+													   'controller' => 'index',
+													   'action' => 'index'),
+												null,
+												true); ?>">
 <table class="listing">
 	<thead>
 		<tr>
@@ -27,6 +32,14 @@
 			endif;
 			?>
 			</th>
+		</tr>
+		<tr>
+			<th></th>
+			<th><input type="text" name="name" value="<?php echo $this->filter['name']; ?>" /></th>
+			<th><input type="text" name="mac" value="<?php echo $this->filter['mac']; ?>" /></th>
+			<th><input type="text" name="ipaddress" value="<?php echo $this->filter['ipaddress']; ?>" /></th>
+			<th></th>
+			<th><span class="button small blue"><button name="index/index" type="button"><?php echo $this->translate('nodes_index_index_button_filter'); ?></button></span></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -74,4 +87,5 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+</form>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
