@@ -23,12 +23,13 @@ input[disabled], input[readonly], select[disabled], select[readonly], checkbox[d
  color: #333;
  cursor: default;
 }
+/*
 input[type="text"],
 input[type="password"],
 input[type="url"],
 input[type="email"] {
 	width: 190px;	
-}
+}*/
 
 form {
 	margin: 0px;
