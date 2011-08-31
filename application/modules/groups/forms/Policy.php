@@ -36,6 +36,14 @@ class Groups_Form_Policy extends Unwired_Form
 												'validators' => array('len' => array('validator' => 'StringLength',
 																				     'options' => array('min' => 2)))));
 
+		$this->addElement('text', 'priority', array('label' => 'groups_policy_edit_form_priority',
+												'required' => true,
+												'validators' => array('Int',
+																	  'Between' => array('validator' => 'Between',
+																				     	'options' => array('min' => 0,
+																										   'max' => 10000)))));
+
+		$this->getElement('priority')->addErrorMessage('groups_policy_edit_form_message_priority');
 
 		$this->addElement('hidden', 'rules_reply', array('label' => 'groups_policy_edit_form_rules_reply',
 														 'required' => false,

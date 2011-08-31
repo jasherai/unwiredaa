@@ -8,6 +8,8 @@ class Groups_Model_Policy extends Unwired_Model_Generic implements Zend_Acl_Reso
 
 	protected $_roleId = null;
 
+	protected $_priority = 1000;
+
 	protected $_rulesReply = array();
 
 	protected $_rulesCheck = array();
@@ -54,6 +56,22 @@ class Groups_Model_Policy extends Unwired_Model_Generic implements Zend_Acl_Reso
 	 */
 	public function setRoleId($roleId) {
 		$this->_roleId = $roleId;
+		return $this;
+	}
+
+	/**
+	 * @return the $priority
+	 */
+	public function getPriority() {
+		return $this->_priority;
+	}
+
+	/**
+	 * @param field_type $priority
+	 */
+	public function setPriority($priority) {
+		$this->_priority = (int) $priority;
+
 		return $this;
 	}
 
