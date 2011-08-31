@@ -276,6 +276,7 @@ form div.buttons {
     margin-left: 4px;
     padding: 2px;
     border: 1px solid #fff;
+    cursor: pointer;
 }
 
 .tools a:hover {
@@ -286,8 +287,9 @@ form div.buttons {
 .tools a.icon {
 	text-indent: -1000px;
 	overflow: hidden;
-	background-repeat: no-repeat;
-    background-position: 50% 50%;
+	padding: 2px !important;
+	background-repeat: no-repeat !important;
+    background-position: 50% 50% !important;
 	width: 28px;
 	height: 28px;
 	display: block;
@@ -298,6 +300,14 @@ form div.buttons {
     padding: 15px 3px 10px 32px;
     background-repeat: no-repeat;
     background-position: 3px 50%;
+}
+
+.tools a.filter {
+	background-image: url('../images/icons/24x24/search.png') !important;
+}
+
+.tools a.reset {
+	background-image: url('../images/icons/24x24/reset.png') !important;
 }
 
 .tools a.view {
@@ -361,7 +371,7 @@ span.button.blue.small:hover button, span.button.blue.small:hover a, span.button
 }
 .fancymap {
 	width: 500px;
-	height: 450px;
+	height: 410px;
 }
 .pagination {
 	text-align: right;

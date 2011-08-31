@@ -103,7 +103,16 @@ $(document).ready(function(){
 	  	}
     });
 	
-	$('table.listing thead tr th span.button button:last').click(function(){
+	$('table.listing thead tr th input').keyup(function(event){
+		if (event.keyCode != '13') {
+			return;
+		}
+		
+		$('table.listing thead tr th a.filter:last').click();
+		return false;
+	});
+	
+	$('table.listing thead tr th a.filter:last').click(function(){
 		var url = $(this).parents('form:first').attr('action');
 		
 		var action = $(this).attr('name');
@@ -124,5 +133,15 @@ $(document).ready(function(){
 		})
 		
 		window.location.href=url;
+	});
+	
+	$('table.listing thead tr th a.reset:last').click(function(){
+		$(this).parents('tr:first').find('th input').each(function(){
+			$(this).val('');
+		})
+		
+		$('table.listing thead tr th a.filter:last').click();
+		
+		return false;
 	});
 });
