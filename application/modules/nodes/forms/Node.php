@@ -18,16 +18,19 @@ class Nodes_Form_Node extends Unwired_Form
 
 		$this->addElement('text', 'name', array('label' => 'nodes_index_edit_form_name',
 												'order' => 1,
-													'required' => true,
-													'validators' => array('len' => array('validator' => 'StringLength',
-																					     'options' => array('min' => 2)))));
+												'class' => 'span-5',
+												'required' => true,
+												'validators' => array('len' => array('validator' => 'StringLength',
+																					 'options' => array('min' => 2)))));
 		$this->addElement('text', 'mac', array('label' => 'nodes_index_edit_form_mac',
 											   'order' => 2,
-													'required' => true,
-													'validators' => array('mac')));
+												'class' => 'span-5',
+												'required' => true,
+												'validators' => array('mac')));
 
 		$this->addElement('select', 'status', array('label' => 'nodes_index_edit_form_status',
 													'order' => 3,
+													'class' => 'span-5',
 													'required' => true,
 													'multiOptions' => array('disabled' => 'disabled',
 																			'enabled' => 'enabled',
@@ -65,7 +68,7 @@ class Nodes_Form_Node extends Unwired_Form
 	    																			  'legend' => 'Node'))));
 
 
-		$settingsForm->addElement('submit', 'form_element_submit', array('label' => 'nodes_index_edit_form_save',
+		$settingsForm->addElement('submit', 'form_element_submit', array('label' => 'nodes_index_edit_form_button_save',
 	 														 	 'order' => 7,
 																 'class'	=> 'button',
 															 	 'decorators' => array('ViewHelper',
@@ -73,7 +76,7 @@ class Nodes_Form_Node extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
-		$settingsForm->addElement('href', 'form_element_cancel', array('label' => 'nodes_index_edit_form_cancel',
+		$settingsForm->addElement('href', 'form_element_cancel', array('label' => 'nodes_index_edit_form_button_cancel',
 	 														 	 'order' => 8,
 																 'data' => array(
 																				'params' => array('module' => 'nodes',

@@ -39,7 +39,10 @@
 			<th><input type="text" name="mac" value="<?php echo $this->filter['mac']; ?>" /></th>
 			<th><input type="text" name="ipaddress" value="<?php echo $this->filter['ipaddress']; ?>" /></th>
 			<th></th>
-			<th><span class="button small blue"><button name="index/index" type="button"><?php echo $this->translate('nodes_index_index_button_filter'); ?></button></span></th>
+			<th class="tools">
+			<a name="index/index" class="icon filter"><?php echo $this->translate('nodes_index_index_button_filter'); ?></a>
+			<a name="index/index" class="icon reset"><?php echo $this->translate('nodes_index_index_button_reset'); ?></a>
+			</th>
 		</tr>
 	</thead>
 	<tbody>

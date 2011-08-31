@@ -103,7 +103,7 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	 * @param integer $mac
 	 */
 	public function setMac($mac) {
-		$this->_mac = strtoupper($mac);
+		$this->_mac = strtoupper(preg_replace('/[^A-F0-9]/i', '', $mac));
 
 		return $this;
 	}

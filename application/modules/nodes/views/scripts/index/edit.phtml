@@ -54,7 +54,7 @@ $(function () {
 			$("input[name=group_id]").val(groupId);
 	     });
 
-	$('#location-latitude').after('<a id="gmap" href="#map">map</a>');
+	$('#location-latitude').after('<a id="gmap" href="#mapwrap">map</a>');
 
 	geocoder = new google.maps.Geocoder();
 
@@ -105,6 +105,8 @@ $(function () {
 				return true;
 			}
 
+			$("select[name=apply_map_data]").data('geodata', results);
+
 			marker.setTitle(results[0].formatted_address);
 			//map.setCenter(position);
 			infowindow.setContent('<h5>' + marker.getTitle() + '</h5><p>lat: ' + position.lat() + '</p><p>lng: ' + position.lng() + '</p>');
@@ -114,10 +116,70 @@ $(function () {
 		return false;
     }
 
+	$('#mapwrap .buttons a.apply').click(function(){
+		var apply = $("select[name=apply_map_data]").val();
+		var geodata = $("select[name=apply_map_data]").data('geodata');
+
+		switch (apply) {
+			case "both":
+			case "address":
+					/**
+					 * Reset address fields
+					 */
+					$('#location-address').val('');
+					$('#location-city').val('');
+					$('#location-zip').val('');
+					$('#location-country').val('AT');
+
+					/**
+					 * Fill in the address
+					 */
+			      	$.each(geodata, function(idx, data) {
+			      		switch(data.types[0]) {
+			      			case 'street_address':
+			      				var addr = data.formatted_address.split(',');
+
+			      				$('#location-address').val(addr[0]);
+			      			break;
+
+			      			case 'locality':
+			      				$('#location-city').val(data.address_components[0].short_name);
+			      			break;
+
+			      			case 'postal_code':
+			      				$('#location-zip').val(data.address_components[0].short_name);
+			      			break;
+
+			      			case 'country':
+			      				$('#location-country').val(data.address_components[0].short_name);
+			      			break;
+			      		}
+			      	});
+
+				  	if (apply == "address") {
+				  		break;
+				  	}
+			case "address":
+			default:
+				$('#location-latitude').val(Math.round(marker.getPosition().lat() * 1000000)/1000000);
+				$('#location-longitude').val(Math.round(marker.getPosition().lng() * 1000000)/1000000);
+		}
+
+	    $.fancybox.close();
+
+	    return false;
+	});
+
+	$('#mapwrap .buttons a.cancel').click(function(){
+	    $.fancybox.close();
+
+	    return false;
+	});
+
 	$('#gmap').fancybox({
 						autoDimensions: false,
 						width: 500,
-						height: 450,
+						height: 465,
 						type: 'inline',
 						onStart: function() {
 									var lat = parseFloat($('#location-latitude').val());
@@ -154,42 +216,7 @@ $(function () {
 						onComplete: function () {
 										google.maps.event.trigger(map, "resize");
 										map.setCenter(marker.getPosition());
-									},
-						onCleanup: function() {
-									$('#location-latitude').val(marker.getPosition().lat());
-									$('#location-longitude').val(marker.getPosition().lng());
-
-									if ($('#location-address').val().length) {
-										return;
 									}
-
-									geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
-								        if (status !== google.maps.GeocoderStatus.OK) {
-								      		return;
-								        }
-								      	$.each(results, function(idx, data) {
-								      		switch(data.types[0]) {
-								      			case 'street_address':
-								      				var addr = data.formatted_address.split(',');
-
-								      				$('#location-address').val(addr[0]);
-								      			break;
-
-								      			case 'locality':
-								      				$('#location-city').val(data.address_components[0].short_name);
-								      			break;
-
-								      			case 'postal_code':
-								      				$('#location-zip').val(data.address_components[0].short_name);
-								      			break;
-
-								      			case 'country':
-								      				$('#location-country').val(data.address_components[0].short_name);
-								      			break;
-								      		}
-								      	});
-								    });
-								 }
 						});
 });
 <?php
@@ -199,6 +226,21 @@ $(function () {
 <div class="grouptree span-8">
 	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
 </div>
-<div style="display:none;">
-	<div id="map" class="fancymap"> </div>
+<div style="display:none">
+	<div id="mapwrap">
+		<div id="map" class="fancymap"> </div>
+		<div class="buttons right">
+			<select name="apply_map_data">
+				<option value="coordinates"><?php echo $this->translate('nodes_index_edit_form_map_coordinates');?></option>
+				<option value="address"><?php echo $this->translate('nodes_index_edit_form_map_address');?></option>
+				<option value="both"><?php echo $this->translate('nodes_index_edit_form_map_both');?></option>
+			</select>
+			<a href="javascript:;" class="apply button small green">
+				<span><?php echo $this->translate('nodes_index_edit_form_button_apply'); ?></span>
+			</a>
+			<a href="javascript:;" class="cancel button small blue">
+				<span><?php echo $this->translate('nodes_index_edit_form_button_cancel'); ?></span>
+			</a>
+		</div>
+	</div>
 </div>

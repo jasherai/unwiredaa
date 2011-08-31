@@ -184,6 +184,22 @@ set qos.Bulk=class
 set qos.Bulk.avgrate=1
 set qos.Bulk.packetdelay=200
 <?php
+    if ($this->node->getSettings()->getActivefrom() > 0 && $this->node->getSettings()->getActiveto() > 0) :
+?>
+set crontabs.@crontab[1].hours=<?php echo (int) $this->node->getSettings()->getActivefrom(); ?>
+set crontabs.@crontab[1].enabled=1
+set crontabs.@crontab[2].hours=<?php echo (int) $this->node->getSettings()->getActiveto(); ?>
+set crontabs.@crontab[2].enabled=1
+<?php
+    else :
+?>
+set crontabs.@crontab[1].hours=*
+set crontabs.@crontab[1].enabled=0
+set crontabs.@crontab[2].hours=*
+set crontabs.@crontab[2].enabled=0
+<?php
+    endif;
+    
 	if ($this->node->getSettings()->getTrafficlimit() > 0) :
 ?>
 set custom.limits=traffic

@@ -18,34 +18,42 @@ class Users_Form_NetUser extends Unwired_Form
 
 		$this->addElement('text', 'username', array('label' => 'users_netuser_edit_form_username',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 2)))));
 		$this->addElement('text', 'firstname', array('label' => 'users_netuser_edit_form_firstname',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 2)))));
 		$this->addElement('text', 'lastname', array('label' => 'users_netuser_edit_form_lastname',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 2)))));
 		$this->addElement('text', 'email', array('label' => 'users_netuser_edit_form_email',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'EmailAddress'))));
 
 		$this->addElement('text', 'phone', array('label' => 'users_netuser_edit_form_phone',
 													'required' => false,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'Regex',
 																					     'options' => array('pattern' => '/^\+[0-9]+[0-9\s]+[0-9]+$/')))));
 		$this->addElement('text', 'address', array('label' => 'users_netuser_edit_form_address',
 													'required' => false,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 5)))));
 		$this->addElement('text', 'city', array('label' => 'users_netuser_edit_form_city',
 													'required' => false,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'StringLength',
 																					     'options' => array('min' => 3)))));
 		$this->addElement('text', 'zip', array('label' => 'users_netuser_edit_form_zip',
 													'required' => false,
+													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'Regex',
 																					     'options' => array('pattern' => '/^[a-z0-9]+[a-z0-9\s]+$/i')))));
 		$this->addElement('CountrySelect', 'country', array('label' => 'users_netuser_edit_form_country',
@@ -59,20 +67,24 @@ class Users_Form_NetUser extends Unwired_Form
 
 		$this->addElement('password', 'password', array('label' => 'users_netuser_edit_form_password',
 														'required' => true,
+														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 6)))));
 
 		$this->addElement('password', 'cfmpassword', array('label' => 'users_netuser_edit_form_cfmpassword',
 														'required' => true,
+														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 6)))));
 
 		$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
 												'required' => true,
+												'class' => 'span-5',
 												'validators' => array('mac')));
 
 		$this->addElement('multiselect', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
-															 'required' => true));
+															 'required' => true,
+															 'class' => 'span-5'));
 
 		/**
 		 * Add policy groups as options

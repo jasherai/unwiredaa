@@ -28,28 +28,32 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 		$this->addElement('text', 'ipaddress', array('label' => 'nodes_index_edit_form_ipaddress',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('ip')));
 
 		$this->addElement('text', 'netmask', array('label' => 'nodes_index_edit_form_netmask',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('ip')));
 
 		$this->addElement('text', 'gateway', array('label' => 'nodes_index_edit_form_gateway',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('ip')));
 
 		$this->addElement('text', 'dnsservers', array('label' => 'nodes_index_edit_form_dnsservers',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('dns')));
 
 
 		$this->addElement('select', 'bandwidthup', array('label' => 'nodes_index_edit_form_bandwidthup',
 													'required' => true,
-													'class' => 'span-4'));
+													'class' => 'span-5'));
 
 		$this->addElement('select', 'bandwidthdown', array('label' => 'nodes_index_edit_form_bandwidthdown',
 													'required' => true,
-													'class' => 'span-4'));
+													'class' => 'span-5'));
 
 		/**
 		 * @todo Network speeds
@@ -74,15 +78,17 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 		$this->addElement('text', 'trafficlimit', array('label' => 'nodes_index_edit_form_trafficlimit',
 													'required' => false,
+													'class' => 'span-5',
 													'validators' => array('Int')));
 
 		$this->addElement('text', 'ssid', array('label' => 'nodes_index_edit_form_ssid',
 													'required' => true,
+													'class' => 'span-5',
 													'validators' => array('ssid')));
 
 		$this->addElement('select', 'channel', array('label' => 'nodes_index_edit_form_channel',
 													'required' => true,
-													'class' => 'span-4'));
+													'class' => 'span-5'));
 
 		for ($i=1; $i<=13; $i++) {
 			$this->getElement('channel')->addMultiOption($i, $i);
@@ -93,10 +99,10 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 
 		$this->addElement('select', 'activefrom', array('label' => 'nodes_index_edit_form_activefrom',
 													'required' => false,
-													'class' => 'span-4'));
+													'class' => 'span-5'));
 		$this->addElement('select', 'activeto', array('label' => 'nodes_index_edit_form_activeto',
 													'required' => false,
-													'class' => 'span-4'));
+													'class' => 'span-5'));
 
 		$this->getElement('activefrom')->addMultiOption('', '');
 		$this->getElement('activeto')->addMultiOption('', '');
