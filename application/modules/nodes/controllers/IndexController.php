@@ -11,8 +11,56 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 	{
 		$groupService = new Groups_Service_Group();
 
+		$filter = $this->_getFilters();
+
+		$groupService->prepareMapperListingByAdmin($this->_getDefaultMapper(),
+													null,
+													false,
+													$filter);
+		$this->_index();
+	}
+
+
+	public function showGroupAction()
+	{
+		$groupId = (int) $this->getRequest()->getParam('id', 0);
+
+		$group = null;
+
+		if ($groupId > 0) {
+			$groupMapper = new Groups_Model_Mapper_Group();
+
+			$group = $groupMapper->find($groupId);
+		}
+
+		if (null === $group) {
+			$this->view->uiMessage('nodes_index_showgroup_notfound', 'error');
+			$this->_helper->redirector->gotoRouteAndExit(array('module' => 'nodes'),
+														 'default',
+														 true);
+		}
+
+
+		$groupService = new Groups_Service_Group();
+
+		$filter = $this->_getFilters();
+
+		$groupService->prepareMapperListing($group,
+											$this->_getDefaultMapper(),
+											true,
+											$filter);
+
+		$this->view->group = $group;
+
+		$this->_index();
+	}
+
+	protected function _getFilters()
+	{
+		$filter = array();
+
 		$filter['name'] = $this->getRequest()->getParam('name', null);
-		$filter['mac'] = $this->getRequest()->getParam('mac', null);
+		$filter['mac'] = strtoupper($this->getRequest()->getParam('mac', null));
 		$filter['ipaddress'] = $this->getRequest()->getParam('ipaddress', null);
 
 		$this->view->filter = $filter;
@@ -26,11 +74,7 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\-\:\.]+/iu', '', $value) . '%';
 		}
 
-		$groupService->prepareMapperListingByAdmin($this->_getDefaultMapper(),
-													null,
-													false,
-													$filter);
-		$this->_index();
+		return $filter;
 	}
 
 	protected function _add(Unwired_Model_Mapper $mapper = null,
@@ -47,6 +91,20 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 
 		if (null !== $entity) {
 			$entity->setToUpdate(true);
+		} else {
+			$groupId = (int) $this->getRequest()->getParam('group_id', 0);
+
+			if ($groupId > 0) {
+
+				if (null === $mapper) {
+					$mapper = $this->_getDefaultMapper();
+				}
+
+				$entity = $mapper->getEmptyModel();
+
+
+				$entity->setGroupId($groupId);
+			}
 		}
 
 		$result = parent::_add($mapper, $entity, $form);

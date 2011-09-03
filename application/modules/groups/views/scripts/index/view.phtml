@@ -22,6 +22,17 @@
 <div class="buttons">
 	<?php
 		$acl = Zend_Registry::get('acl');
+		if ($acl->isAllowed($this->currentUser, $this->group, 'view')) :
+	?>
+	<a class="button small green" href="<?php echo $this->url(array('module' => 'nodes',
+																   'controller' => 'index',
+																   'action' => 'show-group',
+									     						   'id' => $this->group->getGroupId()),
+										   null,
+										   true); ?>"><span><?php echo $this->translate('groups_group_view_button_nodes');?></span></a>
+	<?php
+		endif;
+
 		if ($acl->isAllowed($this->currentUser, $this->group, 'edit')) :
 	?>
 	<a class="button small blue" href="<?php echo $this->url(array('action' => 'edit',

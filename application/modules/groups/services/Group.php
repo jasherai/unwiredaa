@@ -109,4 +109,49 @@ class Groups_Service_Group extends Unwired_Service_Tree
 
 		return $mapper;
 	}
+
+	public function prepareMapperListing(Groups_Model_Group $group, $mapper = null, $children = false, $params = array())
+	{
+		if (null === $mapper) {
+			$mapper = $this->_getDefaultMapper();
+		}
+
+		$acl = Zend_Registry::get('acl');
+
+
+		if ($children) {
+			$group->setChildren($this->getNodeChildren($group));
+		}
+
+		$resource = $mapper->getEmptyModel();
+
+		$accessibleGroupIds = array();
+
+		if (!$acl->isAllowed($group, $resource, 'view')) {
+			throw new Unwired_Exception('Access to group not allowed');
+		}
+
+		$accessibleGroupIds[] = $group->getGroupId();
+
+		$iterator = new RecursiveIteratorIterator($group, RecursiveIteratorIterator::SELF_FIRST);
+
+		foreach ($iterator as $child) {
+			$accessibleGroupIds[] = $child->getGroupId();
+		}
+
+		$params['group_id'] = $accessibleGroupIds;
+		/**
+		 * @todo Auto join in findBy is slow... do something
+		 */
+		$mapper->findBy($params, 0);
+
+		/**
+		 * @todo Fix this! It is _UGLY_
+		 */
+		if ($mapper instanceof Nodes_Model_Mapper_Node) {
+			$mapper->getPaginatorAdapter()->setGroups(array($group));
+		}
+
+		return $mapper;
+	}
 }
