@@ -243,6 +243,10 @@ div.formelement label {
 	margin: 0.5em 0;
 }
 
+div.formelement label.multicheckbox {
+	width: 100px;
+}
+
 div.formelement input {
 	float: left;
 }
