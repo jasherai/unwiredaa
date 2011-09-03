@@ -22,11 +22,13 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
 		$acl->deny();
 
-		$mapper = new Groups_Model_Mapper_Role();
+		$service = new Groups_Service_Role();
 
-		$roles = $mapper->fetchAll();
+		$roles = $service->fetchTree();
 
-		foreach ($roles as $role) {
+		$iterator = new RecursiveIteratorIterator($roles, RecursiveIteratorIterator::SELF_FIRST);
+
+		foreach ($iterator as $role) {
 
 			$acl->addRole($role, $role->getParentId());
 

@@ -54,14 +54,14 @@ class Groups_Form_Role extends Unwired_Form
 
 			$resources[] = $resource;
 
-			$multiOptions = array('view' => 'view',
-								  'add'	 => 'add',
-								  'edit' => 'edit',
-								  'delete' => 'delete',
-								  'special' => 'special');
+			$multiOptions = array('view' => 'resource_' . $resource . '_view',
+								  'add'	 => 'resource_' . $resource . '_add',
+								  'edit' => 'resource_' . $resource . '_edit',
+								  'delete' => 'resource_' . $resource . '_delete',
+								  'special' => 'resource_' . $resource . '_special');
 
 			foreach ($multiOptions as $idx => $option) {
-				if (!$acl->isAllowed(Zend_Auth::getInstance()->getIdentity(), $resource, $option)) {
+				if (!$acl->isAllowed(Zend_Auth::getInstance()->getIdentity(), $resource, $idx)) {
 					unset($multiOptions[$idx]);
 				}
 			}
@@ -69,6 +69,7 @@ class Groups_Form_Role extends Unwired_Form
 			$this->addElement('multiCheckbox', $resource, array('label' => 'resource_' . $resource,
 															    'required' => false,
 															    'separator' => '',
+																'labelClass' => 'multicheckbox',
 															    'multiOptions' => $multiOptions));
 			$this->getElement($resource)->setBelongsTo('permissions');
 		}

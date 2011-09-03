@@ -42,7 +42,7 @@ class Users_Bootstrap extends Unwired_Application_Module_Bootstrap
 	{
 		$acl = parent::_initAclResources();
 
-		$acl->addResource(new Zend_Acl_Resource('users_admin'));
+		$acl->addResource(new Users_Model_Admin());
 		$acl->addResource(new Zend_Acl_Resource('users_netuser'));
 
 		return $acl;

@@ -13,6 +13,14 @@
 $(function () {
 	$("input[name=parent_id]").hide().after($('.roletree'));
 
+	$("label input[type=checkbox]").each(function(){
+		var text = $(this).parent().text().replace(/[\s\t]+/gi, '');
+
+		if (!text.length) {
+			$(this).parent().remove();
+		}
+	});
+
     $(".roletree")
         .jstree({
             "plugins" : ["themes","html_data","ui"],

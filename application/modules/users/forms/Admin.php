@@ -70,18 +70,22 @@ class Users_Form_Admin extends Unwired_Form
 		/**
 		 * @todo Move the acl stuff to a service and check for different access levels per category
 		 */
-		$mapper = new Groups_Model_Mapper_Role();
+		$service = new Groups_Service_Role();
 
-		$roles = $mapper->fetchAll();
+		$roles = $service->fetchTree();
 
 		$acl = Zend_Registry::get('acl');
 		//$acl = new Zend_Acl();
 		$admin = Zend_Auth::getInstance()->getIdentity();
 
 		$adminRoles = array_unique($admin->getGroupsAssigned());
-		foreach ($roles as $role) {
+
+		$iterator = new RecursiveIteratorIterator($roles, RecursiveIteratorIterator::SELF_FIRST);
+
+		foreach ($iterator as $role) {
 			foreach ($adminRoles as $parentRoleId) {
-				if ($acl->isAllowed($admin, null, 'super') || $acl->inheritsRole($role, $parentRoleId)) {
+				if ($acl->isAllowed($admin, null, 'super') || $acl->inheritsRole($role, $parentRoleId)
+					|| ($role->getRoleId() == $parentRoleId && $acl->isAllowed($admin, $admin->getResourceId(), 'special'))) {
 					$this->getElement('available_roles')->addMultiOption($role->getRoleId(), $role->getName());
 					break;
 				}
