@@ -5,6 +5,20 @@ class Unwired_Service_Tree
 
 	protected $_defaultMapper = null;
 
+	public function fetchTree()
+	{
+		$node = $this->_getDefaultMapper()->getEmptyModel();
+
+		$topLevel = $this->_getDefaultMapper()->findBy(array('parent_id' => null));
+
+		foreach ($topLevel as $top) {
+			$this->loadTree($top);
+			$node->addChild($top);
+		}
+
+		return $node;
+	}
+
 	public function findNode($node, $parents = false, $children = false)
 	{
 		if (!$node instanceof Unwired_Model_Tree) {

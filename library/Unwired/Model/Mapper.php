@@ -249,12 +249,12 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 				}
 
 				switch ($value) {
-					case (is_array($value)):
-						$select->where($field . ' IN (?)', $value);
-					break;
-
 					case null:
 						$select->where($field . ' IS NULL');
+					break;
+
+					case (is_array($value)):
+						$select->where($field . ' IN (?)', $value);
 					break;
 
 					case (strpos($value, '%') !== false):
@@ -307,11 +307,12 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     /**
      * Get all entries
+     * @param string $order
      * @return array
      */
-    public function fetchAll()
+    public function fetchAll($order = null)
     {
-        $resultSet = $this->getDbTable()->fetchAll();
+        $resultSet = $this->getDbTable()->fetchAll(null, $order);
 
         return $this->rowsetToModels($resultSet);
     }
