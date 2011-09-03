@@ -16,6 +16,14 @@ class Users_AdminController extends Unwired_Controller_Crud
 							Unwired_Model_Generic $entity = null,
 							Zend_Form $form = null)
 	{
+		if (null !== $entity && $entity->getUserId() == $this->getCurrentUser()->getUserId()) {
+			$this->_helper->redirector->gotoRouteAndExit(array('module' => 'users',
+															   'controller' => 'profile',
+															   'action' => 'index'),
+														'default',
+														true);
+		}
+
 		$groupService = new Groups_Service_Group();
 
 		$rootGroup = $groupService->getGroupTreeByAdmin();

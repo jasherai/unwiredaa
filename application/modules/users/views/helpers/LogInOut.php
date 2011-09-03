@@ -37,9 +37,17 @@ class Users_View_Helper_LogInOut extends Zend_View_Helper_Abstract {
 											'controller' => 'index',
 											'action'	=> 'logout'),
 									  'default',
-									  'true');
+									  true);
 
-		$result .= '<a class="button small green" href="' . $logoutUrl . '"><span>'
+		$profileUrl = $this->view->url(array('module' => 'users',
+											'controller' => 'profile',
+											'action'	=> 'index'),
+									  'default',
+									  true);
+
+		$result .= '<a class="button small blue" href="' . $profileUrl . '"><span>'
+				. $this->view->translate('nav_profile') . '</span></a>'
+				. '<a class="button small green" href="' . $logoutUrl . '"><span>'
 				. $this->view->translate('nav_logout') . '</span></a></div>';
 
 		return $result;
