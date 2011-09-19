@@ -13,17 +13,18 @@ class Unwired_Validate_Dns extends Zend_Validate_Abstract
 
 	public function isValid($value)
 	{
-		if (!preg_match('/^[a-z0-9\.\-\,\s]*$/i', $value)) {
+		if (!preg_match('/^[a-z0-9\.\-\s]*$/i', $value)) {
 			$this->_error(self::NOT_DNS);
 			return false;
 		}
 
-		$servers = explode(',', str_replace(' ', '', $value));
+		$servers = explode(' ', $value);
 
 		$validateIp = new Zend_Validate_Ip();
 		$validateHost = new Zend_Validate_Hostname();
 
 		foreach ($servers as $server) {
+			$server = trim($server);
 			if (!$validateIp->isValid($server) && !$validateHost->isValid($server)) {
 				$this->_error(self::NOT_DNS);
 				return false;
