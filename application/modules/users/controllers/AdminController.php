@@ -7,9 +7,35 @@ class Users_AdminController extends Unwired_Controller_Crud
 
 		$adminMapper = new Users_Model_Mapper_Admin();
 
-		$groupService->prepareMapperListingByAdmin($adminMapper);
+		$filter = $this->_getFilters();
+
+		$groupService->prepareMapperListingByAdmin($adminMapper, null, true, $filter);
 
 		$this->_index($adminMapper);
+	}
+
+	protected function _getFilters()
+	{
+		$filter = array();
+
+		$filter['email'] = $this->getRequest()->getParam('email', null);
+		$filter['firstname'] = strtoupper($this->getRequest()->getParam('firstname', null));
+		$filter['lastname'] = $this->getRequest()->getParam('lastname', null);
+		$filter['city'] = $this->getRequest()->getParam('city', null);
+		$filter['country'] = $this->getRequest()->getParam('country', null);
+
+		$this->view->filter = $filter;
+
+		foreach ($filter as $key => $value) {
+			if (null == $value || empty($value)) {
+				unset($filter[$key]);
+				continue;
+			}
+
+			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\-\.]+/iu', '', $value) . '%';
+		}
+
+		return $filter;
 	}
 
 	protected function _add(Unwired_Model_Mapper $mapper = null,

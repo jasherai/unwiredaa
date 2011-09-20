@@ -100,11 +100,10 @@ class Groups_Service_Group extends Unwired_Service_Tree
 		 */
 		$mapper->findBy($params, 0);
 
-		/**
-		 * @todo Fix this! It is _UGLY_
-		 */
-		if ($mapper instanceof Nodes_Model_Mapper_Node) {
-			$mapper->getPaginatorAdapter()->setGroups($groups);
+		$paginatorAdapter = $mapper->getPaginatorAdapter();
+
+		if (method_exists($paginatorAdapter, 'setGroups')) {
+			$paginatorAdapter->setGroups($groups);
 		}
 
 		return $mapper;
@@ -145,11 +144,10 @@ class Groups_Service_Group extends Unwired_Service_Tree
 		 */
 		$mapper->findBy($params, 0);
 
-		/**
-		 * @todo Fix this! It is _UGLY_
-		 */
-		if ($mapper instanceof Nodes_Model_Mapper_Node) {
-			$mapper->getPaginatorAdapter()->setGroups(array($group));
+			$paginatorAdapter = $mapper->getPaginatorAdapter();
+
+		if (method_exists($paginatorAdapter, 'setGroups')) {
+			$paginatorAdapter->setGroups($groups);
 		}
 
 		return $mapper;

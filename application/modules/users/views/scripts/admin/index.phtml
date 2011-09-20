@@ -5,6 +5,11 @@
 
 	$acl = Zend_Registry::get('acl');
 ?>
+<form class="span-19 last" method="GET" action="<?php echo $this->url(array('module' => 'users',
+													   'controller' => 'admin',
+													   'action' => 'index'),
+												null,
+												true); ?>">
 <table class="listing">
 	<thead>
 		<tr>
@@ -28,6 +33,18 @@
 			<?php
 			endif;
 			?>
+			</th>
+		</tr>
+		<tr>
+			<th></th>
+			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
+			<th><input type="text" name="firstname" value="<?php echo $this->filter['firstname']; ?>" /></th>
+			<th><input type="text" name="lastname" value="<?php echo $this->filter['lastname']; ?>" /></th>
+			<th><input type="text" name="city" value="<?php echo $this->filter['city']; ?>" /></th>
+			<th><input type="text" name="country" value="<?php echo $this->filter['country']; ?>" /></th>
+			<th class="tools">
+			<a name="index" class="icon filter"><?php echo $this->translate('users_admin_index_button_filter'); ?></a>
+			<a name="index" class="icon reset"><?php echo $this->translate('users_admin_index_button_reset'); ?></a>
 			</th>
 		</tr>
 	</thead>
@@ -69,4 +86,5 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+</form>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

@@ -4,6 +4,11 @@
 	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
 	$acl = Zend_Registry::get('acl');
 ?>
+<form class="span-19 last" method="GET" action="<?php echo $this->url(array('module' => 'users',
+													   'controller' => 'net-user',
+													   'action' => 'index'),
+												null,
+												true); ?>">
 <table class="listing">
 	<thead>
 		<tr>
@@ -29,6 +34,18 @@
 			?>
 			</th>
 		</tr>
+		<tr>
+			<th></th>
+			<th><input type="text" name="username" value="<?php echo $this->filter['username']; ?>" /></th>
+			<th><input type="text" name="firstname" value="<?php echo $this->filter['firstname']; ?>" /></th>
+			<th><input type="text" name="lastname" value="<?php echo $this->filter['lastname']; ?>" /></th>
+			<th><input type="text" name="city" value="<?php echo $this->filter['city']; ?>" /></th>
+			<th><input type="text" name="country" value="<?php echo $this->filter['country']; ?>" /></th>
+			<th class="tools">
+			<a name="index" class="icon filter"><?php echo $this->translate('users_netuser_index_button_filter'); ?></a>
+			<a name="index" class="icon reset"><?php echo $this->translate('users_netuser_index_button_reset'); ?></a>
+			</th>
+		</tr>
 	</thead>
 	<tbody>
 		<?php
@@ -47,10 +64,27 @@
 				<?php
 					$actions = array(/*'view',*/ 'edit', 'delete');
 					if ($macValidator->isValid($user->getUsername())) {
-						unset($actions[0]);
+						/**
+						 * 3 => Disabled group
+						 * @todo do some constant definition or somethings
+						 */
+						if (!in_array(3, $user->getPolicyIds())) {
+							$actions[0] = array('edit' => 'disable');
+						} else {
+							$actions[0] = array('edit' => 'enable');
+						}
+						//unset($actions[0]);
 					}
 
 					foreach ($actions as $action) :
+
+						if (is_array($action)) {
+							$permission = key($action);
+							$action = current($action);
+						} else {
+							$permission = $action;
+						}
+
 						if (!$acl->isAllowed($this->currentUser, $user->getResourceId(), $action)) {
 							continue;
 						}
@@ -73,4 +107,5 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+</form>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

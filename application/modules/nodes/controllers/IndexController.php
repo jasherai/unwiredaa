@@ -71,7 +71,10 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 				continue;
 			}
 
-			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\-\:\.]+/iu', '', $value) . '%';
+			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\-\.]+/iu', '', $value) . '%';
+			if ($key == 'mac') {
+				$filter[$key] == str_replace('-', '', $filter[$key]);
+			}
 		}
 
 		return $filter;
