@@ -18,6 +18,10 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 
 	protected $_autoRedirect = true;
 
+	protected $_referer = null;
+
+	protected $_actionsToReferer = array('add', 'edit', 'delete');
+
 	public function __construct(Zend_Controller_Request_Abstract $request,
 								Zend_Controller_Response_Abstract $response,
 								array $invokeArgs = array())
@@ -43,6 +47,20 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		if (!$this->getAcl()->isAllowed($this->_currentUser, $this->_getDefaultMapper()->getEmptyModel(), 'view')) {
 			$this->view->uiMessage('access_not_allowed_view', 'error');
 			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
+		}
+
+		if ($this->getInvokeArg('bootstrap')->hasResource('session')) {
+			$session = $this->getInvokeArg('bootstrap')->getResource('session');
+
+			if (null === $session->referer) {
+				$session->referer = $this->getRequest()->getServer('HTTP_REFERER');
+			}
+
+			if (!in_array($this->getRequest()->getActionName(), $this->_actionsToReferer)) {
+				$session->referer = null;
+			}
+
+			$this->_referer = $session->referer;
 		}
 	}
 
@@ -211,6 +229,10 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 	{
 		if (!$this->_hasAutoRedirect()) {
 			return;
+		}
+
+		if (null !== $this->_referer) {
+			$this->_helper->redirector->gotoUrlAndExit($this->_referer);
 		}
 
 		$this->_helper->redirector->gotoRouteAndExit(array( 'module' => $this->getRequest()->getParam('module'),
