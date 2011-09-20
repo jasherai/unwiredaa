@@ -4,7 +4,7 @@
 	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
 	$acl = Zend_Registry::get('acl');
 ?>
-<form class="span-19 last" method="GET" action="<?php echo $this->url(array('module' => 'nodes',
+<form class="span-19 last" method="get" action="<?php echo $this->url(array('module' => 'nodes',
 													   'controller' => 'index',
 													   'action' => 'show-group',
 													   'id' => $this->group->getGroupId()),
@@ -42,8 +42,8 @@
 			<th><input type="text" name="ipaddress" value="<?php echo $this->filter['ipaddress']; ?>" /></th>
 			<th></th>
 			<th class="tools">
-			<a name="index/show-group" class="icon filter"><?php echo $this->translate('nodes_index_index_button_filter'); ?></a>
-			<a name="index/show-group" class="icon reset"><?php echo $this->translate('nodes_index_index_button_reset'); ?></a>
+			<a name="index_show-group" class="icon filter"><?php echo $this->translate('nodes_index_index_button_filter'); ?></a>
+			<a name="index_show-group" class="icon reset"><?php echo $this->translate('nodes_index_index_button_reset'); ?></a>
 			</th>
 		</tr>
 	</thead>

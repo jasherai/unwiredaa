@@ -30,6 +30,10 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 	protected $_group = null;
 
+	protected $_online_status = 0;
+
+	protected $_online_status_changed = 0;
+
 	/**
 	 * @return the $nodeId
 	 */
@@ -123,6 +127,38 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 		return $this;
 	}
+	/**
+	 * @return the $_online_status
+	 */
+	public function getOnlineStatus() {
+		return $this->_online_status;
+	}
+
+	/**
+	 * @param bool $status
+	 */
+	public function setOnlineStatus($status = 0) {
+		$this->_online_status = (int) (bool) $status;
+
+		return $this;
+	}
+
+	/**
+	 * @return the $_online_status_changed
+	 */
+	public function getOnlineStatusChanged() {
+		return $this->_online_status_changed;
+	}
+
+	/**
+	 * @param field_type $changed
+	 */
+	public function setOnlineStatusChanged($changed) {
+		$this->_online_status_changed = $changed;
+
+		return $this;
+	}
+
 	/**
 	 * @return the $_toUpdate
 	 */

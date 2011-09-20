@@ -1,6 +1,14 @@
 <?php
 class Users_NetUserController extends Unwired_Controller_Crud
 {
+	public function init()
+	{
+		parent::init();
+
+		$this->_actionsToReferer[] = 'enable';
+		$this->_actionsToReferer[] = 'disable';
+	}
+
 	public function indexAction()
 	{
 		$groupService = new Groups_Service_Group();

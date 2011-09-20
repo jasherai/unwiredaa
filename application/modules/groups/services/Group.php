@@ -144,10 +144,10 @@ class Groups_Service_Group extends Unwired_Service_Tree
 		 */
 		$mapper->findBy($params, 0);
 
-			$paginatorAdapter = $mapper->getPaginatorAdapter();
+		$paginatorAdapter = $mapper->getPaginatorAdapter();
 
 		if (method_exists($paginatorAdapter, 'setGroups')) {
-			$paginatorAdapter->setGroups($groups);
+			$paginatorAdapter->setGroups(array($group));
 		}
 
 		return $mapper;
