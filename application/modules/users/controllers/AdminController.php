@@ -8,8 +8,14 @@ class Users_AdminController extends Unwired_Controller_Crud
 		$adminMapper = new Users_Model_Mapper_Admin();
 
 		$filter = $this->_getFilters();
+		$user = $this->getCurrentUser();
 
-		$groupService->prepareMapperListingByAdmin($adminMapper, null, true, $filter);
+		$lowerOnly = true;
+		if ($this->getAcl()->isAllowed($user, $user, 'special')) {
+			$lowerOnly = false;
+		}
+
+		$groupService->prepareMapperListingByAdmin($adminMapper, null, $lowerOnly, $filter);
 
 		$this->_index($adminMapper);
 	}

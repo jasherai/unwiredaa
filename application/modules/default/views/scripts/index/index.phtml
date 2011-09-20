@@ -37,7 +37,22 @@
 			marker.setMap(map);
 
 		    google.maps.event.addListener(marker, 'click', function(event) {
-				infowindow.setContent('<h5>' + marker.getTitle() +'</h5>');
+		    	var onlinemsg = '';
+
+		    	var date = new Date();
+
+		    	date.setTime(data.online_status_changed);
+
+		    	if (data.online_status > 0) {
+		    		onlinemsg = 'Online since: ' + date; // .getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.get;
+		    	} else {
+		    		onlinemsg = 'Offline since: ' + date;
+		    	}
+
+				infowindow.setContent('<h5>' + marker.getTitle() +'</h5>'+
+									  '<div>MAC: ' + data.mac + '</div>' +
+									  '<div>Address: ' + data.location.address + ', ' + data.location.city +', ' + data.location.country + '</div>' +
+									  '<div>' + onlinemsg + '</div>');
 				infowindow.open(map, marker);
 		    });
 		});

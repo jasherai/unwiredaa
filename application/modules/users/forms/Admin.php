@@ -98,13 +98,13 @@ class Users_Form_Admin extends Unwired_Form
 														'required' => true,
 														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
-																					     	 'options' => array('min' => 6)))));
+																					     	 'options' => array('min' => 8)))));
 
 		$this->addElement('password', 'cfmpassword', array('label' => 'users_admin_edit_form_cfmpassword',
 														'required' => true,
 														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
-																					     	 'options' => array('min' => 6)))));
+																					     	 'options' => array('min' => 8)))));
 
 		$this->addElement('submit', 'form_element_submit', array('label' => 'users_admin_edit_form_save',
 	 														 	 'tabindex' => 20,
