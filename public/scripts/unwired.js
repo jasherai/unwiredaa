@@ -115,7 +115,7 @@ $(document).ready(function(){
 	$('table.listing thead tr th a.filter:last').click(function(){
 		var url = $(this).parents('form:first').attr('action');
 		
-		var action = $(this).attr('name');
+		var action = $(this).attr('name').replace(/\_/gi, '/');
 
 		var regexp = new RegExp(action.replace('/', '\/'), 'gi');
 		if (action.length && !regexp.test(url)) {
@@ -143,5 +143,13 @@ $(document).ready(function(){
 		$('table.listing thead tr th a.filter:last').click();
 		
 		return false;
+	});
+	
+	$('td.tools a.icon').tipsy({
+		delayIn: 500,
+		delayOut: 0,
+		title: function() { return $(this).text(); }, 
+		fade: true,
+		opacity: 0.8,
 	});
 });
