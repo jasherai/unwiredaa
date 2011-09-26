@@ -11,7 +11,7 @@ class Users_AdminController extends Unwired_Controller_Crud
 		$user = $this->getCurrentUser();
 
 		$lowerOnly = true;
-		if ($this->getAcl()->isAllowed($user, $user, 'special')) {
+		if ($this->getAcl()->isAllowed($user, $adminMapper->getEmptyModel(), 'special')) {
 			$lowerOnly = false;
 		}
 
