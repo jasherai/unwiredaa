@@ -187,8 +187,10 @@ set qos.Bulk.packetdelay=200
     if ($this->node->getSettings()->getActivefrom() > 0 && $this->node->getSettings()->getActiveto() > 0) :
 ?>
 set crontabs.@crontab[1].hours=<?php echo (int) $this->node->getSettings()->getActivefrom(); ?>
+
 set crontabs.@crontab[1].enabled=1
 set crontabs.@crontab[2].hours=<?php echo (int) $this->node->getSettings()->getActiveto(); ?>
+
 set crontabs.@crontab[2].enabled=1
 <?php
     else :
