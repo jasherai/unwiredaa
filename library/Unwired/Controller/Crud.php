@@ -123,6 +123,13 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		$this->view->form = $form;
 
 		if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+			if ($this->getRequest()->isPost()) {
+				try {
+					$entity->fromArray($form->getValues());
+				} catch (Exception $e) {
+					// nothing
+				}
+			}
 			return false;
 		}
 
