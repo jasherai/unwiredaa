@@ -9,7 +9,7 @@
 	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
 	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
 
-	$groupsAssigned = ($this->entity->getUserId()) ? $this->entity->getGroupsAssigned() : array();
+	$groupsAssigned = $this->entity->getGroupsAssigned();
 	$this->headScript()->captureStart();
 
 ?>
