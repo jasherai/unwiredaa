@@ -1,10 +1,14 @@
 <?php
 /**
 * Unwired AA GUI
+*
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
-* Licensed unter the terms of http://www.unwired.at/license.html
-*/
+*
+* Licensed under the terms of the Affero Gnu Public License version 3 
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* license available at http://www.unwired.at/license.html
+*/  
 
 /**
  * Base class for a CRUD action controller
@@ -61,6 +65,8 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 			}
 
 			$this->_referer = $session->referer;
+
+			$this->view->refererUrl = $this->_referer;
 		}
 	}
 
