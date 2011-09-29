@@ -1,10 +1,14 @@
 <?php
 /**
 * Unwired AA GUI
+*
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
-* Licensed unter the terms of http://www.unwired.at/license.html
-*/
+*
+* Licensed under the terms of the Affero Gnu Public License version 3 
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* license available at http://www.unwired.at/license.html
+*/  
 
 /**
  * Network node form
@@ -78,6 +82,8 @@ class Nodes_Form_Node extends Unwired_Form
 																						)));
 		$settingsForm->addElement('href', 'form_element_cancel', array('label' => 'nodes_index_edit_form_button_cancel',
 	 														 	 'order' => 8,
+																 'href' => (isset($this->getView()->refererUrl)) ?
+																					$this->getView()->refererUrl : null,
 																 'data' => array(
 																				'params' => array('module' => 'nodes',
 																					  			  'controller' => 'index',

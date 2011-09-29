@@ -1,10 +1,14 @@
 <?php
 /**
 * Unwired AA GUI
+*
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
-* Licensed unter the terms of http://www.unwired.at/license.html
-*/
+*
+* Licensed under the terms of the Affero Gnu Public License version 3 
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* license available at http://www.unwired.at/license.html
+*/  
 
 /**
  * System settings form
@@ -50,9 +54,11 @@ class Default_Form_Settings extends Unwired_Form
 																						)));
 		$this->addElement('href', 'form_element_cancel', array('label' => 'default_settings_edit_form_cancel',
 	 														 	 'tabindex' => 20,
+																 'href' => (isset($this->getView()->refererUrl)) ?
+																					$this->getView()->refererUrl : null,
 																 'data' => array(
-																				'params' => array('module' => 'groups',
-																					  			  'controller' => 'index',
+																				'params' => array('module' => 'default',
+																					  			  'controller' => 'settings',
 																					  			  'action' => 'index'),
 																				'route' => 'default',
 																				'reset' => true
