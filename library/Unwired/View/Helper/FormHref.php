@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 class Unwired_View_Helper_FormHref extends Zend_View_Helper_FormElement
 {
@@ -46,9 +46,9 @@ class Unwired_View_Helper_FormHref extends Zend_View_Helper_FormElement
         	$attribs['href'] = $this->view->url($attribs['data']['params'],
         										$attribs['data']['route'],
         										$attribs['data']['reset']);
-            unset($attribs['data']);
         }
 
+        unset($attribs['data']);
 
         // build the element
         if ($disable) {
