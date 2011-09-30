@@ -295,7 +295,8 @@ CREATE TABLE IF NOT EXISTS `node_settings` (
   `trafficlimit` int(11) NOT NULL,
   `ssid` varchar(45) NOT NULL,
   `channel` smallint(6) NOT NULL DEFAULT '11',
-  `roaming` tinyint(1) NOT NULL DEFAULT '0',
+  `wifi_enabled` tinyint(1) NOT NULL DEFAULT '1',  
+  `roaming` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`node_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Network node settings (used to create a configuration file)';
 
@@ -389,6 +390,9 @@ CREATE TABLE IF NOT EXISTS `radacct` (
   `acctstartdelay` int(12) DEFAULT NULL,
   `acctstopdelay` int(12) DEFAULT NULL,
   `xascendsessionsvrkey` varchar(10) DEFAULT NULL,
+  `locationstring` char(12) DEFAULT NULL,
+  `sessionstate` varchar(32) DEFAULT NULL,
+  `location` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`radacctid`),
   KEY `username` (`username`),
   KEY `framedipaddress` (`framedipaddress`),
