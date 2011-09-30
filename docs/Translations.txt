@@ -1,0 +1,37 @@
+  To translate the web interface to another language you need to use the 
+English language as base.
+
+  The app modules (application/modules) contain "language" directory.
+Each subdirectory represents a language translation.
+  By default there's only one language - English (en).
+  
+  For each directory in application/modules do the following:
+  
+1. Copy the en/ directory to another one named with the language code you're
+   going to translate to. (Example: de/)
+   
+2. With your favourite text editor, edit each of the ini files and translate
+   the values (on the right side of the = sign)
+   
+   Example:
+     EN: form_element_label_password = "Password"
+	 DE: form_element_label_password = "Passwort"
+	 
+   Note: There might be special switches in the translations such as %s and %d,
+         these are replaced by variables from the system so try to keep them
+		 in your translations.
+		 
+3. Move to the next module while you translate texts in all modules
+
+   After translation is completed, you need to edit the
+application/configs/application.ini
+   Locate the following line:
+   
+			resources.translate.locale = "en"
+   and replace "en" with your new language code.
+   
+   Example:
+			resources.translate.locale = "de"
+			
+	Now go to the web interface URL and check if its now
+being loaded with your translations.

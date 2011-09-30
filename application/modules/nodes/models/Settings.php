@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Node settings model
@@ -41,6 +41,8 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	protected $_trafficlimit = null;
 
 	protected $_channel = null;
+
+	protected $_wifiEnabled = 1;
 
 	protected $_roaming = null;
 
@@ -265,6 +267,22 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 	 */
 	public function setChannel($channel) {
 		$this->_channel = $channel;
+
+		return $this;
+	}
+
+	/**
+	 * @return the $wifiEnabled
+	 */
+	public function getWifiEnabled() {
+		return $this->_wifiEnabled;
+	}
+
+	/**
+	 * @param bool $enabled
+	 */
+	public function setWifiEnabled($enabled = true) {
+		$this->_wifiEnabled = (int) (bool) $enabled;
 
 		return $this;
 	}

@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Network node settings form
@@ -98,8 +98,24 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 			$this->getElement('channel')->addMultiOption($i, $i);
 		}
 
+		$this->addElement('checkbox', 'wifi_enabled', array('label' => 'nodes_index_edit_form_wifienabled',
+															'required' => false));
+
 		$this->addElement('checkbox', 'roaming', array('label' => 'nodes_index_edit_form_roaming',
-													'required' => true));
+													'required' => true,
+													'decorators' => array(
+															'element' => array('decorator' => 'ViewHelper'),
+												        	'label' => array('decorator' => 'Label',
+												            				 'options' => array('optionalSuffix' => ':',
+												                								'requiredSuffix' => ' * :',
+																								'placement' => 'prepend')
+																			),
+															'errors' => 'errors',
+															'htmltag' => array('decorator' => 'HtmlTag',
+												            				   'options' => array ('tag' => 'div',
+																								   'class' => 'formelement span-7'))
+															)
+														));
 
 		$this->addElement('select', 'activefrom', array('label' => 'nodes_index_edit_form_activefrom',
 													'required' => false,
@@ -123,6 +139,8 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 									 ->setRequired(false);
 			$this->getElement('channel')->setAttrib('disabled', true)
 										->setRequired(false);
+			$this->getElement('wifi_enabled')->setAttrib('disabled', true)
+											 ->setRequired(false);
 		}
 
 	    $this->setDisplayGroupDecorators(array('FormElements',
@@ -136,7 +154,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 								    														  'options' => array ('tag' => 'div',
 																				 	     						  'class' => 'span-9')))));
 
-		$this->addDisplayGroup(array('bandwidthup', 'bandwidthdown','trafficlimit','ssid','channel','roaming','activefrom','activeto'),
+		$this->addDisplayGroup(array('bandwidthup', 'bandwidthdown','trafficlimit','ssid','channel', 'wifi_enabled', 'roaming','activefrom','activeto'),
 							   'node_wifi', array('decorators' => array('FormElements',
 									   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 								    														  'options' => array ('tag' => 'div',
