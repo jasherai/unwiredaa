@@ -33,6 +33,10 @@ $(function () {
 		}
 	}).change();
 
+	if (!$('#mac').val().length) {
+		$('#status option[value=enabled]').attr('disabled', 'disabled');
+	}
+
 	$('#mac').change(function(){
 		var value = $(this).val();
 		if (value.length != 12 || value.indexOf(':') >= 0) {
@@ -40,6 +44,15 @@ $(function () {
 		}
 
 		$(this).val(value.replace(/([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})([A-F0-9]{2})/gi, '$1:$2:$3:$4:$5:$6'));
+	}).blur(function(){
+		if ($(this).val().length >= 12) {
+			$('#status option[value=enabled]').removeAttr('disabled');
+		} else {
+			$('#status option[value=enabled]').attr('disabled', 'disabled');
+			if ($('#status option[value=enabled]').is(':selected')) {
+				$('#status option:first').attr('selected', 'selected');
+			}
+		}
 	}).change();
 
     $(".grouptree")

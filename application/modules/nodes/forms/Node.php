@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Network node form
@@ -29,7 +29,7 @@ class Nodes_Form_Node extends Unwired_Form
 		$this->addElement('text', 'mac', array('label' => 'nodes_index_edit_form_mac',
 											   'order' => 2,
 												'class' => 'span-5',
-												'required' => true,
+												'required' => false,
 												'validators' => array('mac')));
 
 		$this->addElement('select', 'status', array('label' => 'nodes_index_edit_form_status',
@@ -116,5 +116,14 @@ class Nodes_Form_Node extends Unwired_Form
 			$values['settings'] = array();
 		}
 		return parent::populate($values);
+	}
+
+	public function isValid($data)
+	{
+
+		if ($data['status'] != 'planning') {
+			$this->getElement('mac')->setRequired(true);
+		}
+		return parent::isValid($data);
 	}
 }
