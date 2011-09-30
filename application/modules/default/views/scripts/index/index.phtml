@@ -3,13 +3,50 @@
 
 	$nodes = array();
 	foreach ($this->nodes as $node) {
-		$nodes[] = $node->toArray();
+		$nodeArray = $node->toArray();
+		unset($nodeArray['settings']);
+		$nodes[] = $nodeArray;
 	}
 	$this->headScript()->captureStart();
 ?>
 	var nodes = <?php echo Zend_Json::encode($nodes);?>;
 	var map;
 	var infowindow;
+
+	function stringToDate(datestring)
+	{
+		var match = /(\d{4})\-0?(\d{1,2})\-0?(\d{1,2})\s0?(\d{1,2}):0?(\d{1,2}):0?(\d{1,2})/i.exec(datestring);
+
+		if (!match.length) {
+			return null;
+		}
+
+		var date = new Date();
+
+		date.setFullYear(match[1]);
+		date.setMonth(parseInt(match[2])-1);
+		date.setDate(match[3]);
+		date.setHours(match[4]);
+		date.setMinutes(match[5]);
+		date.setSeconds(match[6]);
+
+		return date;
+	}
+
+	function formatDbDate(datestring)
+	{
+		if (datestring == '0000-00-00 00:00:00') {
+			return 'N/A';
+		}
+
+		var match = /(\d{4})\-(\d{1,2})\-(\d{1,2})\s(\d{1,2}:\d{1,2}:\d{1,2})/i.exec(datestring);
+
+		if (!match.length) {
+			return '';
+		}
+
+		return match[3] + '/' + match[2] + '/' + match[1] + ' ' + match[4];
+	}
 
 	$(document).ready(function(){
 		$('#nodemap').height(450);
@@ -28,27 +65,30 @@
 		infowindow = new google.maps.InfoWindow();
 
 		$.each(nodes, function(idx, data) {
+			var mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-red.png")?>";
+			var onlinemsg = '';
+
+			var formattedDate = formatDbDate(data.onlinestatuschanged);
+
+			if (data.onlinestatus > 0) {
+	    		onlinemsg = 'Online since: ' + formattedDate;
+	    		mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-green.png")?>";
+	    	} else {
+	    		onlinemsg = 'Offline since: ' + formattedDate;
+	    	}
+
 			var marker = new google.maps.Marker({
 		        position: new google.maps.LatLng(data.location.latitude, data.location.longitude),
 		        title: data.name,
-		        draggable: false
+		        draggable: false,
+		        icon: mimage
 		    });
+
+
 
 			marker.setMap(map);
 
 		    google.maps.event.addListener(marker, 'click', function(event) {
-		    	var onlinemsg = '';
-
-		    	var date = new Date();
-
-		    	date.setTime(data.online_status_changed);
-
-		    	if (data.online_status > 0) {
-		    		onlinemsg = 'Online since: ' + date; // .getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.get;
-		    	} else {
-		    		onlinemsg = 'Offline since: ' + date;
-		    	}
-
 				infowindow.setContent('<h5>' + marker.getTitle() +'</h5>'+
 									  '<div>MAC: ' + data.mac + '</div>' +
 									  '<div>Address: ' + data.location.address + ', ' + data.location.city +', ' + data.location.country + '</div>' +

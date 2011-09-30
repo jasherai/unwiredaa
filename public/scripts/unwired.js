@@ -4,6 +4,10 @@
 (function() {
   var proxied = window.alert;
   window.alert = function() {
+	if (arguments.length == 2) {
+		proxied(arguments[0]);
+		return;
+	}
 	$('body').append('<div id="alertoverride">' + arguments[0] + '</div>');
 	$('#alertoverride').dialog({
 		modal: true,
