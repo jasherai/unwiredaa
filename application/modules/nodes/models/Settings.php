@@ -40,11 +40,11 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 
 	protected $_trafficlimit = null;
 
-	protected $_channel = null;
+	protected $_channel = 11;
 
 	protected $_wifiEnabled = 1;
 
-	protected $_roaming = null;
+	protected $_roaming = 1;
 
 	/**
 	 * @return the $nodeId
