@@ -23,7 +23,20 @@ $(function () {
 			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
 
 			$("input[name=group_id]").val(groupId);
-	     })
+	     });
+
+	$('#firstname,#lastname').blur(function(){
+		if ($('#username').val().length) {
+			return true;
+		}
+
+		if (!$('#firstname').val().length || !$('#lastname').val().length) {
+			return true;
+		}
+
+		var username = $('#firstname').val().trim() + $('#lastname').val().trim() + '@' + $('.grouptree ul li:first a:first').text().trim();
+		$('#username').val(username.toLowerCase());
+	});
 });
 <?php
 	$this->headScript()->captureEnd();

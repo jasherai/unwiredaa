@@ -1,8 +1,17 @@
 <h1><?php echo $this->translate('nodes_index_showgroup_heading', $this->group->getName()); ?></h1>
 
 <?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.pack.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.css'));
 	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
 	$acl = Zend_Registry::get('acl');
+	$this->headScript()->captureStart();
+?>
+$(document).ready(function(){
+	$('#groupfilterlink').fancybox();
+});
+<?php
+	$this->headScript()->captureEnd();
 ?>
 <form class="span-19 last" method="get" action="<?php echo $this->url(array('module' => 'nodes',
 													   'controller' => 'index',
@@ -36,7 +45,7 @@
 			</th>
 		</tr>
 		<tr>
-			<th></th>
+			<th><a href="#groupfilter" id="groupfilterlink"><?php echo $this->group->getName(); ?></a></th>
 			<th><input type="text" name="name" value="<?php echo $this->filter['name']; ?>" /></th>
 			<th><input type="text" name="mac" value="<?php echo $this->filter['mac']; ?>" /></th>
 			<th><input type="text" name="ipaddress" value="<?php echo $this->filter['ipaddress']; ?>" /></th>
@@ -93,4 +102,5 @@
 	</tbody>
 </table>
 </form>
+<?php echo $this->partial('index/groups-filter.phtml', 'nodes', array('rootGroup' => $this->rootGroup)); ?>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

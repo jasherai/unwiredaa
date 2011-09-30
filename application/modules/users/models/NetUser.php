@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Network user model
@@ -39,11 +39,11 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 
 	protected $_zip = null;
 
-	protected $_country = null;
+	protected $_country = 'AT';
 
 	protected $_mac = null;
 
-	protected $_policyIds = array();
+	protected $_policyIds = array(1);
 
 	/**
 	 * @return the $userId
@@ -272,7 +272,7 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 	/**
 	 * @param array $policyIds
 	 */
-	public function setPolicyIds(array $policyIds) {
+	public function setPolicyIds(array $policyIds = array(1)) {
 		$this->_policyIds = $policyIds;
 
 		return $this;

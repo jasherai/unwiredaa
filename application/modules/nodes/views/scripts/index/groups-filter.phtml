@@ -1,0 +1,66 @@
+<?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
+	$this->headScript()->captureStart();
+?>
+var filterGroupSelected = 0;
+$(function () {
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : [ "group_1" ] },
+            "ui" : { select_limit : 1 }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			filterGroupSelected = groupId;
+			});
+
+	 $('#groupfilter .buttons a.button.blue').click(function(){
+	 	var href = '';
+
+		if (filterGroupSelected == 0) {
+			return false;
+		}
+
+	 	if (filterGroupSelected < 2) {
+	 		href = '<?php
+	 					echo $this->url(array('module' => 'nodes',
+	 										  'controller' => 'index',
+	 										  'action' => 'index'),
+	 								    null,
+	 								    true);
+	 				?>';
+	 	} else {
+	 		href = '<?php
+	 					echo $this->url(array('module' => 'nodes',
+	 										  'controller' => 'index',
+	 										  'action' => 'show-group'),
+	 								    null,
+	 								    true);
+	 				?>/id/' + filterGroupSelected;
+	 	}
+
+	 	window.location.href = href;
+	 	return false;
+	 });
+
+	 $('#groupfilter .buttons a.button.red').click(function(){
+	 	$.fancybox.close();
+	 });
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
+<div style="display: none;">
+	<div id="groupfilter" class="span-7">
+		<div class="grouptree span-7">
+			<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
+		</div>
+		<div class="buttons span-7">
+			<a class="button small blue"><span><?php echo $this->translate('nodes_index_index_button_filter'); ?></span></a>
+			<a class="button small red"><span><?php echo $this->translate('nodes_index_index_button_cancel'); ?></span></a>
+		</div>
+	</div>
+</div>

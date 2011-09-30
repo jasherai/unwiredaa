@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 class Nodes_IndexController extends Unwired_Controller_Crud
 {
@@ -20,7 +20,12 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 
 	public function indexAction()
 	{
+
 		$groupService = new Groups_Service_Group();
+
+		$rootGroup = $groupService->getGroupTreeByAdmin();
+
+		$this->view->rootGroup = $rootGroup;
 
 		$filter = $this->_getFilters();
 
@@ -51,8 +56,11 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 														 true);
 		}
 
-
 		$groupService = new Groups_Service_Group();
+
+		$rootGroup = $groupService->getGroupTreeByAdmin();
+
+		$this->view->rootGroup = $rootGroup;
 
 		$filter = $this->_getFilters();
 
@@ -82,7 +90,7 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 				continue;
 			}
 
-			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\-\.]+/iu', '', $value) . '%';
+			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\@\-\:\.]+/iu', '', $value) . '%';
 			if ($key == 'mac') {
 				$filter[$key] == str_replace('-', '', $filter[$key]);
 			}

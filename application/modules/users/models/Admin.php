@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Admin user model
@@ -37,7 +37,7 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 
 	protected $_zip = null;
 
-	protected $_country = null;
+	protected $_country = 'AT';
 
 	/**
 	 * @return the $userId
@@ -65,7 +65,7 @@ class Users_Model_Admin extends Unwired_Model_Generic implements Zend_Acl_Role_I
 	 * key = group id, value = role id
 	 * @param array $groupsAssigned
 	 */
-	public function setGroupsAssigned(array $groupsAssigned) {
+	public function setGroupsAssigned(array $groupsAssigned = array()) {
 		$this->_groupsAssigned = $groupsAssigned;
 		return $this;
 	}

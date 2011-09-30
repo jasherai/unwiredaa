@@ -224,6 +224,14 @@ table.listing tr td.column_id {
     width: 70px;
 }
 
+table.listing tr td span.online {
+	color: #007700;
+}
+
+table.listing tr td span.offline {
+    color: #990000;
+}
+
 .message p {
 	margin-bottom: 5px;
 }

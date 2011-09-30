@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Network user form
@@ -73,16 +73,16 @@ class Users_Form_NetUser extends Unwired_Form
 														'required' => true,
 														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
-																					     	 'options' => array('min' => 6)))));
+																					     	 'options' => array('min' => 8)))));
 
 		$this->addElement('password', 'cfmpassword', array('label' => 'users_netuser_edit_form_cfmpassword',
 														'required' => true,
 														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
-																					     	 'options' => array('min' => 6)))));
+																					     	 'options' => array('min' => 8)))));
 
 		$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
-												'required' => true,
+												'required' => false,
 												'class' => 'span-5',
 												'validators' => array('mac')));
 
@@ -159,6 +159,10 @@ class Users_Form_NetUser extends Unwired_Form
 
 	public function isValid($data)
 	{
+		if (isset($data['policy_ids']) && in_array(1, $data['policy_ids'])) {
+			$this->getElement('mac')->setRequired(true);
+		}
+
 		$valid = parent::isValid($data);
 
 		if (!$valid) {
