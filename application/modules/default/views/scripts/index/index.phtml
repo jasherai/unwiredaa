@@ -36,7 +36,7 @@
 	function formatDbDate(datestring)
 	{
 		if (datestring == '0000-00-00 00:00:00') {
-			return 'N/A';
+			return 'unknown';
 		}
 
 		var match = /(\d{4})\-(\d{1,2})\-(\d{1,2})\s(\d{1,2}:\d{1,2}:\d{1,2})/i.exec(datestring);
@@ -76,6 +76,10 @@
 	    	} else {
 	    		onlinemsg = 'Offline since: ' + formattedDate;
 	    	}
+
+			if (data.status == 'planning') {
+				mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-yellow.png")?>";
+			}
 
 			var marker = new google.maps.Marker({
 		        position: new google.maps.LatLng(data.location.latitude, data.location.longitude),

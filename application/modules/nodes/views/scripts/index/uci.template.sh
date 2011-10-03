@@ -50,7 +50,7 @@ set openvpn.management.enable=1
 set openvpn.management.client=1
 set openvpn.management.dev=tun
 set openvpn.management.proto=udp
-set openvpn.management.remote=portal.wlan.skiamade.com
+set openvpn.management.remote=vpn.wlan.skiamade.com
 set openvpn.management.port=1195
 set openvpn.management.resolv_retry=infinite
 set openvpn.management.nobind=1
@@ -67,7 +67,7 @@ set openvpn.clients.enable=1
 set openvpn.clients.client=1
 set openvpn.clients.dev=tap
 set openvpn.clients.proto=udp
-set openvpn.clients.remote=portal.wlan.skiamade.com
+set openvpn.clients.remote=vpn.wlan.skiamade.com
 set openvpn.clients.port=1194
 set openvpn.clients.resolv_retry=infinite
 set openvpn.clients.nobind=1
@@ -96,6 +96,17 @@ set system.@button[1].handler="logger factory default"
 set system.@button[1].min=5
 set system.@button[1].max=30
 set wireless.radio0=wifi-device
+<?php
+    if ($this->node->getSettings()->getWifiEnabled()) :
+?>
+set wireless.radio0.disabled=0
+<?php
+    else:
+?>
+set wireless.radio0.disabled=1
+<?php
+    endif;
+?>
 set wireless.radio0.type=mac80211
 set wireless.radio0.channel=<?php echo $this->node->getSettings()->getChannel() . "\n"; ?>
 set wireless.radio0.macaddr=<?php echo $this->node->getMac() . "\n"; ?>

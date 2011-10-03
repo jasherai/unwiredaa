@@ -113,6 +113,17 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 
 		if (null !== $entity) {
 			$entity->setToUpdate(true);
+
+			/**
+			 * Do not mark empty mac/planning APs to be updated
+			 */
+			if ($this->getRequest()->isPost() &&
+			   (!$this->getRequest()->getParam('mac', null)
+			   || $this->getRequest()->getParam('status', 'planning') == 'planning')) {
+
+			   	$entity->setToUpdate(false);
+			}
+
 		} else {
 			$groupId = (int) $this->getRequest()->getParam('group_id', 0);
 
