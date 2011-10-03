@@ -68,9 +68,9 @@
 			var mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-red.png")?>";
 			var onlinemsg = '';
 
-			var formattedDate = formatDbDate(data.onlinestatuschanged);
+			var formattedDate = formatDbDate(data.online_status_changed);
 
-			if (data.onlinestatus > 0) {
+			if (data.online_status > 0) {
 	    		onlinemsg = 'Online since: ' + formattedDate;
 	    		mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-green.png")?>";
 	    	} else {

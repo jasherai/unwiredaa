@@ -166,7 +166,7 @@ class Users_Form_Admin extends Unwired_Form
 
 	public function populate(array $values)
 	{
-		if (count($values['groups_assigned'])) {
+		if (isset($values['groups_assigned']) && count($values['groups_assigned'])) {
 			foreach ($values['groups_assigned'] as $key => $value) {
 				$this->getElement('groups_assigned')->addMultiOption($key, $value);
 			}
@@ -199,7 +199,7 @@ class Users_Form_Admin extends Unwired_Form
 	{
 		$values = parent::getValues($suppressArrayNotation);
 
-		if ($values['groups_assigned'] == null) {
+		if (!isset($values['groups_assigned']) && $values['groups_assigned'] == null) {
 			$values['groups_assigned'] = array();
 		}
 

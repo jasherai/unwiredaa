@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Node model (aggregates location and settings)
@@ -34,9 +34,11 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 	protected $_group = null;
 
-	protected $_online_status = 0;
+	protected $_onlineStatus = 0;
 
-	protected $_online_status_changed = 0;
+	protected $_onlineStatusChanged = 0;
+
+	protected $_onlineUsersCount = 0;
 
 	/**
 	 * @return the $nodeId
@@ -132,33 +134,45 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 		return $this;
 	}
 	/**
-	 * @return the $_online_status
+	 * @return the $_onlineStatus
 	 */
 	public function getOnlineStatus() {
-		return $this->_online_status;
+		return $this->_onlineStatus;
 	}
 
 	/**
 	 * @param bool $status
 	 */
 	public function setOnlineStatus($status = 0) {
-		$this->_online_status = (int) (bool) $status;
+		$this->_onlineStatus = (int) (bool) $status;
 
 		return $this;
 	}
 
 	/**
-	 * @return the $_online_status_changed
+	 * @return the $_onlineStatusChanged
 	 */
 	public function getOnlineStatusChanged() {
-		return $this->_online_status_changed;
+		return $this->_onlineStatusChanged;
 	}
 
 	/**
-	 * @param field_type $changed
+	 * @param timestamp $changed
 	 */
 	public function setOnlineStatusChanged($changed) {
-		$this->_online_status_changed = $changed;
+		$this->_onlineStatusChanged = $changed;
+
+		return $this;
+	}
+
+	public function getOnlineUsersCount()
+	{
+		return $this->_onlineUsersCount;
+	}
+
+	public function setOnlineUsersCount($count = 0)
+	{
+		$this->_onlineUsersCount = (int) $count;
 
 		return $this;
 	}
