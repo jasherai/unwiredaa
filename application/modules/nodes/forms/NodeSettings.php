@@ -95,6 +95,9 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 													'class' => 'span-5'));
 
 		for ($i=1; $i<=13; $i++) {
+			if ($i == 6) {
+				continue;
+			}
 			$this->getElement('channel')->addMultiOption($i, $i);
 		}
 
