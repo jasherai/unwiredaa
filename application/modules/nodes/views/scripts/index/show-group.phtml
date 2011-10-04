@@ -28,6 +28,7 @@ $(document).ready(function(){
 			<th><?php echo $this->translate('nodes_index_index_wanip');?></th>
 			<th><?php echo $this->translate('nodes_index_index_status');?></th>
 			<th><?php echo $this->translate('nodes_index_index_online');?></th>
+			<th><?php echo $this->translate('nodes_index_index_onlineusers');?></th>
 			<th class="tools">
 			<?php
 			if ($acl->isAllowed($this->currentUser, 'nodes_node', 'add')) :
@@ -50,6 +51,7 @@ $(document).ready(function(){
 			<th><input type="text" name="name" value="<?php echo $this->filter['name']; ?>" /></th>
 			<th><input type="text" name="mac" value="<?php echo $this->filter['mac']; ?>" /></th>
 			<th><input type="text" name="ipaddress" value="<?php echo $this->filter['ipaddress']; ?>" /></th>
+			<th></th>
 			<th></th>
 			<th></th>
 			<th class="tools">
@@ -77,6 +79,7 @@ $(document).ready(function(){
 			<td><?php echo $node->getSettings()->getIpaddress(); ?></td>
 			<td><?php echo $node->getStatus(); ?></td>
 			<td><?php echo $this->onlineStatusSince($node); ?></td>
+			<td><?php echo $node->getOnlineUsersCount(); ?></td>
 			<td class="tools">
 				<?php
 					$actions = array(/*'view',*/ 'edit', 'delete');

@@ -40,6 +40,8 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 	protected $_onlineUsersCount = 0;
 
+	protected $_deleted = 0;
+
 	/**
 	 * @return the $nodeId
 	 */
@@ -189,6 +191,18 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	 */
 	public function setToUpdate($toUpdate) {
 		$this->_toUpdate = (int) (bool) $toUpdate;
+
+		return $this;
+	}
+
+	public function isDeleted()
+	{
+		return (int) $this->_deleted;
+	}
+
+	public function setDeleted($deleted = false)
+	{
+		$this->_deleted = (int) (bool) $deleted;
 
 		return $this;
 	}

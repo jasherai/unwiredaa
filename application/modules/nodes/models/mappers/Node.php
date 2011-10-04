@@ -41,6 +41,47 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 		return $this->_settingsTable;
 	}
 
+	public function find($id)
+	{
+		$result = parent::find($id);
+
+		if ($result && $result->isDeleted()) {
+			return null;
+		}
+
+		return $result;
+	}
+
+	/**
+     * Find entities by criteria
+     *
+     * @param Zend_Db_Select|array $conditions
+     * @param int|null $limit
+     */
+    public function findBy($conditions, $limit = null)
+    {
+    	if ($conditions instanceof Zend_Db_Select) {
+    		$conditions->where('deleted = ?', 0);
+    	} elseif (is_array($conditions)) {
+    		$conditions['deleted'] = 0;
+    	}
+
+    	return parent::findBy($conditions, $limit);
+    }
+
+    /**
+     * Get all entries
+     * @param string $order
+     * @return array
+     */
+    public function fetchAll($order = null)
+    {
+        $resultSet = $this->getDbTable()->fetchAll('deleted = 0', $order);
+
+        return $this->rowsetToModels($resultSet);
+    }
+
+
 	public function save(Unwired_Model_Generic $model)
 	{
 		$nodeTable = $this->getDbTable();
@@ -86,10 +127,47 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 			$model->setSettings($settingsRow->toArray());
 		}
 
-		// $onlineUsers = SELECT count(*) as client_count, HEX(location) as `device` FROM radacct WHERE acctterminatecause = NULL GROUP BY location
+		if (!$model->getOnlineStatus()) {
+			return $model;
+		}
+
+		$select = $this->getDbTable()
+							->getAdapter()
+								 ->select()
+								 	->from('radacct', new Zend_Db_Expr('count(*) AS `online_users`'))
+								 	->where('acctterminatecause = ? OR acctterminatecause IS NULL', '')
+								 	->where('location = 0x' . $model->getMac());
+
+		$onlineUsers = $this->getDbTable()
+								 ->getAdapter()
+								 	  ->fetchOne($select);
+
+		$model->setOnlineUsersCount($onlineUsers);
 
 		return $model;
 	}
+
+    /**
+     * Mark node entry in database as deleted
+     * @param Unwired_Model_Generic $model
+     * @return integer
+     */
+    public function delete(Unwired_Model_Generic $model)
+    {
+    	$rowSet = $this->getDbTable()->find($model->getNodeId());
+
+    	if (!$rowSet || !$rowSet->count()) {
+    		return 0;
+    	}
+
+    	$row = $rowSet->current();
+
+    	$row->deleted = 1;
+
+    	$row->save();
+
+    	return 1;
+    }
 
 	/* (non-PHPdoc)
 	 * @see Zend_Paginator_AdapterAggregate::getPaginatorAdapter()
