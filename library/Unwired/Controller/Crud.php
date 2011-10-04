@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Base class for a CRUD action controller
@@ -115,6 +115,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 			$this->view->uiMessage('access_not_allowed_add', 'error');
 			$this->_setAutoRedirect(true);
 			$this->_gotoIndex();
+			return false;
 		}
 
 		if (null === $form) {
@@ -179,6 +180,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		if (!$id) {
 			$this->view->uiMessage('entity_not_found', 'error');
 			$this->_gotoIndex();
+			return false;
 		}
 
 		$entity = $mapper->find($id);
@@ -186,6 +188,7 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 		if (!$entity) {
 			$this->view->uiMessage('entity_not_found', 'error');
 			$this->_gotoIndex();
+			return false;
 		}
 
 		return $this->_add($mapper, $entity, $form);
