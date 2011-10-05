@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Base functionality for a DB mapper
@@ -254,7 +254,14 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
 				switch ($value) {
 					case null:
-						$select->where($field . ' IS NULL');
+						/**
+						 * 0 is considered null in case
+						 */
+						if (is_numeric($value)) {
+							$select->where($field . ' = 0');
+						} else {
+							$select->where($field . ' IS NULL');
+						}
 					break;
 
 					case (is_array($value)):
