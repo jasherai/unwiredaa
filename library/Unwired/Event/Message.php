@@ -20,6 +20,10 @@ class Unwired_Event_Message
 	{
 		$this->_messageId = $messageId;
 
+		if (!$data instanceof Unwired_Event_Message_Data) {
+			$data = new Unwired_Event_Message_Data($data);
+		}
+
 		$this->_data = $data;
 	}
 

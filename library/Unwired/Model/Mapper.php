@@ -29,6 +29,13 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     protected $_paginatorAdapter = null;
 
+    protected $_eventBroker = null;
+
+    static protected $_defaultEventBroker = null;
+
+    protected $_eventsDisabled = false;
+
+
     public function __construct()
     {
     	if (null === $this->_modelClass) {
@@ -126,18 +133,32 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
         	$row = $this->getDbTable()->fetchRow($primaryFilter);
         }
 
+        $oldData = array();
+
         if (!$row) {
         	$row = $this->getDbTable()->fetchNew();
+        } else {
+			$oldData = $row->toArray();
         }
 
         try {
-        	foreach ($data as $col => $value) {
-        		$row->$col = $value;
-        	}
+        	$row->setFromArray($data);
 
-        	$row->save();
+        	/* foreach ($data as $col => $value) {
+        		$row->$col = $value;
+        	} */
+
+        	$id = $row->save();
 
         	$model->fromArray($row->toArray());
+
+        	if (empty($oldData)) {
+        		$eventId = 'add';
+        	} else {
+        		$eventId = 'edit';
+        	}
+
+        	$this->sendEvent($eventId, $model, $id, $model->toArray());
 
         } catch (Exception $e) {
         	throw new Unwired_Exception('Error saving the information', 500, $e);
@@ -164,7 +185,11 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
 		$nulled = 0;
 
+		$modelId = array();
+
         foreach ($primary as $col) {
+        	$modelId[$col] = $data[$col];
+
         	if (null === $data[$col]) {
         		if (count($primary) == 1) {
         			break;
@@ -173,10 +198,17 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
         		$nulled++;
         	} else {
         		$primaryFilter[$col . ' = ?'] = $data[$col];
+        		$modelId = $data[$col];
         	}
         }
 
-        return $this->getDbTable()->delete($primaryFilter);
+        $result = $this->getDbTable()->delete($primaryFilter);
+
+        if ($result > 0) {
+        	$this->sendEvent('delete', $model, $modelId);
+        }
+
+        return $result;
     }
 
     /**
@@ -205,7 +237,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
      * @param Zend_Db_Select|array $conditions
      * @param int|null $limit
      */
-    public function findBy($conditions, $limit = null)
+    public function findBy($conditions, $limit = null, $order = null)
     {
     	if ($conditions instanceof Zend_Db_Select) {
     		$select = $conditions;
@@ -215,10 +247,14 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
 			$cols = $this->getDbTable()->info(Zend_Db_Table::COLS);
 
+			/**
+			 * @todo Optimize this
+			 */
 			foreach ($conditions as $field => $value) {
 
 				if (!in_array($field, $cols)) {
 					$dependents = $this->getDbTable()->getDependentTables();
+
 					foreach ($dependents as $table) {
 						$tableInstance = (is_string($table)) ? new $table : $table;
 
@@ -229,16 +265,36 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 						$joinTableName = $tableInstance->info(Zend_Db_Table::NAME);
 						$fromTableName = $this->getDbTable()->info(Zend_Db_Table::NAME);
 
-						$joinCols = array_intersect($this->getDbTable()->info(Zend_Db_Table::PRIMARY),
+						$tablePkInfo = $this->getDbTable()->info(Zend_Db_Table::PRIMARY);
+						$joinCols = array_intersect($tablePkInfo,
 													$tableInstance->info(Zend_Db_Table::PRIMARY));
-						$joinCondition = array();
 
 						$groupCondition = array();
+						$joinCondition = array();
 
-						foreach ($joinCols as $col) {
-							$groupCondition[] = "{$fromTableName}.{$col}";
-							$joinCondition[] = "{$joinTableName}.{$col} = {$fromTableName}.{$col}";
+						/**
+						 * @todo First check direct dependents by primary key then try any match
+						 */
+						if (empty($joinCols)) {
+							$joinCols = array_intersect($this->getDbTable()->info(Zend_Db_Table::COLS),
+													    $tableInstance->info(Zend_Db_Table::COLS));
+
+							foreach ($tablePkInfo as $pk) {
+						    	$groupCondition[] = "{$fromTableName}.{$pk}";
+							}
+
+							foreach ($joinCols as $col) {
+								$joinCondition[] = "{$joinTableName}.{$col} = {$fromTableName}.{$col}";
+							}
+						} else {
+							foreach ($joinCols as $col) {
+								$groupCondition[] = "{$fromTableName}.{$col}";
+								$joinCondition[] = "{$joinTableName}.{$col} = {$fromTableName}.{$col}";
+							}
 						}
+
+
+
 
 						$select->setIntegrityCheck(false)
 							   ->joinInner($joinTableName, implode(' AND ', $joinCondition));
@@ -279,6 +335,10 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 			}
     	} else {
     		throw new Unwired_Exception('Unwired_Model_Mapper::findBy expects array with conditions or select instance');
+    	}
+
+    	if ($order) {
+    		$select->order($order);
     	}
 
 		if ($limit === 0) {
@@ -385,6 +445,99 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 		unset($this->_repository[$id]);
 
     	return $this;
+    }
+
+
+    /**
+     * Send event to event broker to be dispatched
+     *
+     * @param string $event
+     * @param Unwired_Model_Generic $entity
+     * @param integer $entityId
+     * @param array $params
+     */
+    public function sendEvent($event, Unwired_Model_Generic $entity, $entityId, array $params = array())
+    {
+    	if ($this->isEventsDisabled()) {
+    		return true;
+    	}
+
+		$broker = $this->getEventBroker();
+
+		if (!$broker) {
+			return false;
+		}
+
+		$data = array('entity' => $entity,
+					  'entityId' => $entityId,
+					  'user'	=> Zend_Auth::getInstance()->getIdentity(),
+					  'params' => $params);
+
+		$message = new Unwired_Event_Message($event, $data);
+
+		$broker->dispatch($message);
+
+		return true;
+    }
+
+    /**
+     * Get event broker
+     * @return Unwired_Event_Broker
+     */
+    public function getEventBroker()
+    {
+    	if (null === $this->_eventBroker) {
+    		$this->_eventBroker = self::getDefaultEventBroker();
+    	}
+
+    	return $this->_eventBroker;
+    }
+
+    /**
+     * Set event broker
+     * @param Unwired_Event_Broker $broker
+     * @return Unwired_Event_Broker
+     */
+    public function setEventBroker(Unwired_Event_Broker $broker)
+    {
+    	$this->_eventBroker = $broker;
+
+    	return $this;
+    }
+
+    /**
+     * Get default event broker
+     * @return Unwired_Event_Broker
+     */
+    static public function getDefaultEventBroker()
+    {
+    	if (null === self::$_defaultEventBroker && Zend_Registry::isRegistered('Unwired_Event_Broker')) {
+    		self::$_defaultEventBroker = Zend_Registry::get('Unwired_Event_Broker');
+    	}
+
+    	return self::$_defaultEventBroker;
+    }
+
+    /**
+     * Set default event broker
+     * @param Unwired_Event_Broker $broker
+     * @return Unwired_Event_Broker
+     */
+    static public function setDefaultEventBroker(Unwired_Event_Broker $broker)
+    {
+    	self::$_defaultEventBroker = $broker;
+    }
+
+    public function isEventsDisabled()
+    {
+    	return (bool) $this->_eventsDisabled;
+    }
+
+    public function setEventsDisabled($disabled = false)
+    {
+    	$this->_eventsDisabled = (bool) $disabled;
+
+  		return $this;
     }
 
     public function setPaginatorAdapter(Zend_Paginator_Adapter_Interface $adapter = null)

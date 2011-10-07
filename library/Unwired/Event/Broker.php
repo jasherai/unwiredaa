@@ -16,8 +16,32 @@ class Unwired_Event_Broker
 
 	protected $_handlers = array();
 
+	/**
+	 * Add event message handler
+	 *
+	 * @param Unwired_Event_Handler_Interface $handler
+	 * @param unknown_type $queue
+	 * @return Unwired_Event_Broker
+	 */
 	public function addHandler(Unwired_Event_Handler_Interface $handler, $queue = null)
 	{
+		$this->_handlers[] = $handler;
 
+		return $this;
+	}
+
+	/**
+	 * Dispatch message to handlers
+	 *
+	 * @param Unwired_Event_Message $message
+	 * @return Unwired_Event_Broker
+	 */
+	public function dispatch(Unwired_Event_Message $message)
+	{
+		foreach ($this->_handlers as $handler) {
+			$handler->handle($message);
+		}
+
+		return $this;
 	}
 }

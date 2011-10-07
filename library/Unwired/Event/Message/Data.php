@@ -20,7 +20,7 @@ class Unwired_Event_Message_Data
 		$this->fromArray($data);
 	}
 
-	public function __call($name)
+	public function __call($name, $args)
 	{
 		$matches = array();
 
@@ -33,7 +33,7 @@ class Unwired_Event_Message_Data
 			return $this->$matches[2];
 		}
 
-		return $this->__set($matches[2], func_get_arg(1));
+		return $this->__set($matches[2], $args[0]);
 	}
 
 	public function __set($key, $value)

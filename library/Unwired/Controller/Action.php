@@ -5,14 +5,18 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 class Unwired_Controller_Action extends Zend_Controller_Action
 {
 	protected $_acl = null;
+
+	protected $_eventBroker = null;
+
+	static protected $_defaultEventBroker;
 
 	public function init()
 	{
@@ -94,5 +98,81 @@ class Unwired_Controller_Action extends Zend_Controller_Action
         if (file_exists($translationFile)) {
             $translate->getAdapter()->addTranslation($translationFile, $translate->getLocale());
         }
+    }
+
+    /**
+     * Send event to event broker to be dispatched
+     *
+     * @param string $event
+     * @param Unwired_Model_Generic $entity
+     * @param integer $entityId
+     * @param array $params
+     */
+    public function sendEvent($event, Unwired_Model_Generic $entity, $entityId, array $params = array())
+    {
+		$broker = $this->getEventBroker();
+
+		if (!$broker) {
+			return false;
+		}
+
+		$data = array('entity' => $entity,
+					  'entityId' => $entityId,
+					  'user'	=> Zend_Auth::getInstance()->getIdentity(),
+					  'params' => $params);
+
+		$message = new Unwired_Event_Message($event, $data);
+
+		$broker->dispatch($message);
+
+		return true;
+    }
+
+    /**
+     * Get event broker
+     * @return Unwired_Event_Broker
+     */
+    public function getEventBroker()
+    {
+    	if (null === $this->_eventBroker) {
+    		$this->_eventBroker = self::getDefaultEventBroker();
+    	}
+
+    	return $this->_eventBroker;
+    }
+
+    /**
+     * Set event broker
+     * @param Unwired_Event_Broker $broker
+     * @return Unwired_Event_Broker
+     */
+    public function setEventBroker(Unwired_Event_Broker $broker)
+    {
+    	$this->_eventBroker = $broker;
+
+    	return $this;
+    }
+
+    /**
+     * Get default event broker
+     * @return Unwired_Event_Broker
+     */
+    static public function getDefaultEventBroker()
+    {
+    	if (null === self::$_defaultEventBroker && Zend_Registry::isRegistered('Unwired_Event_Broker')) {
+    		self::$_defaultEventBroker = Zend_Registry::get('Unwired_Event_Broker');
+    	}
+
+    	return self::$_defaultEventBroker;
+    }
+
+    /**
+     * Set default event broker
+     * @param Unwired_Event_Broker $broker
+     * @return Unwired_Event_Broker
+     */
+    static public function setDefaultEventBroker(Unwired_Event_Broker $broker)
+    {
+    	self::$_defaultEventBroker = $broker;
     }
 }

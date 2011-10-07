@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 class Unwired_Application_Module_Bootstrap extends Zend_Application_Module_Bootstrap
 {
@@ -29,7 +29,11 @@ class Unwired_Application_Module_Bootstrap extends Zend_Application_Module_Boots
 		if (file_exists($navConfigPath)) {
 			$conf = new Zend_Config_Ini($navConfigPath,
 										APPLICATION_ENV);
-			$nav->addPages($conf);
+			try {
+				$nav->addPages($conf);
+			} catch (Exception $e) {
+				// @todo handle exception
+			}
 		}
 	}
 
