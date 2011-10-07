@@ -25,6 +25,8 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     protected $_customSelect = null;
 
+    protected $_defaultOrder = null;
+
     protected $_repository = array();
 
     protected $_paginatorAdapter = null;
@@ -78,6 +80,18 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
         }
 
         return $this->_dbTable;
+    }
+
+    public function getDefaultOrder()
+    {
+    	return $this->_defaultOrder;
+    }
+
+    public function setDefaultOrder($order)
+    {
+    	$this->_defaultOrder = $order;
+
+    	return $this;
     }
 
     /**
@@ -339,6 +353,8 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     	if ($order) {
     		$select->order($order);
+    	} else if ($this->getDefaultOrder()) {
+    		$select->order($this->getDefaultOrder());
     	}
 
 		if ($limit === 0) {
