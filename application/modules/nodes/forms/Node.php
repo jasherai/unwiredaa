@@ -30,7 +30,15 @@ class Nodes_Form_Node extends Unwired_Form
 											   'order' => 2,
 												'class' => 'span-5',
 												'required' => false,
-												'validators' => array('mac')));
+												'filters' => array('sanitize' => array('filter' => 'PregReplace',
+																					   'options' => array('match' => '/[\-:\s]/',
+																										  'replace' => ''))),
+												'validators' => array('mac',
+																	  'db' => array('validator' => 'Db_NoRecordExists',
+																				    'options' => array(
+																								'table' => 'node',
+																						        'field' => 'mac'
+																					)))));
 
 		$this->addElement('select', 'status', array('label' => 'nodes_index_edit_form_status',
 													'order' => 3,

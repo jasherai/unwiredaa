@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * Application bootstrap class
@@ -47,6 +47,19 @@ class Unwired_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         date_default_timezone_set('Europe/Sofia');
     }
 
+    /**
+     * Init event broker
+     *
+     * @return Unwired_Event_Broker
+     */
+    protected function _initEventBroker()
+    {
+    	$broker = new Unwired_Event_Broker();
+
+    	Zend_Registry::set('Unwired_Event_Broker', $broker);
+
+    	return $broker;
+    }
 
     /**
      * Init session namespace for current project

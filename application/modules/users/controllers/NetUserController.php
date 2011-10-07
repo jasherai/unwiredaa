@@ -18,6 +18,11 @@ class Users_NetUserController extends Unwired_Controller_Crud
 
 		$this->_actionsToReferer[] = 'enable';
 		$this->_actionsToReferer[] = 'disable';
+
+		/**
+		 * Handle disabled network users logout
+		 */
+		$this->getEventBroker()->addHandler(new Users_Service_NetUser());
 	}
 
 	public function indexAction()
@@ -66,6 +71,21 @@ class Users_NetUserController extends Unwired_Controller_Crud
 		$rootGroup = $groupService->getGroupTreeByAdmin();
 
 		$this->view->rootGroup = $rootGroup;
+
+		if ($entity && $entity->getNodeId()) {
+			if (!$form) {
+				$form = new Users_Form_NetUser();
+			}
+
+			$form->getElement('username')
+					  ->getValidator('Db_NoRecordExists')
+					  	   ->setExclude(array('field' => 'user_id',
+					  	   					  'value' => $entity->getUserId()));
+			$form->getElement('mac')
+					  ->getValidator('Db_NoRecordExists')
+					  	   ->setExclude(array('field' => 'user_id',
+					  	   					  'value' => $entity->getUserId()));
+		}
 		parent::_add($mapper, $entity, $form);
 	}
 

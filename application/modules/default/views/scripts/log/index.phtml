@@ -1,0 +1,88 @@
+<h1><?php echo $this->translate('default_log_index_heading'); ?></h1>
+
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+
+	$acl = Zend_Registry::get('acl');
+?>
+<form class="span-19 last" method="get" action="<?php echo $this->url(array('module' => 'default',
+													   'controller' => 'log',
+													   'action' => 'index'),
+												null,
+												true); ?>">
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('default_log_index_id');?></th>
+			<th><?php echo $this->translate('default_log_index_user');?></th>
+			<th><?php echo $this->translate('default_log_index_event');?></th>
+			<th><?php echo $this->translate('default_log_index_entity');?></th>
+			<th><?php echo $this->translate('default_log_index_timestamp');?></th>
+			<th class="tools">
+			</th>
+		</tr>
+		<tr>
+			<th></th>
+			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
+			<th><input type="text" name="event_name" value="<?php echo $this->filter['event_name']; ?>" /></th>
+			<th></th>
+			<th></th>
+			<th class="tools">
+			<a name="index" class="icon filter"><?php echo $this->translate('default_log_index_button_filter'); ?></a>
+			<a name="index" class="icon reset"><?php echo $this->translate('default_log_index_button_reset'); ?></a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			foreach ($this->paginator as $log) :
+		?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $log->getLogId(); ?></td>
+			<td><?php
+				if ($log->getUserId()) :
+
+					$admin = $this->findAdmin($log->getUserId());
+
+					if ($admin) {
+						echo $admin->getEmail();
+					}
+				endif;
+				?>
+			</td>
+			<td><?php echo $log->getEventName(); ?></td>
+			<td><?php
+				if ($log->getEntityId()):
+					try {
+						$class = $log->getEntityName();
+						$entity = new $class;
+
+						$entity->fromArray(unserialize($log->getEventData()));
+
+						echo ($entity instanceof Zend_Acl_Resource_Interface)
+							 ? $this->translate('resource_' . $entity->getResourceId())
+							 : $log->getEntityName();
+
+						echo ' : ';
+
+						if (method_exists($entity, 'getName')) {
+
+							echo $entity->getName();
+						} else {
+							echo $log->getEntityId();
+						}
+					} catch (Exception $e) {
+						// nothing
+					}
+
+				endif;
+			?></td>
+			<td><?php echo $log->getStamp(); ?></td>
+			<td class="tools">
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+</form>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

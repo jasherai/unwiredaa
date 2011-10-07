@@ -82,7 +82,7 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 		return $this->_group;
 	}
 
-	public function setGroup(Groups_Model_Group $group)
+	public function setGroup(Groups_Model_Group $group = null)
 	{
 		$this->_group = $group;
 		return $this;

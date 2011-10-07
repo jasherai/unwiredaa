@@ -24,7 +24,13 @@ class Users_Form_NetUser extends Unwired_Form
 													'required' => true,
 													'class' => 'span-5',
 													'validators' => array('len' => array('validator' => 'StringLength',
-																					     'options' => array('min' => 2)))));
+																					     'options' => array('min' => 2)),
+																		  'db' => array('validator' => 'Db_NoRecordExists',
+																				    	'options' => array(
+																								'table' => 'network_user',
+																						        'field' => 'username'
+																					))),
+																		   ));
 		$this->addElement('text', 'firstname', array('label' => 'users_netuser_edit_form_firstname',
 													'required' => true,
 													'class' => 'span-5',
@@ -84,7 +90,15 @@ class Users_Form_NetUser extends Unwired_Form
 		$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
 												'required' => false,
 												'class' => 'span-5',
-												'validators' => array('mac')));
+												'filters' => array('sanitize' => array('filter' => 'PregReplace',
+																					   'options' => array('match' => '/[\-:\s]/',
+																										  'replace' => ''))),
+												'validators' => array('mac',
+																	  'db' => array('validator' => 'Db_NoRecordExists',
+																				    'options' => array(
+																								'table' => 'network_user',
+																						        'field' => 'mac'
+																					)))));
 
 		$this->addElement('multiselect', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
 															 'required' => true,

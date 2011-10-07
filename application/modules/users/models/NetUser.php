@@ -252,13 +252,17 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 	 * @param string $mac
 	 */
 	public function setMac($mac) {
+		/*
 		if (!preg_match('/^[A-Z0-9]+$/i', $mac)) {
 			$mac = preg_replace('/[^A-Z0-9]+/i', '', $mac);
 		}
 
 		$mac = strtoupper(implode('-', str_split($mac, 2)));
-
 		$this->_mac = $mac;
+		*/
+
+		$this->_mac = strtoupper(preg_replace('/[^A-F0-9]/i', '', $mac));
+
 		return $this;
 	}
 

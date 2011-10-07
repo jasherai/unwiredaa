@@ -89,6 +89,18 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 		$nodeTable->getAdapter()->beginTransaction();
 
 		try {
+
+			if ($model->getNodeId()) {
+				$event = 'edit';
+			} else {
+				$event = 'add';
+			}
+
+			/**
+			 * Disable events fired in parent class
+			 */
+			$this->setEventsDisabled(true);
+
 			parent::save($model);
 
 			$this->setDbTable($this->getLocationTable());
@@ -102,6 +114,17 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 			$this->setDbTable($nodeTable);
 
 			$nodeTable->getAdapter()->commit();
+
+			$data = $model->toArray();
+			$data['settings'] = $model->getSettings()->toArray();
+			$data['location'] = $model->getLocation()->toArray();
+
+			/**
+			 * Fire our own event for node add/edit
+			 */
+			$this->setEventsDisabled(false);
+			$this->sendEvent($event, $model, $model->getNodeId(), $data);
+
 		} catch (Exception $e) {
 			$nodeTable->getAdapter()->rollBack();
 			$this->setDbTable($nodeTable);
@@ -165,6 +188,8 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
     	$row->deleted = 1;
 
     	$row->save();
+
+    	$this->sendEvent('delete', $model, $model->getNodeId());
 
     	return 1;
     }

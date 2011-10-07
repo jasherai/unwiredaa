@@ -140,6 +140,17 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 			}
 		}
 
+		if ($entity && $entity->getNodeId()) {
+			if (!$form) {
+				$form = new Nodes_Form_Node();
+			}
+
+			$form->getElement('mac')
+					  ->getValidator('Db_NoRecordExists')
+					  	   ->setExclude(array('field' => 'node_id',
+					  	   					  'value' => $entity->getNodeId()));
+		}
+
 		$result = parent::_add($mapper, $entity, $form);
 		if ($result) {
 			$nodeService = new Nodes_Service_Node();

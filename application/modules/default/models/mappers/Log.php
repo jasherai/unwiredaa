@@ -11,15 +11,15 @@
 */
 
 /**
- * DB table gateway for admin_user
+ * Mapper for Default_Model_Log
  * @author B. Krastev <bkrastev@web-teh.net>
  */
-class Users_Model_DbTable_AdminUser extends Zend_Db_Table_Abstract
+class Default_Model_Mapper_Log extends Unwired_Model_Mapper
 {
+	protected $_eventsDisabled = true;
 
-    protected $_name = 'admin_user';
+	protected $_modelClass = 'Default_Model_Log';
 
-	protected $_dependentTables = array('Users_Model_DbTable_AdminGroup'/*,
-										'Default_Model_DbTable_Log'*/);
+	protected $_dbTableClass = 'Default_Model_DbTable_Log';
+
 }
-
