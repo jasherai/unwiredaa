@@ -28,6 +28,7 @@ class Default_LogController extends Unwired_Controller_Crud
 
 		$filter['event_name'] = $this->getRequest()->getParam('event_name', null);
 		$filter['email'] = $this->getRequest()->getParam('email', null);
+		$filter['remote_host'] = $this->getRequest()->getParam('remote_host', null);
 
 		$this->view->filter = $filter;
 

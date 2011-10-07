@@ -26,7 +26,7 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 	protected $_status = 'planning';
 
-	protected $_toUpdate = 0;
+	protected $_updateConfig = 0;
 
 	protected $_location = null;
 
@@ -182,15 +182,15 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	/**
 	 * @return the $_toUpdate
 	 */
-	public function getToUpdate() {
-		return $this->_toUpdate;
+	public function getUpdateConfig() {
+		return $this->_updateConfig;
 	}
 
 	/**
 	 * @param field_type $toUpdate
 	 */
-	public function setToUpdate($toUpdate) {
-		$this->_toUpdate = (int) (bool) $toUpdate;
+	public function setUpdateConfig($toUpdate) {
+		$this->_updateConfig = (int) (bool) $toUpdate;
 
 		return $this;
 	}

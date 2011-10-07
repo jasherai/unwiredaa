@@ -112,7 +112,7 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 		$this->_setAutoRedirect(false);
 
 		if (null !== $entity) {
-			$entity->setToUpdate(true);
+			$entity->setUpdateConfig(true);
 
 			/**
 			 * Do not mark empty mac/planning APs to be updated
@@ -121,7 +121,7 @@ class Nodes_IndexController extends Unwired_Controller_Crud
 			   (!$this->getRequest()->getParam('mac', null)
 			   || $this->getRequest()->getParam('status', 'planning') == 'planning')) {
 
-			   	$entity->setToUpdate(false);
+			   	$entity->setUpdateConfig(false);
 			}
 
 		} else {

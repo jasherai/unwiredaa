@@ -32,6 +32,8 @@ class Default_Model_Log extends Unwired_Model_Generic implements Zend_Acl_Resour
 
 	protected $_stamp;
 
+	protected $_remoteHost = null;
+
 	/**
 	 * @return the $logId
 	 */
@@ -190,6 +192,18 @@ class Default_Model_Log extends Unwired_Model_Generic implements Zend_Acl_Resour
 	 */
 	public function setStamp($stamp) {
 		$this->_stamp = $stamp;
+
+		return $this;
+	}
+
+	public function getRemoteHost()
+	{
+		return $this->_remoteHost;
+	}
+
+	public function setRemoteHost($host)
+	{
+		$this->_remoteHost = $host;
 
 		return $this;
 	}

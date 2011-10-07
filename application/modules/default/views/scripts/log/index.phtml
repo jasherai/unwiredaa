@@ -17,6 +17,7 @@
 			<th><?php echo $this->translate('default_log_index_user');?></th>
 			<th><?php echo $this->translate('default_log_index_event');?></th>
 			<th><?php echo $this->translate('default_log_index_entity');?></th>
+			<th><?php echo $this->translate('default_log_index_remote');?></th>
 			<th><?php echo $this->translate('default_log_index_timestamp');?></th>
 			<th class="tools">
 			</th>
@@ -26,6 +27,7 @@
 			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
 			<th><input type="text" name="event_name" value="<?php echo $this->filter['event_name']; ?>" /></th>
 			<th></th>
+			<th><input type="text" name="remote_host" value="<?php echo $this->filter['remote_host']; ?>" /></th>
 			<th></th>
 			<th class="tools">
 			<a name="index" class="icon filter"><?php echo $this->translate('default_log_index_button_filter'); ?></a>
@@ -77,6 +79,7 @@
 
 				endif;
 			?></td>
+			<td><?php echo $log->getRemoteHost(); ?></td>
 			<td><?php echo $log->getStamp(); ?></td>
 			<td class="tools">
 			</td>

@@ -14,10 +14,9 @@
 		<tr>
 			<th><?php echo $this->translate('users_netuser_index_id');?></th>
 			<th><?php echo $this->translate('users_netuser_index_username');?></th>
+			<th><?php echo $this->translate('users_netuser_index_mac');?></th>
 			<th><?php echo $this->translate('users_netuser_index_firstname');?></th>
 			<th><?php echo $this->translate('users_netuser_index_lastname');?></th>
-			<th><?php echo $this->translate('users_netuser_index_city');?></th>
-			<th><?php echo $this->translate('users_netuser_index_country');?></th>
 			<th class="tools">
 			<?php
 			if ($acl->isAllowed($this->currentUser, 'users_netuser', 'add')) :
@@ -37,10 +36,9 @@
 		<tr>
 			<th></th>
 			<th><input type="text" name="username" value="<?php echo $this->filter['username']; ?>" /></th>
+			<th><input type="text" name="mac" value="<?php echo $this->filter['mac']; ?>" /></th>
 			<th><input type="text" name="firstname" value="<?php echo $this->filter['firstname']; ?>" /></th>
 			<th><input type="text" name="lastname" value="<?php echo $this->filter['lastname']; ?>" /></th>
-			<th><input type="text" name="city" value="<?php echo $this->filter['city']; ?>" /></th>
-			<th><input type="text" name="country" value="<?php echo $this->filter['country']; ?>" /></th>
 			<th class="tools">
 			<a name="index" class="icon filter"><?php echo $this->translate('users_netuser_index_button_filter'); ?></a>
 			<a name="index" class="icon reset"><?php echo $this->translate('users_netuser_index_button_reset'); ?></a>
@@ -56,24 +54,24 @@
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
 			<td class="column_id"><?php echo $user->getUserId(); ?></td>
 			<td><?php echo $user->getUsername(); ?></td>
+			<td><?php echo $user->getMac(); ?></td>
 			<td><?php echo $user->getFirstname(); ?></td>
 			<td><?php echo $user->getLastname(); ?></td>
-			<td><?php echo $user->getCity(); ?></td>
-			<td><?php echo $user->getCountry(); ?></td>
 			<td class="tools">
 				<?php
 					$actions = array(/*'view',*/ 'edit', 'delete');
-					if ($macValidator->isValid($user->getUsername())) {
-						/**
-						 * 3 => Disabled group
-						 * @todo do some constant definition or somethings
-						 */
-						if (!in_array(3, $user->getPolicyIds())) {
-							$actions[0] = array('edit' => 'disable');
-						} else {
-							$actions[0] = array('edit' => 'enable');
-						}
-						//unset($actions[0]);
+					if ($user->isRadiusSync()) {
+						unset($actions[0]);
+					}
+
+					/**
+					 * 3 => Disabled group
+					 * @todo do some constant definition or somethings
+					 */
+					if (!in_array(3, $user->getPolicyIds())) {
+						array_unshift($actions, array('edit' => 'disable'));
+					} else {
+						array_unshift($actions, array('edit' => 'enable'));
 					}
 
 					foreach ($actions as $action) :

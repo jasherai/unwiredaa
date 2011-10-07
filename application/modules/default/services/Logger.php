@@ -49,6 +49,8 @@ class Default_Service_Logger implements Unwired_Event_Handler_Interface
 			$logEntry->setEventData(serialize($data->params));
 		}
 
+		$logEntry->setRemoteHost(Zend_Controller_Front::getInstance()->getRequest()->getServer('REMOTE_ADDR'));
+
 		try {
 			$mapperLog->save($logEntry);
 		} catch (Unwired_Exception $e) {

@@ -43,6 +43,8 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 
 	protected $_mac = null;
 
+	protected $_radiusSync = 0;
+
 	protected $_policyIds = array(1);
 
 	/**
@@ -266,6 +268,18 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 		return $this;
 	}
 
+	public function isRadiusSync()
+	{
+		return (int) (bool) $this->_radiusSync;
+	}
+
+	public function setRadiusSync($synced = 0)
+	{
+		$this->_radiusSync = (int) (bool) $synced;
+
+		return $this;
+	}
+
 	/**
 	 * @return array $policyIds
 	 */
@@ -276,7 +290,11 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 	/**
 	 * @param array $policyIds
 	 */
-	public function setPolicyIds(array $policyIds = array(1)) {
+	public function setPolicyIds($policyIds = array(1)) {
+		if (!is_array($policyIds)) {
+			$policyIds = array(1);
+		}
+
 		$this->_policyIds = $policyIds;
 
 		return $this;

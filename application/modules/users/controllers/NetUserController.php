@@ -45,8 +45,9 @@ class Users_NetUserController extends Unwired_Controller_Crud
 		$filter['username'] = $this->getRequest()->getParam('username', null);
 		$filter['firstname'] = strtoupper($this->getRequest()->getParam('firstname', null));
 		$filter['lastname'] = $this->getRequest()->getParam('lastname', null);
-		$filter['city'] = $this->getRequest()->getParam('city', null);
-		$filter['country'] = $this->getRequest()->getParam('country', null);
+		$filter['mac'] = $this->getRequest()->getParam('mac', null);
+		/* $filter['city'] = $this->getRequest()->getParam('city', null);
+		$filter['country'] = $this->getRequest()->getParam('country', null); */
 
 		$this->view->filter = $filter;
 
@@ -72,7 +73,7 @@ class Users_NetUserController extends Unwired_Controller_Crud
 
 		$this->view->rootGroup = $rootGroup;
 
-		if ($entity && $entity->getNodeId()) {
+		if ($entity && $entity->getUserId()) {
 			if (!$form) {
 				$form = new Users_Form_NetUser();
 			}
