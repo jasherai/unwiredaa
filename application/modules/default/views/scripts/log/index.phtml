@@ -14,21 +14,31 @@
 	<thead>
 		<tr>
 			<th><?php echo $this->translate('default_log_index_id');?></th>
-			<th><?php echo $this->translate('default_log_index_user');?></th>
+			<th class="span-5"><?php echo $this->translate('default_log_index_user');?></th>
 			<th><?php echo $this->translate('default_log_index_event');?></th>
-			<th><?php echo $this->translate('default_log_index_entity');?></th>
+			<th class="span-4"><?php echo $this->translate('default_log_index_entity');?></th>
 			<th><?php echo $this->translate('default_log_index_remote');?></th>
 			<th><?php echo $this->translate('default_log_index_timestamp');?></th>
-			<th class="tools">
-			</th>
 		</tr>
 		<tr>
 			<th></th>
 			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
 			<th><input type="text" name="event_name" value="<?php echo $this->filter['event_name']; ?>" /></th>
-			<th></th>
+			<th><select name="entity">
+					<option value=""><?php echo $this->translate('default_log_index_entity_all'); ?></option>
+			<?php
+				$entities = $this->logDistinctEntities();
+				foreach ($entities as $id => $name) :
+			?>
+				<option <?php
+							echo ($this->filter['entity'] == $id) ? 'selected="selected"' : '';
+						?> value="<?php echo $id; ?>"><?php echo $this->translate($name); ?></option>
+			<?php
+				endforeach;
+			?>
+				</select>
+			</th>
 			<th><input type="text" name="remote_host" value="<?php echo $this->filter['remote_host']; ?>" /></th>
-			<th></th>
 			<th class="tools">
 			<a name="index" class="icon filter"><?php echo $this->translate('default_log_index_button_filter'); ?></a>
 			<a name="index" class="icon reset"><?php echo $this->translate('default_log_index_button_reset'); ?></a>
@@ -40,7 +50,7 @@
 			foreach ($this->paginator as $log) :
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-			<td class="column_id"><?php echo $log->getLogId(); ?></td>
+			<td class="span-2"><?php echo $log->getLogId(); ?></td>
 			<td><?php
 				if ($log->getUserId()) :
 
@@ -81,8 +91,6 @@
 			?></td>
 			<td><?php echo $log->getRemoteHost(); ?></td>
 			<td><?php echo $log->getStamp(); ?></td>
-			<td class="tools">
-			</td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>

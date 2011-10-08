@@ -126,7 +126,7 @@ $(document).ready(function(){
 			url = url + '/' + action;
 		}
 		
-		$(this).parents('tr:first').find('th input').each(function(){
+		$(this).parents('tr:first').find('th input, th select').each(function(){
 			var attr_name = $(this).attr('name');
 			var value = $(this).val().replace(/[^a-z0-9\s\@\-\:\.]+/gi, '');
 			
@@ -140,7 +140,7 @@ $(document).ready(function(){
 	});
 	
 	$('table.listing thead tr th a.reset:last').click(function(){
-		$(this).parents('tr:first').find('th input').each(function(){
+		$(this).parents('tr:first').find('th input, th select').each(function(){
 			$(this).val('');
 		})
 		
@@ -154,6 +154,6 @@ $(document).ready(function(){
 		delayOut: 0,
 		title: function() { return $(this).text(); }, 
 		fade: true,
-		opacity: 0.8,
+		opacity: 0.8
 	});
 });

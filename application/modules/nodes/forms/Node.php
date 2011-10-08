@@ -44,9 +44,9 @@ class Nodes_Form_Node extends Unwired_Form
 													'order' => 3,
 													'class' => 'span-5',
 													'required' => true,
-													'multiOptions' => array('disabled' => 'disabled',
-																			'enabled' => 'enabled',
-																			'planning' => 'planning')));
+													'multiOptions' => array('disabled' => 'nodes_index_edit_form_status_disabled',
+																			'enabled' => 'nodes_index_edit_form_status_enabled',
+																			'planning' => 'nodes_index_edit_form_status_planning')));
 
 		$this->addElement('hidden', 'group_id', array('label' => 'nodes_index_edit_form_group',
 													  'order' => 4,
