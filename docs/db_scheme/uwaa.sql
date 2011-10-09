@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.5
+-- version 3.2.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 29, 2011 at 05:42 PM
--- Server version: 5.1.46
--- PHP Version: 5.2.14
+-- Generation Time: Oct 09, 2011 at 01:42 PM
+-- Server version: 5.5.15
+-- PHP Version: 5.3.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -91,6 +91,33 @@ INSERT INTO `group` (`group_id`, `parent_id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `log`
+--
+
+CREATE TABLE IF NOT EXISTS `log` (
+  `log_id` bigint(19) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `entity` bigint(20) DEFAULT NULL,
+  `entity_name` varchar(255) DEFAULT NULL,
+  `entity_id` int(10) unsigned DEFAULT NULL,
+  `event_id` bigint(20) NOT NULL,
+  `event_name` varchar(255) NOT NULL,
+  `event_data` text,
+  `event_level` int(11) NOT NULL DEFAULT '100',
+  `stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `remote_host` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `fk_log_admin_user1` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `log`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `nas`
 --
 
@@ -132,15 +159,11 @@ CREATE TABLE IF NOT EXISTS `network_user` (
   `zip` varchar(64) NOT NULL,
   `country` varchar(2) NOT NULL DEFAULT 'AT',
   `mac` varchar(17) NOT NULL,
+  `radius_sync` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   KEY `fk_network_users_groups1` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Network users table. It is used for the UI not to mess with ' AUTO_INCREMENT=1 ;
-
---
--- Dumping data for table `network_user`
---
-
 
 --
 -- Triggers `network_user`
@@ -164,6 +187,11 @@ CREATE TRIGGER `delete_user` AFTER DELETE ON `network_user`
 //
 DELIMITER ;
 
+--
+-- Dumping data for table `network_user`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -177,11 +205,6 @@ CREATE TABLE IF NOT EXISTS `network_user_policy` (
   KEY `fk_policy_groups_has_network_users_network_users1` (`user_id`),
   KEY `fk_policy_groups_has_network_users_policy_groups1` (`policy_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Network users to policy group relation';
-
---
--- Dumping data for table `network_user_policy`
---
-
 
 --
 -- Triggers `network_user_policy`
@@ -229,6 +252,11 @@ CREATE TRIGGER `delete_user_group` AFTER DELETE ON `network_user_policy`
 //
 DELIMITER ;
 
+--
+-- Dumping data for table `network_user_policy`
+--
+
+
 -- --------------------------------------------------------
 
 --
@@ -241,7 +269,8 @@ CREATE TABLE IF NOT EXISTS `node` (
   `name` varchar(64) NOT NULL,
   `mac` varchar(17) NOT NULL,
   `status` enum('enabled','disabled','planning') NOT NULL DEFAULT 'planning',
-  `to_update` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `update_config` tinyint(1) NOT NULL DEFAULT '0',
   `online_status_changed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `online_status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`node_id`),
@@ -295,8 +324,8 @@ CREATE TABLE IF NOT EXISTS `node_settings` (
   `trafficlimit` int(11) NOT NULL,
   `ssid` varchar(45) NOT NULL,
   `channel` smallint(6) NOT NULL DEFAULT '11',
-  `wifi_enabled` tinyint(1) NOT NULL DEFAULT '1',  
-  `roaming` tinyint(1) NOT NULL DEFAULT '1',
+  `wifi_enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `roaming` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`node_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Network node settings (used to create a configuration file)';
 
@@ -317,15 +346,6 @@ CREATE TABLE IF NOT EXISTS `policy_group` (
   `priority` int(11) NOT NULL DEFAULT '1000',
   PRIMARY KEY (`policy_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Network policy groups, actual values are held in the freerad' AUTO_INCREMENT=4 ;
-
---
--- Dumping data for table `policy_group`
---
-
-INSERT INTO `policy_group` (`policy_id`, `name`, `priority`) VALUES
-(1, 'Guest', 1000),
-(2, 'Authenticated', 900),
-(3, 'Disabled', 700);
 
 --
 -- Triggers `policy_group`
@@ -356,6 +376,15 @@ CREATE TRIGGER `delete_group` AFTER DELETE ON `policy_group`
   END
 //
 DELIMITER ;
+
+--
+-- Dumping data for table `policy_group`
+--
+
+INSERT INTO `policy_group` (`policy_id`, `name`, `priority`) VALUES
+(1, 'Guest', 1000),
+(2, 'Authenticated', 900),
+(3, 'Disabled', 700);
 
 -- --------------------------------------------------------
 
@@ -405,49 +434,34 @@ CREATE TABLE IF NOT EXISTS `radacct` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `radacct`
---
-
-
---
 -- Triggers `radacct`
 --
 DROP TRIGGER IF EXISTS `radius_user_sync`;
 DELIMITER //
 CREATE TRIGGER `radius_user_sync` AFTER INSERT ON `radacct`
  FOR EACH ROW BEGIN
-
     DECLARE usercount, guestgroup, guestuser INT;
 
-
-
-    SELECT count(*) INTO usercount FROM `network_user` WHERE `username`=NEW.username LIMIT 1;
-
-    SELECT `group_id` INTO guestgroup FROM `policy_group` WHERE `priority`>=1000 ORDER BY `priority` DESC LIMIT 1;
-
+    SELECT count(*) INTO usercount FROM `network_user` WHERE `username` LIKE CONCAT(NEW.username, '%');
+    SELECT `policy_id` INTO guestgroup FROM `policy_group` WHERE `priority`>=1000 ORDER BY `priority` DESC LIMIT 1;
     
-
     IF usercount = 0 THEN
-
-        INSERT INTO `network_user`(`group_id`,`username`,`firstname`,`lastname`,`email`,`phone`,`address`,`city`,`zip`,`country`,`mac`) VALUES(1, NEW.username, '','','','','','','','AT',NEW.username);
-
+        INSERT INTO `network_user`(`group_id`,`username`,`firstname`,`lastname`,`email`,`phone`,`address`,`city`,`zip`,`country`,`mac`, `radius_sync`) VALUES(1, NEW.username, '','','','','','','','AT', REPLACE(NEW.callingstationid, '-', ''), 1);
         SELECT LAST_INSERT_ID() INTO guestuser;
-
         
-
         IF guestuser > 0 THEN
-
-            INSERT INTO `network_user_policy` VALUES(guestgroup, guestuser);
-
+            INSERT IGNORE INTO `network_user_policy` VALUES(guestgroup, guestuser);
         END IF;
-
     END IF;
-
     
-
   END
 //
 DELIMITER ;
+
+--
+-- Dumping data for table `radacct`
+--
+
 
 -- --------------------------------------------------------
 
@@ -660,6 +674,12 @@ ALTER TABLE `group`
   ADD CONSTRAINT `fk_parent_group` FOREIGN KEY (`parent_id`) REFERENCES `group` (`group_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Constraints for table `log`
+--
+ALTER TABLE `log`
+  ADD CONSTRAINT `fk_log_admin_user1` FOREIGN KEY (`user_id`) REFERENCES `admin_user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Constraints for table `network_user`
 --
 ALTER TABLE `network_user`
@@ -669,7 +689,7 @@ ALTER TABLE `network_user`
 -- Constraints for table `network_user_policy`
 --
 ALTER TABLE `network_user_policy`
-  ADD CONSTRAINT `fk_policy_groups_has_network_users_policy_groups1` FOREIGN KEY (`policy_id`) REFERENCES `policy_group` (`policy_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_policy_groups_has_network_users_policy_groups1` FOREIGN KEY (`policy_id`) REFERENCES `policy_group` (`policy_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_policy_groups_has_network_users_network_users1` FOREIGN KEY (`user_id`) REFERENCES `network_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
