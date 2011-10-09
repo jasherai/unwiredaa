@@ -16,7 +16,7 @@ class Default_Bootstrap extends Unwired_Application_Module_Bootstrap
 	{
 		$acl = parent::_initAclResources();
 
-		$acl->addResource(new Zend_Acl_Resource('default_setting'));
+		$acl->addResource(new Zend_Acl_Resource('default_settings'));
 		$acl->addResource(new Zend_Acl_Resource('default_log'));
 
 		return $acl;
