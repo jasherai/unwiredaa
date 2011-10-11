@@ -1,0 +1,104 @@
+<h1><?php echo $this->translate('rest_index_index_heading'); ?></h1>
+
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+
+	$acl = Zend_Registry::get('acl');
+?>
+<form class="span-19 last" method="get" action="<?php echo $this->url(array('module' => 'rest',
+													   'controller' => 'index',
+													   'action' => 'index'),
+												null,
+												true); ?>">
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('rest_index_index_id');?></th>
+			<th><?php echo $this->translate('rest_index_index_user');?></th>
+			<th><?php echo $this->translate('rest_index_index_key');?></th>
+			<th><?php echo $this->translate('rest_index_index_active');?></th>
+			<th class="tools">
+			<?php
+			if ($acl->isAllowed($this->currentUser, 'rest_key', 'add')) :
+			?>
+			<a class="add" href="<?php
+				echo $this->url(array('module' => 'rest',
+									  'controller' => 'index',
+									  'action' => 'add'), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
+				?>" alt="<?php echo $this->translate('rest_index_index_button_add'); ?>" /> <?php echo $this->translate('rest_index_index_button_add'); ?></a>
+			<?php
+			endif;
+			?>
+			</th>
+		</tr>
+		<tr>
+			<th></th>
+			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
+			<th><input type="text" name="key" value="<?php echo $this->filter['key']; ?>" /></th>
+			<th></th>
+			<th class="tools">
+			<a name="index_index" class="icon filter"><?php echo $this->translate('rest_index_index_button_filter'); ?></a>
+			<a name="index_index" class="icon reset"><?php echo $this->translate('rest_index_index_button_reset'); ?></a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			foreach ($this->paginator as $key) :
+		?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $key->getUserId(); ?></td>
+			<td><?php echo $key->getAdmin()->getEmail(); ?></td>
+			<td><?php echo $key->getKey(); ?></td>
+			<td><?php echo $key->isActive(); ?></td>
+			<td class="tools">
+				  <?php
+					$actions = array();
+
+					if ($key->getKey() !== null) {
+					    if ($key->isActive()) {
+					        $actions[] = array('edit' => 'disable');
+					    } else {
+					        $actions[] = array('edit' => 'enable');
+					    }
+
+					    $actions[] = 'delete';
+					} else {
+                        $actions[] = array('edit' => 'generate');
+					}
+
+					foreach ($actions as $action) :
+						if (is_array($action)) {
+							$permission = key($action);
+							$action = current($action);
+						} else {
+							$permission = $action;
+						}
+
+						if (!$acl->isAllowed($this->currentUser, $key->getResourceId(), $permission)) {
+							continue;
+						}
+
+						?>
+					<a href="<?php echo $this->url(array('module' => 'rest',
+													     'controller' => 'index',
+													     'action' => $action,
+													     'id'	=> $key->getKeyId(),
+					                                     'uid'  => $key->getUserId()),
+												   null,
+												   true); ?>" class="icon <?php echo $action; ?>"><?php
+
+						echo $this->translate('rest_index_index_button_' . $action);
+				   ?></a>
+				   <?php
+					endforeach;
+				?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+</form>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

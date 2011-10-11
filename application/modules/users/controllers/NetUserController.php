@@ -10,7 +10,7 @@
 * license available at http://www.unwired.at/license.html
 */
 
-class Users_NetUserController extends Unwired_Controller_Crud
+class Users_NetUserController extends Unwired_Rest_Controller
 {
 	public function init()
 	{
