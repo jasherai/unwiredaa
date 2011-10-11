@@ -19,7 +19,7 @@ class Default_Service_Log
 		$select = $mapper->getDbTable()->select(true);
 
 		$select->reset('columns')
-			   ->columns(array('entity', 'entity_name'))
+			   ->columns(array('entity'))
 			   ->distinct(true)
 			   ->where('entity IS NOT NULL');
 
@@ -33,15 +33,25 @@ class Default_Service_Log
 		}
 
 		foreach ($result as $row) {
+    		$select->reset('columns')
+			   ->columns(array('entity_name'))
+			   ->distinct(false)
+			   ->where('entity = ?', $row->entity);
+
+		    $dbEntityName = $mapper->getDbTable()->getAdapter()->fetchOne($select);
+		    if (empty($dbEntityName)) {
+		        continue;
+		    }
+
 			if ($acl) {
-				$entityName = strtolower(preg_replace('/^(.*?)_.*_(.*)$/i', '$1_$2', $row->entity_name));
+				$entityName = strtolower(preg_replace('/^(.*?)_.*_(.*)$/i', '$1_$2', $dbEntityName));
 				if (!$acl->has($entityName)) {
-					$entityName = $row->entity_name;
+					$entityName = $dbEntityName;
 				} else {
 					$entityName = 'resource_' . $entityName;
 				}
 			} else {
-				$entityName = $row->entity_name;
+				$entityName = $dbEntityName;
 			}
 
 			$entityIds[$row->entity] = $entityName;
