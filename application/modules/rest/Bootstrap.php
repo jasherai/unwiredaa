@@ -15,7 +15,7 @@ class Rest_Bootstrap extends Unwired_Application_Module_Bootstrap
 	/**
 	 * Initialize REST routes
 	 */
-    public function _initRestRoutes()
+    protected function _initRestRoutes()
     {
     	if (!$this->hasResource('frontController')) {
     		$this->bootstrap('frontController');
@@ -28,7 +28,29 @@ class Rest_Bootstrap extends Unwired_Application_Module_Bootstrap
     	$route = new Zend_Controller_Router_Route('api');
 
 		$router->addRoute("api", $route->chain(new Zend_Rest_Route($front,
-																   array('controller' => 'api'),
+																   array(),
 																   array())));
     }
+
+    protected function _initRestAuth()
+    {
+		$this->getApplication()->bootstrap('frontcontroller');
+
+		$front = $this->getApplication()->getResource('frontcontroller');
+
+		$restAuth = new Rest_Plugin_Auth();
+
+		$front->registerPlugin($restAuth);
+
+		return $restAuth;
+    }
+
+	protected function _initAclResources()
+	{
+		$acl = parent::_initAclResources();
+
+		$acl->addResource(new Zend_Acl_Resource('rest_key'));
+
+		return $acl;
+	}
 }

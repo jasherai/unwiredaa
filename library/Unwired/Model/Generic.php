@@ -55,9 +55,14 @@ class Unwired_Model_Generic
 
 			$key = str_replace('_', '', $key);
 			$method = 'get' . ucfirst($key);
+            $isMethod = 'is' . ucfirst($key);
 
 			if (!method_exists($this, $method)) {
-				continue;
+			    if (method_exists($this, $isMethod)) {
+                    $method = $isMethod;
+			    } else {
+			        continue;
+			    }
 			}
 
 			$result[strtolower($filter->filter($key))] = $this->$method();

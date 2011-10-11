@@ -27,6 +27,8 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
     protected $_defaultOrder = null;
 
+    protected $_defaultJoinType = Zend_Db_Select::INNER_JOIN;
+
     protected $_repository = array();
 
     protected $_paginatorAdapter = null;
@@ -92,6 +94,18 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     	$this->_defaultOrder = $order;
 
     	return $this;
+    }
+
+    public function getDefaultJoinType()
+    {
+        return $this->_defaultJoinType;
+    }
+
+    public function setDefaultJoinType($type = Zend_Db_Select::INNER_JOIN)
+    {
+        $this->_defaultJoinType = $type;
+
+        return $this;
     }
 
     /**
@@ -253,6 +267,8 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
      */
     public function findBy($conditions, $limit = null, $order = null)
     {
+        $table = $this->getDbTable();
+
     	if ($conditions instanceof Zend_Db_Select) {
     		$select = $conditions;
     	} elseif (is_array($conditions)) {
@@ -269,8 +285,8 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 				if (!in_array($field, $cols)) {
 					$dependents = $this->getDbTable()->getDependentTables();
 
-					foreach ($dependents as $table) {
-						$tableInstance = (is_string($table)) ? new $table : $table;
+					foreach ($dependents as $depTable) {
+						$tableInstance = (is_string($depTable)) ? new $depTable : $depTable;
 
 						if (!in_array($field, $tableInstance->info(Zend_Db_Table::COLS))) {
 							continue;
@@ -310,8 +326,12 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 
 
 
-						$select->setIntegrityCheck(false)
-							   ->joinInner($joinTableName, implode(' AND ', $joinCondition));
+						$select->setIntegrityCheck(false);
+						if ($this->getDefaultJoinType() == Zend_Db_Select::INNER_JOIN) {
+					        $select->joinInner($joinTableName, implode(' AND ', $joinCondition));
+						} else {
+						    $select->joinLeft($joinTableName, implode(' AND ', $joinCondition));
+						}
 
 						$select->group(implode(",", $groupCondition));
 
@@ -328,22 +348,22 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
 						 * 0 is considered null in case
 						 */
 						if (is_numeric($value)) {
-							$select->where($field . ' = 0');
+							$select->where($table->getAdapter()->quoteIdentifier($field) . ' = 0');
 						} else {
-							$select->where($field . ' IS NULL');
+							$select->where($table->getAdapter()->quoteIdentifier($field) . ' IS NULL');
 						}
 					break;
 
 					case (is_array($value)):
-						$select->where($field . ' IN (?)', $value);
+						$select->where($table->getAdapter()->quoteIdentifier($field) . ' IN (?)', $value);
 					break;
 
 					case (strpos($value, '%') !== false):
-						$select->where($field . ' LIKE ?', $value);
+						$select->where($table->getAdapter()->quoteIdentifier($field) . ' LIKE ?', $value);
 					break;
 
 					default:
-						$select->where($field . ' = ?', $value);
+						$select->where($table->getAdapter()->quoteIdentifier($field) . ' = ?', $value);
 					break;
 				}
 			}
@@ -408,7 +428,7 @@ class Unwired_Model_Mapper implements Zend_Paginator_AdapterAggregate {
     {
     	$id = $row->{current($this->getDbTable()->info(Zend_Db_Table_Abstract::PRIMARY))};
 
-    	if (!$updateRepo && $this->_hasInRepository($id)) {
+    	if ((null !== $id) && !$updateRepo && $this->_hasInRepository($id)) {
     		return $this->_getFromRepository($id);
     	}
 

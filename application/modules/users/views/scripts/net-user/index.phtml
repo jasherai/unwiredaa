@@ -83,7 +83,7 @@
 							$permission = $action;
 						}
 
-						if (!$acl->isAllowed($this->currentUser, $user->getResourceId(), $action)) {
+						if (!$acl->isAllowed($this->currentUser, $user->getResourceId(), $permission)) {
 							continue;
 						}
 

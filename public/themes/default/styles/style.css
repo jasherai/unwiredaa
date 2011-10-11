@@ -342,6 +342,11 @@ form div.buttons {
 .tools a.disable {
     background-image: url('../images/icons/24x24/lock.png');
 }
+
+.tools a.generate {
+    background-image: url('../images/icons/24x24/keys.png');
+}
+
 /* buttons */
 span.button, a.button {display:inline-block;height:32px;color:#343434;font:bold 12px Tahoma,Helvetica,sans-serif !important;cursor:pointer !important;position:relative;left:5px;text-shadow:1px 1px 0px rgba(255,255,255,0.5);text-decoration:none;margin:0 5px 0 8px;padding-left:0px;vertical-align:middle;background:url("../images/buttons.png") top right no-repeat;white-space:nowrap;border:none;overflow:visible;}
 span.button button, span.button a span.button input {font-weight: bold !important;}
