@@ -10,14 +10,23 @@
  * license available at http://www.unwired.at/license.html
  */
 
-class Zend_View_Helper_LogDistinctEntities extends Zend_View_Helper_Abstract
+class Zend_View_Helper_LogDistinctPairs extends Zend_View_Helper_Abstract
 {
 
-	public function logDistinctEntities()
+	public function logDistinctPairs($pair = 'event')
 	{
 		$service = new Default_Service_Log();
 
-		$ids = $service->getDistinctEntities();
+		switch ($pair) {
+		    case 'event':
+		        $ids = $service->getDistinctEvents();
+		    break;
+
+		    case 'entity':
+		    default:
+		        $ids = $service->getDistinctEntities();
+		    break;
+		}
 
 		return $ids;
 	}

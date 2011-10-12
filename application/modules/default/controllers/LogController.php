@@ -27,7 +27,7 @@ class Default_LogController extends Unwired_Controller_Crud
 		$filter = array();
 
 		$filter['entity'] = $this->getRequest()->getParam('entity', null);
-		$filter['event_name'] = $this->getRequest()->getParam('event_name', null);
+		$filter['event_id'] = $this->getRequest()->getParam('event_id', null);
 		$filter['email'] = $this->getRequest()->getParam('email', null);
 		$filter['remote_host'] = $this->getRequest()->getParam('remote_host', null);
 
@@ -39,7 +39,7 @@ class Default_LogController extends Unwired_Controller_Crud
 				continue;
 			}
 
-			if ($key == 'event') {
+			if ($key == 'event_id') {
 				continue;
 			}
 			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\@\-\:\._]+/iu', '', $value) . '%';

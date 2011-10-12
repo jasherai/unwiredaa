@@ -14,34 +14,20 @@ class Default_Service_Log
 {
 	public function getDistinctEntities()
 	{
-		$mapper = new Default_Model_Mapper_Log();
+		$pairs = $this->_getDistinctPairs('entity', 'entity_name');
 
-		$select = $mapper->getDbTable()->select(true);
-
-		$select->reset('columns')
-			   ->columns(array('entity'))
-			   ->distinct(true)
-			   ->where('entity IS NOT NULL');
-
-		$result = $mapper->getDbTable()->fetchAll($select);
-
-		$entityIds = array();
+		if (empty($pairs)) {
+		    return $pairs;
+		}
 
 		$acl = null;
 		if (Zend_Registry::isRegistered('acl')) {
 			$acl = Zend_Registry::get('acl');
 		}
 
-		foreach ($result as $row) {
-    		$select->reset('columns')
-			   ->columns(array('entity_name'))
-			   ->distinct(false)
-			   ->where('entity = ?', $row->entity);
+		foreach ($pairs as $id => $name) {
 
-		    $dbEntityName = $mapper->getDbTable()->getAdapter()->fetchOne($select);
-		    if (empty($dbEntityName)) {
-		        continue;
-		    }
+		    $dbEntityName = $name;
 
 			if ($acl) {
 				$entityName = strtolower(preg_replace('/^(.*?)_.*_(.*)$/i', '$1_$2', $dbEntityName));
@@ -54,10 +40,47 @@ class Default_Service_Log
 				$entityName = $dbEntityName;
 			}
 
-			$entityIds[$row->entity] = $entityName;
+			$pairs[$id] = $entityName;
 		}
 
-		return $entityIds;
+		return $pairs;
 
+	}
+
+	public function getDistinctEvents()
+	{
+        return $this->_getDistinctPairs('event_id', 'event_name');
+	}
+
+	protected function _getDistinctPairs($idcol, $namecol)
+	{
+		$mapper = new Default_Model_Mapper_Log();
+
+		$select = $mapper->getDbTable()->select(true);
+
+		$select->reset('columns')
+			   ->columns(array($idcol))
+			   ->distinct(true)
+			   ->where($idcol . ' IS NOT NULL');
+
+		$result = $mapper->getDbTable()->fetchAll($select);
+
+		$pairs = array();
+
+		foreach ($result as $row) {
+    		$select->reset('columns')
+			   ->columns(array($namecol))
+			   ->distinct(false)
+			   ->where($idcol . ' = ?', $row->$idcol);
+
+		    $dbName = $mapper->getDbTable()->getAdapter()->fetchOne($select);
+		    if (empty($dbName)) {
+		        continue;
+		    }
+
+			$pairs[$row->$idcol] = $dbName;
+		}
+
+		return $pairs;
 	}
 }

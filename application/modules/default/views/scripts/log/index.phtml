@@ -23,11 +23,25 @@
 		<tr>
 			<th></th>
 			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
-			<th><input type="text" name="event_name" value="<?php echo $this->filter['event_name']; ?>" /></th>
+			<th>
+			<select name="event_id">
+					<option value=""><?php echo $this->translate('default_log_index_event_all'); ?></option>
+			<?php
+				$events = $this->logDistinctPairs('event');
+				foreach ($events as $id => $name) :
+			?>
+				<option <?php
+							echo ($this->filter['event_id'] == $id) ? 'selected="selected"' : '';
+						?> value="<?php echo $id; ?>"><?php echo $this->translate($name); ?></option>
+			<?php
+				endforeach;
+			?>
+				</select>
+			</th>
 			<th><select name="entity">
 					<option value=""><?php echo $this->translate('default_log_index_entity_all'); ?></option>
 			<?php
-				$entities = $this->logDistinctEntities();
+				$entities = $this->logDistinctPairs('entity');
 				foreach ($entities as $id => $name) :
 			?>
 				<option <?php
