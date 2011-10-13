@@ -25,7 +25,7 @@ class Unwired_View_Helper_ArrayToXml extends Zend_View_Helper_Abstract
 
         $node = $this->_xml->createElement($name);
 
-        $this->_iterateChildren($data, $node, $replacements);
+        $this->_iterateChildren($data, $node, $replacements, $exclude);
 
         $api->appendChild($node);
 
@@ -89,7 +89,7 @@ class Unwired_View_Helper_ArrayToXml extends Zend_View_Helper_Abstract
                 }
             } else {
                 $newNode = $this->_xml->createElement($name);
-                $this->_iterateChildren($value, $newNode, $subreplacements);
+                $this->_iterateChildren($value, $newNode, $subreplacements, $subexclude);
             }
 
             foreach ($attribs as $key => $value) {

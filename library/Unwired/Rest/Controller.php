@@ -65,7 +65,19 @@ abstract class Unwired_Rest_Controller extends Unwired_Controller_Crud
      */
     public function getAction()
     {
-        $this->_edit();
+        $id = (int) $this->getRequest()->getParam('id', 0);
+
+        if (!$id) {
+            throw new Unwired_Exception('entity_not_found', 404);
+        }
+
+        $entity = $this->_getDefaultMapper()->find($id);
+
+        if (!$entity) {
+            throw new Unwired_Exception('entity_not_found', 404);
+        }
+
+        $this->view->entity = $entity;
     }
 
     /**
