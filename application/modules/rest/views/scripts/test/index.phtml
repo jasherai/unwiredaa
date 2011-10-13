@@ -1,0 +1,124 @@
+<?php
+/**
+* Unwired AA GUI
+*
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+*
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
+* license available at http://www.unwired.at/license.html
+*/
+$this->headLink()->appendStylesheet('http://alexgorbatchev.com/pub/sh/current/styles/shCore.css');
+$this->headLink()->appendStylesheet('http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css');
+$this->headScript()->appendFile('http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js');
+$this->headScript()->appendFile('http://alexgorbatchev.com/pub/sh/current/scripts/shAutoloader.js');
+$this->headScript()->appendFile('http://alexgorbatchev.com/pub/sh/current/scripts/shBrushXml.js');
+
+$this->headScript()->captureStart();
+?>
+$(document).ready(function(){
+
+	$('#btnrequest').click(function(){
+		var resturl = '<?php echo $this->serverUrl($this->url(array('module' => 'api'), null, true)) ;?>/';
+		$.ajax({
+			url: '<?php echo $this->url(array('module' => 'rest',
+			                                  'controller' => 'test',
+			                                  'action' => 'sign'), null, true)?>',
+			dataType: 'json',
+			data: {
+					app_key: $('#appkey').val(),
+					app_secret: $('#appsecret').val(),
+					id: $('#resourceid').val(),
+					resturl: resturl + $('#resource').val() + '/'
+				  },
+			success: function(signdata) {
+
+				$('#requesturl span.url').html(resturl + $('#resource').val() + '/?' + signdata[0].replace(/\&/gi, '&amp;'));
+				$.ajax({
+					url: resturl + $('#resource').val() + '/',
+					data: signdata[0],
+					type: $('#method').val(),
+					success: function(data, textStatus, xhr) {
+						$('#response').html('');
+
+						$('#response').append('<pre>Status:' + textStatus + '</pre>');
+						var stringData = '';
+						if (window.ActiveXObject) {
+                        	stringData = data.xml;
+                        }
+                        // code for Mozilla, Firefox, Opera, etc.
+                        else {
+                        	stringData = (new XMLSerializer()).serializeToString(data);
+                        }
+
+						$('#response').append('<pre class="brush: xml; toolbar: true">' + stringData.replace(/\</gi, '&lt;').replace(/\>/gi, '&gt;') + '</pre>');
+
+						SyntaxHighlighter.highlight();
+					},
+					global: false,
+					error: function(xhr, status){
+						$('#response').html('');
+
+						$('#response').append('<pre>Status: ' + status + '</pre>');
+
+						$('#response').append('<pre class="brush: xml; toolbar: true">' + xhr.responseText.replace(/\</gi, '&lt;').replace(/\>/gi, '&gt;') + '</pre>');
+
+						SyntaxHighlighter.highlight();
+					}
+				})
+			},
+			error: function(){
+				alert('Error sign request');
+			}
+		});
+	});
+});
+<?php
+$this->headScript()->captureEnd();
+?>
+<h1><?php echo $this->translate('rest_test_index_heading');?></h1>
+<div class="span-18">
+	<div class="span-12">
+		<div class="span-6">
+			<label>App key:</label>
+			<input type="text" id="appkey" name="app_key" value="" />
+		</div>
+		<div class="span-6 last">
+			<label>App secret:</label>
+			<input type="text" id="appsecret" name="app_secret" value="" />
+		</div>
+		<div class="span-5 last">
+			<label class="span-4">Resource:</label>
+			<select class="span-4" id="resource" name="resource">
+				<option value="users/admin">Admin</option>
+				<option value="users/net-user">Network users</option>
+				<option value="nodes">Devices</option>
+			</select>
+		</div>
+
+		<div class="span-4 last">
+			<label class="span-4">Method:</label>
+			<select id="method" name="method">
+				<option value="get">Get</option>
+				<option value="post">Put/Post</option>
+				<option value="delete">Delete</option>
+			</select>
+		</div>
+		<div class="span-3 last">
+			<label class="span-3 last">ID:</label>
+			<input class="span-1 last" type="text" id="resourceid" name="resourceid" value="" />
+		</div>
+		<div class="span-12 buttons">
+			<a class="button small green" id="btnrequest"><span>Do request</span></a>
+		</div>
+
+    	<div id="requesturl" class="span-12 buttons">
+    		<span>URL:</span><span class="url"> </span>
+    	</div>
+	</div>
+	<div class="span-6 last">
+
+	</div>
+	<div id="response" class="buttons span-18 last "></div>
+</div>

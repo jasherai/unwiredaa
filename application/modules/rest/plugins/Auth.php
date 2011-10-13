@@ -27,8 +27,7 @@ class Rest_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 		$appKey = $this->getRequest()->getParam('app_key', null);
 
 		if (!$appKey) {
-			$this->_authError();
-			return;
+            throw new Unwired_Exception('default_error_error_access_denied', 403);
 		}
 
 		$service = new Rest_Service_Auth();
@@ -42,10 +41,10 @@ class Rest_Plugin_Auth extends Zend_Controller_Plugin_Abstract
 
 		$appKey = $service->getKeyByAdmin($admin);
 
-		/*if (!$service->checkRequest($appKey, $request)) {
-		    $this->_authError();
-		    return;
-		}*/
+		if (!$service->checkRequest($appKey, $request)) {
+		    throw new Unwired_Exception('default_error_error_access_denied', 403);
+		}
+
 		Zend_Auth::getInstance()->clearIdentity();
 		Zend_Auth::getInstance()->getStorage()->write($admin);
 	}

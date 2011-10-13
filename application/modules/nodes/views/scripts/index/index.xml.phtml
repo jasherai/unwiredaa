@@ -10,5 +10,9 @@
 * license available at http://www.unwired.at/license.html
 */
 
-echo $this->paginatorToXml($this->paginator, 'nodes', 'node', array('node_id' => 'id'));
+echo $this->paginatorToXml($this->paginator, 'devices', 'device', array('node_id' => 'id'), array('settings',
+																								  'update_config',
+                                                                                                  'location' => array('node_id'),
+                                                                                                  'group',
+																								  'deleted'));
 ?>

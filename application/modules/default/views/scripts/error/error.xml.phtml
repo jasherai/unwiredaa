@@ -1,0 +1,34 @@
+<?php
+/**
+* Unwired AA GUI
+*
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+*
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
+* license available at http://www.unwired.at/license.html
+*/
+echo "<?xml version=\"1.0\"?>\n";
+?>
+<api>
+	<error>
+		<message><![CDATA[<?php echo $this->translate($this->message); ?>]]></message>
+		<code><?php echo isset($this->exception)
+		                        ? $this->exception->getCode()
+		                        : Zend_Controller_Front::getInstance()
+		                                                    ->getResponse()
+		                                                         ->getHttpResponseCode(); ?></code>
+		<?php if (APPLICATION_ENV == 'development') :?>
+		<debug>
+			<message><![CDATA[
+    		<?php echo isset($this->exception) ? $this->exception->getMessage() : '' ; ?>
+    		]]></message>
+    		<trace><![CDATA[
+    		<?php echo isset($this->exception) ? $this->exception->getTraceAsString() : '' ; ?>
+    		]]><trace>
+		</debug>
+		<?php endif;?>
+	</error>
+	<status>failed</status>
+</api>

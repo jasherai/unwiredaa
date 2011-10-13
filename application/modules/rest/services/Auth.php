@@ -105,8 +105,13 @@ class Rest_Service_Auth
         if (!isset($params['timestamp']) || !$this->_isValidTimestamp($params['timestamp'])) {
             return false;
         }
+        $serverHelper = new Zend_View_Helper_ServerUrl();
 
-        $data = http_build_query($params);
+        $requestUri = explode('?',  $serverHelper->serverUrl(true));
+
+        $serverHelper = null;
+
+        $data = $requestUri[0] . '?' . http_build_query($params);
 
         $checkSignature = Zend_Crypt_Hmac::compute($key->getSecret(), $this->_getHashAlgoSecret(), $data);
 

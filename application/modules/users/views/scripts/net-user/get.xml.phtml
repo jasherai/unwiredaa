@@ -9,12 +9,6 @@
 * (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
 */
-echo "<?xml version=\"1.0\"?>\n";
+
+echo $this->arrayToXml($this->entity->toArray(), 'netuser', array('user_id' => 'id'), array('password'));
 ?>
-<unwired>
-	<error>
-	    <message><![CDATA[<?php echo $this->translate('rest_not_authorized'); ?>]]></message>
-	    <code>403</code>
-	</error>
-	<status>failed</status>
-</unwired>
