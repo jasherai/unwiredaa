@@ -45,6 +45,12 @@ class Rest_Bootstrap extends Unwired_Application_Module_Bootstrap
 		return $restAuth;
     }
 
+    protected function _initProfileKeyView()
+    {
+        $front = $this->getApplication()->getResource('frontcontroller');
+        $front->registerPlugin(new Rest_Plugin_ProfileCredentials());
+    }
+
 	protected function _initAclResources()
 	{
 		$acl = parent::_initAclResources();
