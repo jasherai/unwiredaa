@@ -14,7 +14,7 @@ class Rest_Plugin_ProfileCredentials extends Zend_Controller_Plugin_Abstract
 {
     public function postDispatch(Zend_Controller_Request_Abstract $request)
     {
-        if (!$request->getModuleName() == 'users' && !$request->getControllerName() == 'profile') {
+        if ($request->getModuleName() != 'users' || $request->getControllerName() != 'profile') {
             return;
         }
 
