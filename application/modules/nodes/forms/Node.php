@@ -77,7 +77,7 @@ class Nodes_Form_Node extends Unwired_Form
 	    $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'fieldset',
 	    														  'options' => array ('class' => 'span-9',
-	    																			  'legend' => 'Node'))));
+	    																			  'legend' => 'nodes_index_edit_form_legend_node'))));
 
 
 		$settingsForm->addElement('submit', 'form_element_submit', array('label' => 'nodes_index_edit_form_button_save',

@@ -20,7 +20,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 	{
 		parent::init();
 
-		$this->setLegend('Node settings');
+		$this->setLegend('nodes_index_edit_form_legend_settings');
 
 		$this->setDecorators(array('FormElements',
 								   'fieldset' => array('decorator' => 'fieldset',
