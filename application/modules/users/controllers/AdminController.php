@@ -49,7 +49,7 @@ class Users_AdminController extends Unwired_Rest_Controller
 				continue;
 			}
 
-			$filter[$key] = '%' . preg_replace('/[^a-z0-9\s\@\-\:\.]+/iu', '', $value) . '%';
+			$filter[$key] = '%' . preg_replace('/[^a-z0-9ÄÖÜäöüßêñéçìÈùø\s\@\-\:\.]+/iu', '', $value) . '%';
 		}
 
 		return $filter;

@@ -128,7 +128,7 @@ $(document).ready(function(){
 		
 		$(this).parents('tr:first').find('th input, th select').each(function(){
 			var attr_name = $(this).attr('name');
-			var value = $(this).val().replace(/[^a-z0-9\s\@\-\:\.]+/gi, '');
+			var value = $(this).val().replace(/[^a-z0-9ÄÖÜäöüßêñéçìÈùø\s\@\-\:\.]+/gi, '');
 			
 			if (!value.length) {
 				return true;
