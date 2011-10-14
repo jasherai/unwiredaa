@@ -61,11 +61,6 @@ class Unwired_View_Helper_FormHref extends Zend_View_Helper_FormElement
                 . ' name="' . $this->view->escape($name) . '"'
                 . ' id="' . $this->view->escape($id) . '"';
 
-        // add a value if one is given
-        if (!empty($value)) {
-            $xhtml .= ' value="' . $this->view->escape($value) . '"';
-        }
-
         // add attributes and close start tag
         $xhtml .= $this->_htmlAttribs($attribs) . '>';
 
