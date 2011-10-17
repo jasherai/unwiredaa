@@ -124,6 +124,10 @@ class Unwired_Controller_Crud extends Unwired_Controller_Action
 			$form = new $formClass;
 		}
 
+		if ($form instanceof Unwired_Form) {
+		    $form->setEntity($entity);
+		}
+
 		$form->populate($entity->toArray());
 
 		$this->view->entity = $entity;

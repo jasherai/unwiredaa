@@ -13,9 +13,9 @@
 abstract class Unwired_Rest_Controller extends Unwired_Controller_Crud
 {
 
-	protected $_autoRedirect = false;
+	// protected $_autoRedirect = false;
 
-	protected $_actionsToReferer = array();
+	// protected $_actionsToReferer = array();
 
     public $contexts = array('index'  => array('xml'),
                              'delete' => array('xml'),
@@ -86,6 +86,7 @@ abstract class Unwired_Rest_Controller extends Unwired_Controller_Crud
      */
     public function postAction()
     {
+        $this->_setAutoRedirect(false);
         $this->_edit();
     }
 
@@ -96,6 +97,7 @@ abstract class Unwired_Rest_Controller extends Unwired_Controller_Crud
      */
     public function putAction()
     {
+        $this->_setAutoRedirect(false);
         $this->_edit();
     }
 
@@ -106,6 +108,7 @@ abstract class Unwired_Rest_Controller extends Unwired_Controller_Crud
      */
     public function deleteAction()
     {
+        $this->_setAutoRedirect(false);
         $this->_delete();
     }
 }
