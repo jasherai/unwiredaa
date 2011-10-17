@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * System group form
@@ -38,7 +38,12 @@ class Groups_Form_Group extends Unwired_Form
 		$this->addElement('text', 'name', array('label' => 'groups_group_edit_form_name',
 												'required' => true,
 												'validators' => array('len' => array('validator' => 'StringLength',
-																				     'options' => array('min' => 2)))));
+																				     'options' => array('min' => 2)),
+																	  'db' => array('validator' => 'Db_NoRecordExists',
+																				    'options' => array(
+																								'table' => 'group',
+																						        'field' => 'name'
+																					)))));
 
 		$this->addElement('text', 'parent_id', array('label' => 'groups_group_edit_form_parent',
 													 'required' => true,
@@ -74,5 +79,23 @@ class Groups_Form_Group extends Unwired_Form
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
 													 	     						  'class' => 'formbuttons'))));
+	}
+
+	public function isValid($data)
+	{
+	    $entity = $this->getEntity();
+
+	    $exclude = '';
+
+	    if ($entity && $entity->getGroupId()) {
+	        $exclude = 'group_id != ' . $entity->getGroupId() . ' AND ';
+	    }
+
+	    $exclude .= 'parent_id = ' . $data['parent_id'];
+
+	    $this->getElement('name')->getValidator('Db_NoRecordExists')
+	                                  ->setExclude($exclude);
+
+	    return parent::isValid($data);
 	}
 }
