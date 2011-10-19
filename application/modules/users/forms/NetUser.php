@@ -87,7 +87,7 @@ class Users_Form_NetUser extends Unwired_Form
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 8)))));
 
-		$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
+	/*	$this->addElement('text', 'mac', array('label' => 'users_netuser_edit_form_mac',
 												'required' => false,
 												'class' => 'span-5',
 												'filters' => array('sanitize' => array('filter' => 'PregReplace',
@@ -98,7 +98,7 @@ class Users_Form_NetUser extends Unwired_Form
 																				    'options' => array(
 																								'table' => 'network_user',
 																						        'field' => 'mac'
-																					)))));
+																					))))); */
 
 		$this->addElement('multiselect', 'policy_ids', array('label' => 'users_netuser_edit_form_policy',
 															 'required' => true,
@@ -154,7 +154,7 @@ class Users_Form_NetUser extends Unwired_Form
 									 'cfmpassword',
 									 'group_id',
 									 'policy_ids',
-									 'mac'),
+									/* 'mac' */),
 				 			   'access');
 
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),

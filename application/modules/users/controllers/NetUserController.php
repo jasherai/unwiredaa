@@ -82,10 +82,10 @@ class Users_NetUserController extends Unwired_Rest_Controller
 					  ->getValidator('Db_NoRecordExists')
 					  	   ->setExclude(array('field' => 'user_id',
 					  	   					  'value' => $entity->getUserId()));
-			$form->getElement('mac')
+			/* $form->getElement('mac')
 					  ->getValidator('Db_NoRecordExists')
 					  	   ->setExclude(array('field' => 'user_id',
-					  	   					  'value' => $entity->getUserId()));
+					  	   					  'value' => $entity->getUserId())); */
 		}
 		parent::_add($mapper, $entity, $form);
 	}
