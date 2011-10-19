@@ -14,9 +14,9 @@
 	<thead>
 		<tr>
 			<th><?php echo $this->translate('users_admin_index_id');?></th>
-			<th><?php echo $this->translate('users_admin_index_email');?></th>
-			<th><?php echo $this->translate('users_admin_index_firstname');?></th>
 			<th><?php echo $this->translate('users_admin_index_lastname');?></th>
+			<th><?php echo $this->translate('users_admin_index_firstname');?></th>
+			<th><?php echo $this->translate('users_admin_index_email');?></th>
 			<th><?php echo $this->translate('users_admin_index_city');?></th>
 			<th><?php echo $this->translate('users_admin_index_country');?></th>
 			<th class="tools">
@@ -37,9 +37,9 @@
 		</tr>
 		<tr>
 			<th></th>
-			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
-			<th><input type="text" name="firstname" value="<?php echo $this->filter['firstname']; ?>" /></th>
 			<th><input type="text" name="lastname" value="<?php echo $this->filter['lastname']; ?>" /></th>
+			<th><input type="text" name="firstname" value="<?php echo $this->filter['firstname']; ?>" /></th>
+			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
 			<th><input type="text" name="city" value="<?php echo $this->filter['city']; ?>" /></th>
 			<th><input type="text" name="country" value="<?php echo $this->filter['country']; ?>" /></th>
 			<th class="tools">
@@ -54,9 +54,9 @@
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
 			<td class="column_id"><?php echo $user->getUserId(); ?></td>
-			<td><?php echo $user->getEmail(); ?></td>
-			<td><?php echo $user->getFirstname(); ?></td>
 			<td><?php echo $user->getLastname(); ?></td>
+			<td><?php echo $user->getFirstname(); ?></td>
+			<td><?php echo $user->getEmail(); ?></td>
 			<td><?php echo $user->getCity(); ?></td>
 			<td><?php echo $user->getCountry(); ?></td>
 			<td class="tools">
