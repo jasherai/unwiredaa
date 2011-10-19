@@ -89,9 +89,14 @@
 
 						echo ' : ';
 
+<<<<<<< HEAD
 						$eventData = $log->getEventData();
 						if (!empty($eventData)) {
 							$entity->fromArray(unserialize($eventData));
+=======
+						if (!empty($log->getEventData())) {
+							$entity->fromArray(unserialize($log->getEventData()));
+>>>>>>> 5cafd6e16a2c3cb4cf545c4ac25f34e103b96fe1
 						} else {
 							$entity = null;
 						}
