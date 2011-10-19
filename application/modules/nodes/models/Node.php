@@ -130,8 +130,20 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	/**
 	 * @param string $status
 	 */
-	public function setStatus($status) {
+	public function setStatus($status)
+	{
 		$this->_status = $status;
+
+		$settings = $this->getSettings();
+		if (!$settings) {
+			return $this;
+		}
+
+		if ($status == 'enabled') {
+			$settings->setWifiEnabled(true);
+		} else {
+			$settings->setWifiEnabled(false);
+		}
 
 		return $this;
 	}

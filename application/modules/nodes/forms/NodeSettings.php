@@ -100,10 +100,10 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 			}
 			$this->getElement('channel')->addMultiOption($i, $i);
 		}
-
+/*
 		$this->addElement('checkbox', 'wifi_enabled', array('label' => 'nodes_index_edit_form_wifienabled',
 															'required' => false));
-
+*/
 		$this->addElement('checkbox', 'roaming', array('label' => 'nodes_index_edit_form_roaming',
 													'required' => true,
 													'decorators' => array(
@@ -142,8 +142,8 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 									 ->setRequired(false);
 			$this->getElement('channel')->setAttrib('disabled', true)
 										->setRequired(false);
-			$this->getElement('wifi_enabled')->setAttrib('disabled', true)
-											 ->setRequired(false);
+		/*	$this->getElement('wifi_enabled')->setAttrib('disabled', true)
+											 ->setRequired(false); */
 		}
 
 	    $this->setDisplayGroupDecorators(array('FormElements',
@@ -157,7 +157,7 @@ class Nodes_Form_NodeSettings extends Unwired_Form
 								    														  'options' => array ('tag' => 'div',
 																				 	     						  'class' => 'span-9')))));
 
-		$this->addDisplayGroup(array('bandwidthup', 'bandwidthdown','trafficlimit','ssid','channel', 'wifi_enabled', 'roaming','activefrom','activeto'),
+		$this->addDisplayGroup(array('bandwidthup', 'bandwidthdown','trafficlimit','ssid','channel',/* 'wifi_enabled',*/ 'roaming','activefrom','activeto'),
 							   'node_wifi', array('decorators' => array('FormElements',
 									   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 								    														  'options' => array ('tag' => 'div',
