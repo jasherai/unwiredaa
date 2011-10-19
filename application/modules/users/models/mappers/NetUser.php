@@ -40,7 +40,8 @@ class Users_Model_Mapper_NetUser extends Unwired_Model_Mapper
 
 			$adapter->delete('radcheck', "`username`='{$model->getUsername()}' AND `attribute`='MD5-Password'");
 
-			if ($model->getPassword() !== null) {
+			$password = $model->getPassword();
+			if (!empty($password)) {
 				/**
 				 * @todo This shouldn't be possibe! (null password)
 				 */

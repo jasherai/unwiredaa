@@ -76,13 +76,13 @@ class Users_Form_NetUser extends Unwired_Form
 		$this->getElement('group_id')->addErrorMessage('users_netuser_edit_form_error_group');
 
 		$this->addElement('password', 'password', array('label' => 'users_netuser_edit_form_password',
-														'required' => true,
+														'required' => false,
 														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 8)))));
 
 		$this->addElement('password', 'cfmpassword', array('label' => 'users_netuser_edit_form_cfmpassword',
-														'required' => true,
+														'required' => false,
 														'class' => 'span-5',
 														'validators' => array('len' => array('validator' => 'StringLength',
 																					     	 'options' => array('min' => 8)))));
