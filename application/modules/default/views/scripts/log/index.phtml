@@ -83,13 +83,18 @@
 						$class = $log->getEntityName();
 						$entity = new $class;
 
-						$entity->fromArray(unserialize($log->getEventData()));
-
 						echo ($entity instanceof Zend_Acl_Resource_Interface)
 							 ? $this->translate('resource_' . $entity->getResourceId())
 							 : $log->getEntityName();
 
 						echo ' : ';
+
+						$eventData = $log->getEventData();
+						if (!empty($eventData)) {
+							$entity->fromArray(unserialize($eventData));
+						} else {
+							$entity = null;
+						}
 
 						if (method_exists($entity, 'getName')) {
 
