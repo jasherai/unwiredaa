@@ -20,7 +20,7 @@ class Users_Model_Mapper_NetUser extends Unwired_Model_Mapper
 	protected $_modelClass = 'Users_Model_NetUser';
 	protected $_dbTableClass = 'Users_Model_DbTable_NetworkUser';
 
-	protected $_defaultOrder = array('radius_sync ASC', 'user_id ASC');
+	protected $_defaultOrder = array('radius_sync ASC', 'lastname ASC');
 
 	public function save(Unwired_Model_Generic $model)
 	{
