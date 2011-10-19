@@ -224,6 +224,18 @@ table.listing tr td.column_id {
     width: 70px;
 }
 
+table.listing tr td.status0 {
+	background-image: url('../images/icons/16x16/status0.png');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;	
+}
+
+table.listing tr td.status1 {
+	background-image: url('../images/icons/16x16/status0.png');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;	
+}
+
 table.listing tr td span.online {
 	color: #007700;
 }
