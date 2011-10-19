@@ -71,14 +71,16 @@ class Default_Service_Log
     		$select->reset('columns')
 			   ->columns(array($namecol))
 			   ->distinct(false)
+			   ->reset('where')
 			   ->where($idcol . ' = ?', $row->$idcol);
 
 		    $dbName = $mapper->getDbTable()->getAdapter()->fetchOne($select);
+
 		    if (empty($dbName)) {
 		        continue;
 		    }
 
-			$pairs[$row->$idcol] = $dbName;
+			$pairs[(string) $row->$idcol] = $dbName;
 		}
 
 		return $pairs;
