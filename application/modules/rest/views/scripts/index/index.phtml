@@ -52,7 +52,7 @@
 			<td class="column_id"><?php echo $key->getUserId(); ?></td>
 			<td><?php echo $key->getAdmin()->getEmail(); ?></td>
 			<td><?php echo $key->getKey(); ?></td>
-			<td class="status<?php echo $key->isActive(); ?>"> </td>
+			<td class="status<?php echo (int) $key->isActive(); ?>"> </td>
 			<td class="tools">
 				  <?php
 					$actions = array();
