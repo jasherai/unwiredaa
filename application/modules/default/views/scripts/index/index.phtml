@@ -72,7 +72,7 @@
 
 			if (data.online_status > 0) {
 				onlinemsg = 'Online users: ' + data.online_users_count;
-	    		onlinemsg = '</div><div>Online since: ' + formattedDate;
+	    		onlinemsg = onlinemsg + '</div><div>Online since: ' + formattedDate;
 	    		mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-green.png")?>";
 	    	} else {
 	    		onlinemsg = 'Offline since: ' + formattedDate;
