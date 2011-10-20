@@ -75,7 +75,7 @@ $(document).ready(function(){
 			<td><?php echo $node->getName(); ?></td>
 			<td><?php echo $node->getMac(); ?></td>
 			<td><?php echo $node->getSettings()->getIpaddress(); ?></td>
-			<td><?php echo $node->getStatus(); ?></td>
+			<td><?php echo $this->translate('nodes_index_edit_form_status_' . $node->getStatus()); ?></td>
 			<td><?php echo $this->onlineStatusSince($node); ?></td>
 			<td><?php echo $node->getOnlineUsersCount(); ?></td>
 			<td class="tools">
