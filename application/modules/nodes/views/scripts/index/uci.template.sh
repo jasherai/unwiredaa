@@ -15,6 +15,7 @@ set network.loopback.netmask=255.0.0.0
 set network.lan=interface
 set network.lan.type=bridge
 set network.lan.ifname="wlan0 tap0"
+delete network.wan
 set network.wan=interface
 set network.wan.ifname=eth0
 <?php if ($this->node->getSettings()->getDhcp()) : ?>
