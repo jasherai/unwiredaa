@@ -1,0 +1,3 @@
+[submodule "library/Unwired"]
+	path = library/Unwired
+	url = git@github.com:unwired/UWLIB.git
