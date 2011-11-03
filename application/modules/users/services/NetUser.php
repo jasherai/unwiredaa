@@ -51,7 +51,8 @@ class Users_Service_NetUser implements Unwired_Event_Handler_Interface
 				}
 
 				$mac = str_replace(array(':','-'), '', $mac);
-				$mac = preg_replace('/^(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})$/i', '$1:$2:$3:$4:$5:$6', $mac);
+				$mac = str_split($mac, 2);
+				$mac = implode('-', $mac);
 
 				try {
 					$client = new Zend_Http_Client($this->_logoutUri . $mac,
