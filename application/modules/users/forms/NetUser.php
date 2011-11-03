@@ -174,7 +174,7 @@ class Users_Form_NetUser extends Unwired_Form
 	public function isValid($data)
 	{
 		if (isset($data['policy_ids']) && in_array(1, $data['policy_ids'])) {
-			$this->getElement('mac')->setRequired(true);
+			// $this->getElement('mac')->setRequired(true);
 		}
 
 		$valid = parent::isValid($data);
