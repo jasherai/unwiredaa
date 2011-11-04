@@ -41,7 +41,7 @@ class Users_Model_NetUser extends Unwired_Model_Generic implements Zend_Acl_Role
 
 	protected $_country = 'AT';
 
-	protected $_mac = null;
+	protected $_mac = '';
 
 	protected $_radiusSync = 0;
 
