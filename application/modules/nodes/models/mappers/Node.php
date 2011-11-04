@@ -159,7 +159,8 @@ class Nodes_Model_Mapper_Node extends Unwired_Model_Mapper
 								 ->select()
 								 	->from('radacct', new Zend_Db_Expr('count(*) AS `online_users`'))
 								 	->where('acctterminatecause = ? OR acctterminatecause IS NULL', '')
-								 	->where('location = 0x' . $model->getMac());
+								 	->where('location = 0x' . $model->getMac())
+								 	->where('LOCATE(":", calledstationid) = 0');
 
 		$onlineUsers = $this->getDbTable()
 								 ->getAdapter()
