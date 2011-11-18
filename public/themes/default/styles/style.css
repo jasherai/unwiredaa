@@ -253,6 +253,10 @@ div.formelement {
 	float: left;
 }
 
+div.formelement.ui-accordion-content {
+    padding: 0px;	
+}
+
 fieldset div.formelement {
     margin-left: 10px;	
 }
