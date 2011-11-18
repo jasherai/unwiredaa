@@ -1,0 +1,58 @@
+<h1><?php
+	if ($this->entity->getTemplateId()) {
+		echo sprintf($this->translate('captive_template_edit_heading_edit'), $this->entity->getName());
+	} else {
+		echo $this->translate('captive_template_edit_heading_add');
+	}
+?></h1>
+<?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
+
+	$groupsAssigned = $this->entity->getGroupsAssigned();
+	$this->headScript()->captureStart();
+
+?>
+var templateGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
+var groupsAssigned = <?php echo Zend_Json::encode($groupsAssigned);?>;
+
+$(function () {
+	$("label[for=groups_assigned]").siblings('label').remove();
+	$("label[for=groups_assigned]").after($('.grouptree'));
+
+	var init_select = new Array();
+
+	$.each(groupsAssigned, function (idx, data) {
+		init_select.push('group_' + data);
+	});
+
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : init_select.length ? init_select : 'group_1' },
+            "ui" : { select_multiple_modifier: 'on',
+            		 disable_selecting_children: true,
+					 select_limit : -1,
+					 "initially_select" : init_select
+					}
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$('.grouptree').after('<input type="hidden" name="groups_assigned[]" value="' + groupId +'" />');
+	     })
+        .bind("deselect_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$('input[name^=groups_assigned][value='+groupId+']').remove();
+	     })
+
+});
+<?php
+	$this->headScript()->captureEnd();
+
+	echo $this->form;
+?>
+<div class="grouptree span-8">
+	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
+</div>

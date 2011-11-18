@@ -1,0 +1,65 @@
+<h1><?php echo $this->translate('captive_index_index_heading'); ?></h1>
+
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+
+	$acl = Zend_Registry::get('acl');
+?>
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('captive_index_index_id');?></th>
+			<th><?php echo $this->translate('captive_index_index_title');?></th>
+			<th class="tools">
+			<?php
+			if ($acl->isAllowed($this->currentUser, 'captive_splashpage', 'add')) :
+			?>
+			<a class="add" href="<?php
+				echo $this->url(array('module' => 'captive',
+									  'controller' => 'index',
+									  'action' => 'add'), null, true);
+				?>"><img src="<?php
+					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
+				?>" alt="<?php echo $this->translate('captive_index_index_button_add'); ?>" /> <?php echo $this->translate('captive_index_index_button_add'); ?></a>
+
+			<?php
+			endif;
+			?>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			foreach ($this->paginator as $splashpage) :
+		?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $splashpage->getSplashId(); ?></td>
+			<td><?php echo $splashpage->getTitle(); ?></td>
+			<td class="tools">
+				<?php
+					$actions = array(/*'view',*/ 'edit', 'delete');
+
+					foreach ($actions as $action) :
+						if (!$acl->isAllowed($this->currentUser, $splashpage->getResourceId(), $action)) {
+							continue;
+						}
+
+						?>
+					<a href="<?php echo $this->url(array('module' => 'captive',
+													     'controller' => 'index',
+													     'action' => $action,
+													     'id'	=> $splashpage->getSplashId()),
+												   null,
+												   true); ?>" class="icon <?php echo $action; ?>"><?php
+
+						echo $this->translate('captive_index_index_button_' . $action);
+				   ?></a>
+				   <?php
+					endforeach;
+				?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

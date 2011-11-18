@@ -1,0 +1,33 @@
+<h1><?php
+	if ($this->entity->getSplashId()) {
+		echo sprintf($this->translate('captive_index_edit_heading_edit'), $this->entity->getTitle());
+	} else {
+		echo $this->translate('captive_index_edit_heading_add');
+	}
+?></h1>
+<?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
+	$this->headScript()->captureStart();
+?>
+$(function () {
+	$("input[name=group_id]").hide().after($('.grouptree'));
+
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "ui" : { "initially_select" : [ "group_<?php echo implode('", "group_', $this->entity->getGroupIds()); ?>" ] }
+        })
+        .bind("select_node.jstree", function (event, data) {
+			/* var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			$("input[name=group_id]").val(groupId); */
+	     });
+});
+<?php
+	$this->headScript()->captureEnd();
+?>
+<?php echo $this->form;?>
+<div class="grouptree span-8">
+	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
+</div>

@@ -1,0 +1,85 @@
+<?php
+/**
+* Unwired AA GUI
+*
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+*
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
+* license available at http://www.unwired.at/license.html
+*/
+?>
+<h1><?php
+	echo sprintf($this->translate('captive_template_edit_heading_edit'), $this->template->getName());
+	$settings = $this->template->getSettings();
+?></h1>
+<?php
+
+    $this->headScript()->captureStart();
+?>
+	$(document).ready(function(){
+		$('div.tabs').tabs();
+		$('div.tabs').removeClass('ui-corner-all');
+		$('.accordion').accordion({
+			autoHeight: false,
+			collapsible: true
+		});
+	});
+<?php
+    $this->headScript()->captureEnd();
+?>
+<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+    <div class="accordion span-19 last">
+		<h3 class="span-19 last"><a href="#"><?php echo $this->translate('captive_content_edit_imprint');?></a></h3>
+		<div class="span-19 tabs formelement">
+    		<ul>
+    		<?php foreach ($settings['language_ids'] as $languageId) :?>
+    			<li><a href="#imprint-<?php echo $languageId; ?>"><?php echo $this->languages[$languageId]->getName(); ?></a></li>
+    		<?php endforeach; ?>
+    		</ul>
+    		<?php foreach ($this->contents['imprint'] as $languageId => $content) :?>
+    		<div class="formelement" id="imprint-<?php echo $languageId; ?>">
+    			<div class="span-17 formelement">
+    				<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$languageId]->getName(); ?></label>
+    			</div>
+    			<div class="formelement">
+    				<label><?php echo $this->translate('captive_content_edit_imprint_title'); ?>* :</label>
+    				<input type="text" name="content[imprint][<?php echo $languageId; ?>][title]" value="<?php echo $this->escape($content->getTitle()); ?> "/>
+    			</div>
+    			<div class="formelement">
+    				<label><?php echo $this->translate('captive_content_edit_imprint_content'); ?>* :</label>
+    				<textarea class="wysiwyg span-16 last" name="content[imprint][<?php echo $languageId; ?>][content]"><?php
+    				    echo $this->escape($content->getContent());
+    				?></textarea>
+    			</div>
+    		</div>
+		<?php endforeach; ?>
+		</div>
+		<h3 class="span-19 last"><a href="#"><?php echo $this->translate('captive_content_edit_terms');?></a></h3>
+		<div class="span-19 tabs formelement">
+    		<ul>
+    		<?php foreach ($settings['language_ids'] as $languageId) :?>
+    			<li><a href="#terms-<?php echo $languageId; ?>"><?php echo $this->languages[$languageId]->getName(); ?></a></li>
+    		<?php endforeach; ?>
+    		</ul>
+    		<?php foreach ($this->contents['imprint'] as $languageId => $content) :?>
+    		<div class="formelement" id="terms-<?php echo $languageId; ?>">
+    			<div class="span-17 formelement">
+    				<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$languageId]->getName(); ?></label>
+    			</div>
+    			<div class="formelement">
+    				<label><?php echo $this->translate('captive_content_edit_terms_title'); ?>* :</label>
+    				<input type="text" name="content[terms][<?php echo $languageId; ?>][title]" value="<?php echo $this->escape($content->getTitle()); ?> "/>
+    			</div>
+    			<div class="formelement">
+    				<label><?php echo $this->translate('captive_content_edit_terms_content'); ?>* :</label>
+    				<textarea class="wysiwyg span-16 last" name="content[terms][<?php echo $languageId; ?>][content]"><?php
+    				    echo $this->escape($content->getContent());
+    				?></textarea>
+    			</div>
+    		</div>
+		<?php endforeach; ?>
+		</div>
+    </div>
+</form>
