@@ -36,7 +36,7 @@ class Captive_Form_Template extends Unwired_Form
 		/*$this->addElement('file', 'filename', array('label' => 'captive_template_edit_form_filename',
 												'required' => false));*/
 
-		$this->addElement('multiSelect', 'language_ids', array('label' => 'captive_template_edit_form_settings_languages',
+		$this->addElement('multiselect', 'language_ids', array('label' => 'captive_template_edit_form_settings_languages',
 															  'belongsTo' => 'settings',
 															  'class' => 'span-8',
 															  'required' => true));
@@ -60,7 +60,7 @@ class Captive_Form_Template extends Unwired_Form
 		/**
 		 * Auth methods
 		 */
-		$this->addElement('multiSelect', 'auth', array('label' => 'captive_template_edit_form_settings_auth',
+		$this->addElement('multiselect', 'auth', array('label' => 'captive_template_edit_form_settings_auth',
 		                                               'belongsTo' => 'settings',
 		                                               'class' => 'span-8',
 													   'required' => true));
