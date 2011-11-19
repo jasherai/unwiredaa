@@ -20,13 +20,14 @@ class Captive_Form_SplashPage extends Unwired_Form
 	{
 		parent::init();
 
-
+		$mapperLanguages - new Captive_Model_Mapper_Language();
+		
 		$this->addElement('text', 'title', array('label' => 'captive_index_edit_form_title',
 												'required' => true,
 												'validators' => array('len' => array('validator' => 'StringLength',
 																				     'options' => array('min' => 2)),
 																	  'db' => array('validator' => 'Db_NoRecordExists',
-																				    'options' => array(
+																				    'options' => array( 'adapter' => $mapperLanguages->getDbTable()->getAdapter(),
 																								'table' => 'splash_page',
 																						        'field' => 'title'
 																					)))));
