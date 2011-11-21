@@ -54,6 +54,17 @@
 
 						echo $this->translate('captive_index_index_button_' . $action);
 				   ?></a>
+			   	    <?php if ($action == 'edit') :?>
+					<a href="<?php echo $this->url(array('module' => 'captive',
+													     'controller' => 'content',
+													     'action' => 'splashpage',
+													     'id'	=> $splashpage->getSplashId()),
+												   null,
+												   true); ?>" class="icon content"><?php
+
+						echo $this->translate('captive_template_index_button_content');
+				   ?></a>
+				   <?php endif; // edit?>
 				   <?php
 					endforeach;
 				?>

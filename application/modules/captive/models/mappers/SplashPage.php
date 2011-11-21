@@ -26,11 +26,13 @@ class Captive_Model_Mapper_SplashPage extends Unwired_Model_Mapper
 
             $groupRows = $row->findDependentRowset('Captive_Model_DbTable_GroupSplashPage');
 
-            $groupIds = array();
+            $groupsAssigned = array();
 
             foreach ($groupRows as $groupRow) {
-                $groupIds[] = $groupRow->group_id;
+                $groupsAssigned[] = $groupRow->group_id;
             }
+
+            $model->setGroupsAssigned($groupsAssigned);
 
             $settingsRows = $row->findDependentRowset('Captive_Model_DbTable_SplashPageSettings');
 

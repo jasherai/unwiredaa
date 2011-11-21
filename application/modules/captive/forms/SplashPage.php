@@ -21,7 +21,7 @@ class Captive_Form_SplashPage extends Unwired_Form
 		parent::init();
 
 		$mapperLanguages = new Captive_Model_Mapper_Language();
-		
+
 		$this->addElement('text', 'title', array('label' => 'captive_index_edit_form_title',
 												'required' => true,
 												'validators' => array('len' => array('validator' => 'StringLength',
@@ -32,6 +32,49 @@ class Captive_Form_SplashPage extends Unwired_Form
 																						        'field' => 'title'
 																					)))));
 
+		$this->addElement('multiselect', 'language_ids', array('label' => 'captive_index_edit_form_settings_languages',
+															  'belongsTo' => 'settings',
+															  'class' => 'span-8',
+															  'required' => true));
+
+		/**
+		 * Languages
+		 */
+		$mapperLanguages = new Captive_Model_Mapper_Language();
+
+		$languages = $mapperLanguages->fetchAll();
+
+		$elementLanguage = $this->getElement('language_ids');
+
+		foreach ($languages as $language) {
+		    $elementLanguage->addMultiOption($language->getLanguageId(), $language->getName());
+		}
+
+		$languages = null;
+		$mapperLanguages = null;
+
+		/**
+		 * Template selector
+		 */
+		$this->addElement('select', 'template_id', array('label' => 'captive_index_edit_form_template',
+		                                               'class' => 'span-8',
+													   'required' => true));
+
+		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'captive_index_edit_form_group',
+											  	 			  'required' => true,
+															  'separator' => '',
+															  'registerInArrayValidator' => false));
+
+		$this->getElement('groups_assigned')->addErrorMessage('captive_index_edit_form_error_group');
+
+
+		$this->addElement('textarea', 'analytics', array('label' => 'captive_index_edit_form_settings_analytics',
+		                                               'belongsTo' => 'settings',
+		                                               'class' => 'span-8',
+													   'required' => false));
+		/*
+		 * Buttons
+		 */
 		$this->addElement('submit', 'form_element_submit', array('label' => 'captive_index_edit_form_save',
 	 														 	 'tabindex' => 20,
 																 'class'	=> 'button',
@@ -40,28 +83,39 @@ class Captive_Form_SplashPage extends Unwired_Form
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button green')),
 																						)));
+        $this->addElement('submit', 'form_element_submit_edit', array('label' => 'captive_index_edit_form_save_and_edit_content',
+	 														 	 'tabindex' => 21,
+																 'class'	=> 'button',
+															 	 'decorators' => array('ViewHelper',
+																				 		array(array('span' => 'HtmlTag'),
+						            				   									 	   array ('tag' => 'span',
+																		   				 		 	  'class' => 'button green')),
+																						)));
 		$this->addElement('href', 'form_element_cancel', array('label' => 'captive_index_edit_form_cancel',
-	 														 	 'tabindex' => 20,
-																 'href' => (isset($this->getView()->refererUrl)) ?
+	 														   'tabindex' => 22,
+															   'href' => (isset($this->getView()->refererUrl)) ?
 																					$this->getView()->refererUrl : null,
-																 'data' => array(
+															   'data' => array(
 																				'params' => array('module' => 'captive',
 																					  			  'controller' => 'index',
 																					  			  'action' => 'index'),
 																				'route' => 'default',
 																				'reset' => true
 																			),
-															 	 'decorators' => array('ViewHelper',
+															   'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
 						            				   									 	   array ('tag' => 'span',
 																		   				 		 	  'class' => 'button blue')),
 																						)));
-        $this->addDisplayGroup(array('title'), 'pagedata');
 
-		$this->addDisplayGroup(array('form_element_submit', 'form_element_cancel'),
+	    $this->addDisplayGroup(array('title', 'template_id', 'language_ids', 'analytics'), 'pagedata');
+
+		$this->addDisplayGroup(array('groups_assigned'), 'groupinfo');
+
+		$this->addDisplayGroup(array('form_element_submit', 'form_element_submit_edit', 'form_element_cancel'),
 							   'formbuttons');
 
-	    $this->setDisplayGroupDecorators(array('FormElements',
+        $this->setDisplayGroupDecorators(array('FormElements',
 		   							     	   'HtmlTag' => array('decorator' => 'HtmlTag',
 	    														  'options' => array ('tag' => 'div',
 													 	     						  'class' => 'span-9'))));

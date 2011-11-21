@@ -14,7 +14,7 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
 
 	protected $_isMobile = 0;
 
-	protected $_groupIds = array();
+	protected $_groupsAssigned = array();
 
 	protected $_settings = array();
 
@@ -116,6 +116,10 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
 
     public function getSettings()
     {
+        if (empty($this->_settings) && $this->_template) {
+            $this->_settings = $this->getTemplate()->getSettings();
+        }
+
         return $this->_settings;
     }
 
@@ -125,19 +129,26 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
             $settings = array();
         }
 
+        if ($this->_template) {
+            $settings = array_merge($this->getTemplate()->getSettings(), $settings);
+        }
+
         $this->_settings = $settings;
 
         return $this;
     }
 
-    public function getGroupIds()
+    public function getGroupsAssigned()
     {
-        return $this->_groupIds;
+        return $this->_groupsAssigned;
     }
 
-    public function setGroupIds(array $groupIds = array())
+    public function setGroupsAssigned($groups = array())
     {
-        $this->_groupIds = $groupIds;
+        if (!is_array($groups)) {
+            $groups = array();
+        }
+        $this->_groupsAssigned = $groups;
 
         return $this;
     }
