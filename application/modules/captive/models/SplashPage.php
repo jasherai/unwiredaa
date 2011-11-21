@@ -16,6 +16,8 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
 
 	protected $_groupIds = array();
 
+	protected $_settings = array();
+
 	/**
      * @return the $splashId
      */
@@ -108,6 +110,22 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
     public function setIsMobile($mobile = 1)
     {
         $this->_isMobile = (int) (bool) $mobile;
+
+        return $this;
+    }
+
+    public function getSettings()
+    {
+        return $this->_settings;
+    }
+
+    public function setSettings($settings = array())
+    {
+        if (!is_array($settings)) {
+            $settings = array();
+        }
+
+        $this->_settings = $settings;
 
         return $this;
     }

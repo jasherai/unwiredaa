@@ -12,7 +12,7 @@
 
 class Captive_ContentController extends Unwired_Controller_Crud
 {
-    protected $_actionsToReferrer = array('template');
+    protected $_actionsToReferer = array('template');
 
 	public function preDispatch()
 	{
@@ -35,6 +35,82 @@ class Captive_ContentController extends Unwired_Controller_Crud
 
 			$this->view->refererUrl = $this->_referer;
 		}
+	}
+
+	public function splashpageAction()
+	{
+	    if (!$this->getAcl()->isAllowed($this->_currentUser, 'captive_splashpage', 'add')) {
+			$this->view->uiMessage('access_not_allowed_view', 'error');
+			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
+		}
+
+        $id = $this->getRequest()->getParam('id');
+
+        if (!$id) {
+            $this->_gotoIndex();
+        }
+
+        /**
+         * Get the splashpage
+         */
+        $mapperSplash = new Captive_Model_Mapper_SplashPage();
+
+        $splashPage = $mapperSplash->find($id);
+
+        if (!$splashPage) {
+            $this->_gotoIndex();
+        }
+
+        $mapperSplash = null;
+
+        $settings = $splashPage->getSettings();
+
+        /**
+         * Get template languages
+         */
+        $mapperLanguages = new Captive_Model_Mapper_Language();
+
+        $languages = $mapperLanguages->findBy(array('language_id' => $settings['language_ids']));
+
+        $languagesSorted = array();
+
+        foreach ($languages as $language) {
+            $languagesSorted[$language->getLanguageId()] = $language;
+        }
+
+        $languages = null;
+        $this->view->languages = $languagesSorted;
+
+        $mapperLanguages = null;
+
+        $serviceSplashPage = new Captive_Service_SplashPage();
+
+        /**
+         * Try to save contents
+         */
+        if ($this->getRequest()->isPost())
+        {
+            $contents = $this->getRequest()->getPost('content');
+            if (!empty($contents) && is_array($contents)) {
+                try {
+                    $serviceSplashPage->saveSplashContents($splashPage, $contents);
+                    $this->view->uiMessage('captive_content_splashpage_content_saved', 'success');
+                    $this->_gotoIndex();
+                } catch (Exception $e) {
+                    $this->view->uiMessage('captive_content_splashpage_content_error', 'error');
+                }
+            } else {
+                $this->view->uiMessage('captive_content_splashpage_no_content_provided', 'error');
+            }
+        }
+
+        /**
+         * Get template content blocks
+         */
+        $contents = $serviceSplashPage->getSplashPageContents($splashPage);
+
+        $this->view->splashPage = $splashPage;
+        $this->view->contents = $contents;
 	}
 
     public function templateAction()
@@ -83,37 +159,33 @@ class Captive_ContentController extends Unwired_Controller_Crud
 
         $mapperLanguages = null;
 
+        $serviceSplashPage = new Captive_Service_SplashPage();
+
+        /**
+         * Try to save contents
+         */
+        if ($this->getRequest()->isPost())
+        {
+            $contents = $this->getRequest()->getPost('content');
+            if (!empty($contents) && is_array($contents)) {
+                try {
+                    $serviceSplashPage->saveTemplateContents($template, $contents);
+                    $this->view->uiMessage('captive_content_template_content_saved', 'success');
+                    $this->_gotoIndex();
+                } catch (Exception $e) {
+                    $this->view->uiMessage('captive_content_template_content_error', 'error');
+                }
+            } else {
+                $this->view->uiMessage('captive_content_template_no_content_provided', 'error');
+            }
+        }
+
         /**
          * Get template content blocks
          */
-        $mapperContent = new Captive_Model_Mapper_Content();
-
-        $contents = $mapperContent->findBy(array('template_id' => $template->getTemplateId()));
-
-        $contentSorted = array('content' => array(), 'imprint' => array(), 'terms' => array());
-
-        if (empty($contents)) {
-            foreach (array_keys($contentSorted) as $type) {
-                foreach ($settings['language_ids'] as $languageId) {
-                    $content = new Captive_Model_Content();
-
-                    $content->setType($type);
-                    $content->setLanguageId($languageId);
-                    $content->setColumn(0);
-                    $content->setOrderWeb(1);
-                    $content->setOrderMobile(1);
-                }
-            }
-        }
-
-        foreach ($contents as $content) {
-            if (!isset($contentSorted[$content->getType()][$content->getLanguageId()])) {
-                $contentSorted[$content->getType()][$content->getLanguageId()] = array();
-            }
-            $contentSorted[$content->getType()][$content->getLanguageId()] = $content;
-        }
+        $contents = $serviceSplashPage->getTemplateContent($template);
 
         $this->view->template = $template;
-        $this->view->contents = $contentSorted;
+        $this->view->contents = $contents;
     }
 }

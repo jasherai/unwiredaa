@@ -62,4 +62,75 @@ class Captive_Service_SplashPage
         return $contents;
 
     }
+
+    public function getTemplateContent(Captive_Model_Template $template)
+    {
+        $mapperContent = new Captive_Model_Mapper_Content();
+
+        $settings = $template->getSettings();
+
+        $contents = $mapperContent->findBy(array('template_id' => $template->getTemplateId()));
+
+        $contentSorted = array('content' => array(), 'imprint' => array(), 'terms' => array());
+
+        if (empty($contents)) {
+            foreach (array_keys($contentSorted) as $type) {
+                foreach ($settings['language_ids'] as $languageId) {
+                    $content = new Captive_Model_Content();
+
+                    $content->setType($type);
+                    $content->setLanguageId($languageId);
+                    $content->setColumn(0);
+                    $content->setOrderWeb(1);
+                    $content->setOrderMobile(1);
+                }
+            }
+        }
+
+        foreach ($contents as $content) {
+            if (!isset($contentSorted[$content->getType()][$content->getLanguageId()])) {
+                $contentSorted[$content->getType()][$content->getLanguageId()] = array();
+            }
+            $contentSorted[$content->getType()][$content->getLanguageId()] = $content;
+        }
+
+        return $contentSorted;
+    }
+
+    public function saveTemplateContents(Captive_Model_Template $template, array $contents)
+    {
+        /**
+         * @todo this is quick and dirty workaround for 22nd Nov
+         */
+
+        $mapperContent = new Captive_Model_Mapper_Content();
+
+        $success = 0;
+
+        foreach ($contents as $type => $languageData) {
+            if ($type != 'terms' && $type != 'imprint') {
+                continue;
+            }
+
+            foreach ($languageData as $languageId => $content) {
+                try {
+                    $model = $mapperContent->getEmptyModel();
+                    $model->fromArray($content);
+                    $model->setLanguageId($languageId)
+                          ->setType($type)
+                          ->setTemplateId($template->getTemplateId());
+
+                    $mapperContent->save($model);
+                    $success++;
+                } catch (Exception $e) {
+                    throw $e;
+                }
+            }
+        }
+
+        /**
+         * @todo add html content blocks
+         */
+        return $success;
+    }
 }

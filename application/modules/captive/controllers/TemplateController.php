@@ -23,7 +23,7 @@ class Captive_TemplateController extends Unwired_Controller_Crud
 		    /**
 		     * Redirect to template content editing on update
 		     */
-		    if ($entity->getTemplateId()) {
+		    if ($entity && $entity->getTemplateId()) {
                 $this->_referer = $this->view->serverUrl($this->_helper->url->url(array('module' => 'captive',
                                                             'controller' => 'content',
                                                             'action' => 'template',
@@ -60,6 +60,7 @@ class Captive_TemplateController extends Unwired_Controller_Crud
     public function addAction()
     {
         $this->_add();
+        $this->_helper->viewRenderer->setScriptAction('edit');
     }
 
     public function editAction()

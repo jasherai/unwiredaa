@@ -15,7 +15,7 @@
 	$settings = $this->template->getSettings();
 ?></h1>
 <?php
-
+    $this->headScript()->appendFile($this->baseUrl('scripts/nicedit/nicEdit.js'));
     $this->headScript()->captureStart();
 ?>
 	$(document).ready(function(){
@@ -25,6 +25,8 @@
 			autoHeight: false,
 			collapsible: true
 		});
+
+		nicEditors.allTextAreas({iconsPath : '<?php echo $this->baseUrl('scripts/nicedit/nicEditorIcons.gif'); ?>'});
 	});
 <?php
     $this->headScript()->captureEnd();
@@ -42,6 +44,13 @@
     		<div class="formelement" id="imprint-<?php echo $languageId; ?>">
     			<div class="span-17 formelement">
     				<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$languageId]->getName(); ?></label>
+    				<?php
+    				    if ($content->getContentId()) :
+    				?>
+    					<input type="hidden" name="content[imprint][<?php echo $languageId; ?>][content_id]" value="<?php echo $content->getContentId(); ?>" />
+    				<?php
+    				    endif;
+    				?>
     			</div>
     			<div class="formelement">
     				<label><?php echo $this->translate('captive_content_edit_imprint_title'); ?>* :</label>
@@ -49,9 +58,11 @@
     			</div>
     			<div class="formelement">
     				<label><?php echo $this->translate('captive_content_edit_imprint_content'); ?>* :</label>
-    				<textarea class="wysiwyg span-16 last" name="content[imprint][<?php echo $languageId; ?>][content]"><?php
-    				    echo $this->escape($content->getContent());
-    				?></textarea>
+    				<div class="span-17 last">
+        				<textarea class="wysiwyg span-18 last" name="content[imprint][<?php echo $languageId; ?>][content]"><?php
+        				    echo $this->escape($content->getContent());
+        				?></textarea>
+    				</div>
     			</div>
     		</div>
 		<?php endforeach; ?>
@@ -63,10 +74,17 @@
     			<li><a href="#terms-<?php echo $languageId; ?>"><?php echo $this->languages[$languageId]->getName(); ?></a></li>
     		<?php endforeach; ?>
     		</ul>
-    		<?php foreach ($this->contents['imprint'] as $languageId => $content) :?>
+    		<?php foreach ($this->contents['terms'] as $languageId => $content) :?>
     		<div class="formelement" id="terms-<?php echo $languageId; ?>">
     			<div class="span-17 formelement">
     				<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$languageId]->getName(); ?></label>
+    				<?php
+    				    if ($content->getContentId()) :
+    				?>
+    					<input type="hidden" name="content[terms][<?php echo $languageId; ?>][content_id]" value="<?php echo $content->getContentId(); ?>" />
+    				<?php
+    				    endif;
+    				?>
     			</div>
     			<div class="formelement">
     				<label><?php echo $this->translate('captive_content_edit_terms_title'); ?>* :</label>
@@ -74,12 +92,21 @@
     			</div>
     			<div class="formelement">
     				<label><?php echo $this->translate('captive_content_edit_terms_content'); ?>* :</label>
-    				<textarea class="wysiwyg span-16 last" name="content[terms][<?php echo $languageId; ?>][content]"><?php
+    				<div class="span-17 last">
+    				<textarea class="wysiwyg span-18 last" name="content[terms][<?php echo $languageId; ?>][content]"><?php
     				    echo $this->escape($content->getContent());
     				?></textarea>
+    				</div>
     			</div>
     		</div>
 		<?php endforeach; ?>
 		</div>
+    </div>
+    <div class="buttons">
+    	<span class="button green">
+    		<input type="submit" value="<?php echo $this->translate('captive_content_template_save'); ?>"/>
+    	</span>
+
+    	<a href="<?php echo $this->refererUrl; ?>" class="button blue"><span><?php echo $this->translate('captive_content_template_cancel'); ?></span></a>
     </div>
 </form>

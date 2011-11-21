@@ -17,8 +17,9 @@ class Captive_Model_Mapper_SplashPage extends Unwired_Model_Mapper
             $rowTemplate = $row->findParentRow('Captive_Model_DbTable_Template');
 
             if ($rowTemplate) {
-                $modelTemplate = new Captive_Model_Template();
-                $modelTemplate->fromArray($rowTemplate->toArray());
+                $mapperTemplate = new Captive_Model_Mapper_Template();
+
+                $modelTemplate = $mapperTemplate->rowToModel($rowTemplate);
 
                 $model->setTemplate($modelTemplate);
             }
@@ -31,7 +32,20 @@ class Captive_Model_Mapper_SplashPage extends Unwired_Model_Mapper
                 $groupIds[] = $groupRow->group_id;
             }
 
-            $model->setGroupIds($groupIds);
+            $settingsRows = $row->findDependentRowset('Captive_Model_DbTable_SplashPageSettings');
+
+            $settings = array();
+
+            foreach ($settingsRows as $setting) {
+                if (preg_match('/^[ao]{1}:\d+:\{/', $setting->value)) {
+                    $value = unserialize($setting->value);
+                } else {
+                    $value = $setting->value;
+                }
+                $settings[$setting->name] = $value;
+            }
+
+            $model->setSettings($settings);
 	    }
 
 	    return $model;
