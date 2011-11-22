@@ -1,0 +1,36 @@
+<div class="box aside-box login-box">
+	<div class="holder">
+		<div class="frame">
+        	<h2><?php echo $this->translate('widget_login_heading'); ?></h2>
+        	<ul>
+        	    <?php if ($this->chilliData->getTerms()) :?>
+        		<li><a href="<?php echo $this->url(array('module' => 'default',
+        		                                     'controller' => 'user',
+        		                                     'action'    => 'guest'),
+        		                               'default',
+        		                               true); ?>"><span><?php echo $this->translate('widget_login_guest_user'); ?></span></a></li>
+        		<li><a href="<?php echo $this->url(array('module' => 'default',
+        		                                     'controller' => 'user',
+        		                                     'action'    => 'login'),
+        		                               'default',
+        		                               true); ?>"><span><?php echo $this->translate('widget_login_registered_user'); ?></span></a></li>
+        		<?php else :?>
+        		<li>
+            		<form method="post"
+            		    <?php if ($this->userAgent->isMobile()) : ?>
+            		     data-ajax="false"
+            		    <?php endif;?> action="<?php echo $this->url(array('module' => 'default',
+            		                                     'controller' => 'user',
+            		                                     'action'    => 'guest'),
+            		                               'default',
+            		                               true); ?>">
+            		<input class="button" type="submit" value="<?php echo $this->translate('widget_login_go_online'); ?>" />
+                    </form>
+                </li>
+                <?php endif; ?>
+        	</ul>
+        	<p><?php echo $this->translate('widget_login_ip'); ?>:  <?php echo $this->chilliData->getIp(); ?></p>
+        	<p><?php echo $this->translate('widget_login_device'); ?>:  <?php echo isset($this->device) ? $this->device->getName() : 'N/A'; ?></p>
+		</div>
+	</div>
+</div>

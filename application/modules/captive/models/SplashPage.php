@@ -14,7 +14,9 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
 
 	protected $_isMobile = 0;
 
-	protected $_groupsAssigned = array();
+	protected $_groupId = null;
+
+	protected $_selected = 0;
 
 	protected $_settings = array();
 
@@ -27,7 +29,7 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
     }
 
 	/**
-     * @param field_type $splashId
+     * @param integer $splashId
      */
     public function setSplashId($splashId)
     {
@@ -68,6 +70,24 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
     public function setActive($active)
     {
         $this->_active = $active;
+
+        return $this;
+    }
+
+	/**
+     * @return the $selected
+     */
+    public function getSelected()
+    {
+        return $this->_selected;
+    }
+
+	/**
+     * @param boolean $selected
+     */
+    public function setSelected($selected)
+    {
+        $this->_selected = (int) (bool) $selected;
 
         return $this;
     }
@@ -116,9 +136,9 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
 
     public function getSettings()
     {
-        if (empty($this->_settings) && $this->_template) {
+        /*if (empty($this->_settings) && $this->_template) {
             $this->_settings = $this->getTemplate()->getSettings();
-        }
+        }*/
 
         return $this->_settings;
     }
@@ -138,17 +158,14 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
         return $this;
     }
 
-    public function getGroupsAssigned()
+    public function getGroupId()
     {
-        return $this->_groupsAssigned;
+        return $this->_groupId;
     }
 
-    public function setGroupsAssigned($groups = array())
+    public function setGroupId($groupId)
     {
-        if (!is_array($groups)) {
-            $groups = array();
-        }
-        $this->_groupsAssigned = $groups;
+        $this->_groupId = (int) $groupId;
 
         return $this;
     }

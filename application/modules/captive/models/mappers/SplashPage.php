@@ -29,10 +29,9 @@ class Captive_Model_Mapper_SplashPage extends Unwired_Model_Mapper
             $groupsAssigned = array();
 
             foreach ($groupRows as $groupRow) {
-                $groupsAssigned[] = $groupRow->group_id;
+                $model->setGroupId($groupRow->group_id);
+                $model->setSelected($groupRow->selected);
             }
-
-            $model->setGroupsAssigned($groupsAssigned);
 
             $settingsRows = $row->findDependentRowset('Captive_Model_DbTable_SplashPageSettings');
 
@@ -48,6 +47,29 @@ class Captive_Model_Mapper_SplashPage extends Unwired_Model_Mapper
             }
 
             $model->setSettings($settings);
+	    }
+
+	    return $model;
+	}
+
+	public function save(Unwired_Model_Generic $model)
+	{
+	    try {
+	        $model = parent::save($model);
+
+	        $tableGroupSplashPage = new Captive_Model_DbTable_GroupSplashPage();
+
+	        $tableGroupSplashPage->delete(array('splash_id = ?' => $model->getSplashId()));
+
+	        $tableGroupSplashPage->update(array('selected' => 0),
+	                                      array('group_id = ?' => $model->getGroupId()));
+
+	        $tableGroupSplashPage->insert(array('splash_id' => $model->getSplashId(),
+	                                            'group_id' => $model->getGroupId(),
+	                                            'selected' => $model->getSelected()));
+	    } catch (Exception $e) {
+	        die($e->getMessage());
+	        throw $e;
 	    }
 
 	    return $model;

@@ -1,0 +1,138 @@
+<?php
+/**
+* Unwired AA GUI
+*
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+*
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
+* license available at http://www.unwired.at/license.html
+*/
+    if (!$this->hasLinkWidgetScripts) :
+    $this->headScript()->captureStart();
+?>
+	$(document).ready(function(){
+		$('select.deviceSelect').change(function(){
+			var inputs = $(this).parents(".devicelink:first").find('input');
+			var select = this;
+			$(inputs).each(function(){
+				var newname = $(this).attr('name').replace(/(.*)\[.*\]\[(.*)\]$/gi, '$1['+$(select).val()+'][$2]');
+				$(this).attr('name', newname);
+			});
+		});
+
+		$('a.deviceLinkAction.remove').live('click', function(){
+			if (!confirm('<?php echo $this->translate('widget_links_admin_devicelink_remove_confirm');?>')) {
+				return false;
+			}
+			var fieldset = $(this).parents('fieldset:first');
+			if ($(fieldset).children('.devicelink').length > 1) {;
+				$(this).parents('.devicelink:first').remove();
+			} else {
+				if ($(fieldset).parents('.linkwidget:first').find('fieldset').length < 2) {
+					alert('<?php echo $this->translate('widget_links_admin_error_nolinks'); ?>');
+					return;
+				}
+
+				$(fieldset).parent().remove();
+			}
+		});
+
+		$('a.deviceLinkAction.add').live('click', function(){
+			var cloned = $(this).parents('.devicelink:first').clone();
+
+			$(this).parents('fieldset').find('.devicelink:last').after(cloned);
+			$(this).parents('fieldset').find('.devicelink:last').find('input').val('');
+		});
+
+		$('a.addlink').click(function(){
+			var cloned = $(this).parents(".formelement:first").prev().clone();
+
+			$(cloned).find('.devicelink:gt(0)').remove();
+			$(cloned).find('.devicelink').find('input').val('');
+
+			$(this).parent().before(cloned);
+		});
+	});
+<?php
+    $this->headScript()->captureEnd();
+
+    $this->hasLinkWidgetScripts = true;
+    endif;
+?>
+<div class="formelement linkwidget">
+<div class="span-17 formelement">
+	<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$this->languageId]->getName(); ?></label>
+	<?php
+	    if ($this->content->getContentId()) :
+	?>
+		<input type="hidden" name="<?php echo $this->prefix; ?>[content_id]" value="<?php echo $this->content->getContentId(); ?>" />
+	<?php
+	    endif;
+	?>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[language_id]" value="<?php echo $this->languageId; ?>" />
+</div>
+<div class="formelement">
+	<label><?php echo $this->translate('widget_links_admin_title'); ?>* :</label>
+	<input type="text" name="<?php echo $this->prefix; ?>[title]" value="<?php echo $this->escape($this->content->getTitle()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[column]" value="<?php echo $this->escape($this->content->getColumn()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[order_web]" value="<?php echo $this->escape($this->content->getOrderWeb()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[order_mobile]" value="<?php echo $this->escape($this->content->getOrderMobile()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[widget]" value="Links"/>
+</div>
+<div class="formelement span-17">
+	<label><?php echo $this->translate('widget_links_admin_decorate'); ?>* :</label>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[content][decorate]" value="0"/>
+	<input type="checkbox" name="<?php echo $this->prefix; ?>[content][decorate]" value="1" <?php
+	    if ($this->linksDecorate) {
+	        echo 'checked="checked"';
+	    }
+	?>/>
+</div>
+<?php
+    $linkCounter = 0;
+    foreach ($this->linksData as $link) :
+        $linkCounter++;
+?>
+<div class="formelement">
+	<fieldset>
+	<legend><?php echo $this->translate('widget_links_admin_link'); ?></legend>
+	<?php foreach ($link as $device => $linkData) :?>
+	<div class="devicelink span-18 last">
+    	<div class="span-3">
+        	<label><?php echo $this->translate('widget_links_admin_link_device'); ?></label>
+        	<select class="deviceSelect" name="deviceSelect<?php echo $linkCounter; ?><?php echo $device; ?>">
+        		<?php
+        		    foreach (array('desktop', 'android', 'iphone', 'symbian', 'blackberry', 'other') as $deviceOption):
+        		?>
+        			<option value="<?php echo $deviceOption; ?>" <?php echo ($device == $deviceOption) ? 'selected="selected"' : '';?>><?php
+        			    echo $this->translate('widget_links_admin_device_'.$deviceOption);
+        			?></option>
+        		<?php
+        		    endforeach;
+        		?>
+        	</select>
+    	</div>
+    	<div class="span-6">
+    		<label><?php echo $this->translate('widget_links_admin_link_href'); ?></label>
+    		<input class="span-6 last" type="text" name="<?php echo $this->prefix; ?>[content][links][<?php echo $linkCounter;?>][<?php echo $device;?>][href]" value="<?php echo $linkData['href']?>" />
+    	</div>
+    	<div class="span-7">
+    		<label><?php echo $this->translate('widget_links_admin_link_content'); ?></label>
+    		<input class="span-7 last" type="text" name="<?php echo $this->prefix; ?>[content][links][<?php echo $linkCounter;?>][<?php echo $device;?>][content]" value="<?php echo $this->escape($linkData['content']);?>" />
+    	</div>
+
+    	<div class="span-1 last">
+    		<a href="javascript:;" class="deviceLinkAction remove"><?php echo $this->translate('widget_link_admin_devicelink_remove')?></a>
+    		<a href="javascript:;" class="deviceLinkAction add"><?php echo $this->translate('widget_link_admin_devicelink_add')?></a>
+    	</div>
+	</div>
+	<?php endforeach;?>
+	</fieldset>
+</div>
+<?php endforeach;?>
+<div class="formelement">
+	<a href="javascript:;" class="button green small addlink"><span><?php echo $this->translate('widget_links_admin_link_add');?></span></a>
+</div>
+</div>

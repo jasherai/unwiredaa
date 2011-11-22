@@ -1,0 +1,49 @@
+<?php
+/**
+* Unwired AA GUI
+*
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+*
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
+* license available at http://www.unwired.at/license.html
+*/
+?>
+<div class="span-17 formelement">
+	<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$this->languageId]->getName(); ?></label>
+	<?php
+	    if ($this->content->getContentId()) :
+	?>
+		<input type="hidden" name="<?php echo $this->prefix; ?>[content_id]" value="<?php echo $this->content->getContentId(); ?>" />
+	<?php
+	    endif;
+	?>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[language_id]" value="<?php echo $this->languageId; ?>" />
+</div>
+<div class="formelement">
+	<label><?php echo $this->translate('widget_iframe_admin_title'); ?>* :</label>
+	<input type="text" name="<?php echo $this->prefix; ?>[title]" value="<?php echo $this->escape($this->content->getTitle()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[column]" value="<?php echo $this->escape($this->content->getColumn()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[order_web]" value="<?php echo $this->escape($this->content->getOrderWeb()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[order_mobile]" value="<?php echo $this->escape($this->content->getOrderMobile()); ?>"/>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[widget]" value="Iframe"/>
+</div>
+<div class="formelement span-17 last">
+	<label><?php echo $this->translate('widget_iframe_admin_src'); ?>* :</label>
+	<input type="text" class="span-7 last" name="<?php echo $this->prefix; ?>[content][src]" value="<?php
+	    echo $this->escape($this->iframeData['src']);
+	?>" />
+</div>
+<div class="formelement span-17 last">
+	<label><?php echo $this->translate('widget_iframe_admin_width'); ?>* :</label>
+	<input type="text" name="<?php echo $this->prefix; ?>[content][width]" value="<?php
+	    echo $this->escape($this->iframeData['width']);
+	?>" />
+</div>
+<div class="formelement span-17 last">
+	<label><?php echo $this->translate('widget_iframe_admin_height'); ?>* :</label>
+	<input type="text" name="<?php echo $this->prefix; ?>[content][height]" value="<?php
+	    echo $this->escape($this->iframeData['height']);
+	?>" />
+</div>

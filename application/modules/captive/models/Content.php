@@ -26,6 +26,8 @@ class Captive_Model_Content extends Unwired_Model_Generic
 
     protected $_templateContent = null;
 
+    protected $_editable = 1;
+
 	/**
      * @return the $contentId
      */
@@ -128,6 +130,10 @@ class Captive_Model_Content extends Unwired_Model_Generic
      */
     public function setContent($content)
     {
+        if (is_array($content)) {
+            $content = serialize($content);
+        }
+
         $this->_content = $content;
 
         return $this;
@@ -238,6 +244,17 @@ class Captive_Model_Content extends Unwired_Model_Generic
     {
         $this->_templateContent = $templateContent;
 
+        return $this;
+    }
+
+    public function isEditable()
+    {
+        return $this->_editable;
+    }
+
+    public function setEditable($editable = true)
+    {
+        $this->_editable = (int)(bool) $editable;
         return $this;
     }
 

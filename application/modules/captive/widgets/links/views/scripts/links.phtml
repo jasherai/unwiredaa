@@ -1,0 +1,17 @@
+<div class="box aside-box full">
+	<div class="holder">
+		<div class="frame">
+        	<?php
+        	    foreach ($this->deviceLinks as $link) {
+        	        $escape = true;
+        	        if (preg_match('/\<.*\>/i', $link['content'])) {
+        	            $escape = false;
+        	        }
+                    echo $this->formHref(array('name' => 'link' . rand(),
+                                               'escape' => $escape,
+                                               'attribs' => $link));
+        	    }
+        	?>
+		</div>
+	</div>
+</div>

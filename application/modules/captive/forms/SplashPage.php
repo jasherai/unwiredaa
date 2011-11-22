@@ -32,46 +32,29 @@ class Captive_Form_SplashPage extends Unwired_Form
 																						        'field' => 'title'
 																					)))));
 
-		$this->addElement('multiselect', 'language_ids', array('label' => 'captive_index_edit_form_settings_languages',
-															  'belongsTo' => 'settings',
-															  'class' => 'span-8',
-															  'required' => true));
-
-		/**
-		 * Languages
-		 */
-		$mapperLanguages = new Captive_Model_Mapper_Language();
-
-		$languages = $mapperLanguages->fetchAll();
-
-		$elementLanguage = $this->getElement('language_ids');
-
-		foreach ($languages as $language) {
-		    $elementLanguage->addMultiOption($language->getLanguageId(), $language->getName());
-		}
-
-		$languages = null;
-		$mapperLanguages = null;
-
 		/**
 		 * Template selector
 		 */
 		$this->addElement('select', 'template_id', array('label' => 'captive_index_edit_form_template',
 		                                               'class' => 'span-8',
-													   'required' => true));
+													   'required' => true,
+		                                               'registerInArrayValidator' => false));
 
-		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'captive_index_edit_form_group',
-											  	 			  'required' => true,
-															  'separator' => '',
-															  'registerInArrayValidator' => false));
-
-		$this->getElement('groups_assigned')->addErrorMessage('captive_index_edit_form_error_group');
-
-
-		$this->addElement('textarea', 'analytics', array('label' => 'captive_index_edit_form_settings_analytics',
-		                                               'belongsTo' => 'settings',
+		/**
+		 * Enabled for group
+		 */
+		$this->addElement('select', 'selected', array('label' => 'captive_index_edit_form_selected',
 		                                               'class' => 'span-8',
-													   'required' => false));
+													   'required' => true,
+		                                               'multiOptions' => array('0' => 'captive_index_edit_form_selected_offline',
+		                                                                       '1' => 'captive_index_edit_form_selected_online')));
+
+		$this->addElement('hidden', 'group_id', array('label' => 'captive_index_edit_form_group',
+											  	 	  'required' => true,
+													  'validators' => array('Int')));
+
+		$this->getElement('group_id')->addErrorMessage('captive_index_edit_form_error_group');
+
 		/*
 		 * Buttons
 		 */
@@ -108,9 +91,9 @@ class Captive_Form_SplashPage extends Unwired_Form
 																		   				 		 	  'class' => 'button blue')),
 																						)));
 
-	    $this->addDisplayGroup(array('title', 'template_id', 'language_ids', 'analytics'), 'pagedata');
+	    $this->addDisplayGroup(array('title', 'template_id', 'selected'), 'pagedata');
 
-		$this->addDisplayGroup(array('groups_assigned'), 'groupinfo');
+		$this->addDisplayGroup(array('group_id'), 'groupinfo');
 
 		$this->addDisplayGroup(array('form_element_submit', 'form_element_submit_edit', 'form_element_cancel'),
 							   'formbuttons');

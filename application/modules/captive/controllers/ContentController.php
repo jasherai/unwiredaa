@@ -12,7 +12,7 @@
 
 class Captive_ContentController extends Unwired_Controller_Crud
 {
-    protected $_actionsToReferer = array('template');
+    protected $_actionsToReferer = array('template', 'splashpage');
 
 	public function preDispatch()
 	{
@@ -65,24 +65,6 @@ class Captive_ContentController extends Unwired_Controller_Crud
 
         $settings = $splashPage->getSettings();
 
-        /**
-         * Get template languages
-         */
-        $mapperLanguages = new Captive_Model_Mapper_Language();
-
-        $languages = $mapperLanguages->findBy(array('language_id' => $settings['language_ids']));
-
-        $languagesSorted = array();
-
-        foreach ($languages as $language) {
-            $languagesSorted[$language->getLanguageId()] = $language;
-        }
-
-        $languages = null;
-        $this->view->languages = $languagesSorted;
-
-        $mapperLanguages = null;
-
         $serviceSplashPage = new Captive_Service_SplashPage();
 
         /**
@@ -91,9 +73,10 @@ class Captive_ContentController extends Unwired_Controller_Crud
         if ($this->getRequest()->isPost())
         {
             $contents = $this->getRequest()->getPost('content');
+
             if (!empty($contents) && is_array($contents)) {
                 try {
-                    $serviceSplashPage->saveSplashContents($splashPage, $contents);
+                    $serviceSplashPage->saveSplashPageContents($splashPage, $contents);
                     $this->view->uiMessage('captive_content_splashpage_content_saved', 'success');
                     $this->_gotoIndex();
                 } catch (Exception $e) {
@@ -105,9 +88,53 @@ class Captive_ContentController extends Unwired_Controller_Crud
         }
 
         /**
-         * Get template content blocks
+         * Get template languages and language content
          */
-        $contents = $serviceSplashPage->getSplashPageContents($splashPage);
+        $contents = array('special' => array());
+
+        $mapperLanguages = new Captive_Model_Mapper_Language();
+
+        $languages = $mapperLanguages->findBy(array('language_id' => $settings['language_ids']));
+
+        $languagesSorted = array();
+
+        foreach ($languages as $language) {
+            $languagesSorted[$language->getLanguageId()] = $language;
+
+            $languageContent = $serviceSplashPage->getSplashPageContents($splashPage, $language);
+
+            foreach ($languageContent as $content) {
+                $columnKey = $content->getColumn();
+
+                if ($columnKey < 0) {
+                    $columnKey = 'special';
+                } else if ($columnKey == 0) {
+                    $columnKey = 'main';
+                } else {
+                    $columnKey = 'column' . $columnKey;
+                }
+
+
+                if (!isset($contents[$columnKey])) {
+                    $contents[$columnKey] = array();
+                }
+
+                if (!isset($contents[$columnKey][$language->getLanguageId()])) {
+                    $contents[$columnKey][$language->getLanguageId()] = array();
+                }
+
+                $contents[$columnKey][$language->getLanguageId()][] = $content;
+
+            }
+        }
+
+        ksort($contents);
+        $contents = array_merge(array('special' => array(), 'main' => array()), $contents);
+
+        $languages = null;
+        $this->view->languages = $languagesSorted;
+
+        $mapperLanguages = null;
 
         $this->view->splashPage = $splashPage;
         $this->view->contents = $contents;

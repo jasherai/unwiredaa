@@ -1,0 +1,25 @@
+<div class="widget login-widget">
+	<?php if ($this->chilliData->getTerms()) :?>
+		<a class="button" href="<?php echo $this->url(array('module' => 'default',
+		                                     'controller' => 'user',
+		                                     'action'    => 'guest'),
+		                               'default',
+		                               true); ?>"><?php echo $this->translate('widget_login_guest_user')?></a>
+		<a class="button" href="<?php echo $this->url(array('module' => 'default',
+		                                     'controller' => 'user',
+		                                     'action'    => 'login'),
+		                               'default',
+		                               true); ?>"><?php echo $this->translate('widget_login_registered_user')?></a>
+	<?php else :?>
+		<form method="post"
+		    <?php if ($this->userAgent->isMobile()) : ?>
+		     data-ajax="false"
+		    <?php endif;?> action="<?php echo $this->url(array('module' => 'default',
+		                                     'controller' => 'user',
+		                                     'action'    => 'guest'),
+		                               'default',
+		                               true);?>">
+		<input class="button" type="submit" value="<?php echo $this->translate('widget_login_go_online')?>" />
+        </form>
+	<?php endif; ?>
+</div>

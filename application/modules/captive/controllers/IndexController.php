@@ -21,7 +21,7 @@ class Captive_IndexController extends Unwired_Controller_Crud
 
 		if ($this->getRequest()->isPost() && $this->getRequest()->getParam('form_element_submit_edit')) {
 		    /**
-		     * Redirect to template content editing on update
+		     * Redirect to splash page content editing on update
 		     */
 		    if ($entity && $entity->getTemplateId()) {
                 $this->_referer = $this->view->serverUrl($this->_helper->url->url(array('module' => 'captive',
@@ -32,7 +32,7 @@ class Captive_IndexController extends Unwired_Controller_Crud
                                                       true));
 		    } else {
 		    /**
-		     * Redirect to template content editing on add
+		     * Redirect to splash page content editing on add
 		     */
 		        $this->_autoRedirect = false;
 
@@ -66,5 +66,34 @@ class Captive_IndexController extends Unwired_Controller_Crud
     public function editAction()
     {
         $this->_edit(null, new Captive_Form_SplashPage());
+    }
+
+    public function groupTemplatesAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $id = $this->getRequest()->getParam('id');
+        header('Content-type: application/json');
+
+        if (!$id) {
+            echo $this->view->json(array());
+            exit;
+        }
+
+        $serviceSplash = new Captive_Service_SplashPage();
+
+        $templates = $serviceSplash->getGroupTemplates($id);
+
+        $templateArray = array();
+
+        foreach ($templates as $template) {
+            $templateArray[] = array('id'   => $template->getTemplateId(),
+                                     'name' => $template->getName());
+        }
+
+        echo $this->view->json($templateArray);
+        exit;
+
     }
 }

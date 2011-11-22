@@ -21,4 +21,12 @@ class Captive_Bootstrap extends Unwired_Application_Module_Bootstrap
 
 		return $acl;
 	}
+
+    protected function _initWidgetLoader()
+    {
+        $widgetLoader = new Unwired_Loader_Widget(array('namespace' => 'Widget',
+                                                        'basePath'  => dirname(__FILE__) . '/widgets'));
+
+        return $widgetLoader;
+    }
 }

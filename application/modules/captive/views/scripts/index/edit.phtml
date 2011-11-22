@@ -9,43 +9,63 @@
 	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
 	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
 
-	$groupsAssigned = $this->entity->getGroupsAssigned();
 	$this->headScript()->captureStart();
 
 ?>
-var templateGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
-var groupsAssigned = <?php echo Zend_Json::encode($groupsAssigned);?>;
+var adminGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
 
 $(function () {
-	$("label[for=groups_assigned]").siblings('label').remove();
-	$("label[for=groups_assigned]").after($('.grouptree'));
+	$("label[for=group_id]").siblings('label').remove();
+	$("label[for=group_id]").after($('.grouptree'));
 
 	var init_select = new Array();
 
-	$.each(groupsAssigned, function (idx, data) {
-		init_select.push('group_' + data);
-	});
+<?php
+    if ($this->entity->getGroupId()):
+?>
+	init_select.push('group_<?php echo $this->entity->getGroupId(); ?>');
+<?php
+    endif;
+?>
 
     $(".grouptree")
         .jstree({
             "plugins" : ["themes","html_data","ui"],
             "core" : { "initially_open" : init_select.length ? init_select : 'group_1' },
-            "ui" : { select_multiple_modifier: 'on',
-            		 disable_selecting_children: true,
-					 select_limit : -1,
+            "ui" : { select_multiple_modifier: 'off',
+            		 disable_selecting_children: false,
+					 select_limit : 1,
 					 "initially_select" : init_select
 					}
         })
         .bind("select_node.jstree", function (event, data) {
 			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
 
-			$('.grouptree').after('<input type="hidden" name="groups_assigned[]" value="' + groupId +'" />');
-	     })
-        .bind("deselect_node.jstree", function (event, data) {
-			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+			$('input[name=group_id]').val(groupId);
 
-			$('input[name^=groups_assigned][value='+groupId+']').remove();
-	     })
+			var oldTemplate = $('#template_id').val() ? $('#template_id').val() : '<?php echo $this->entity->getTemplateId(); ?>';
+
+			$('#template_id').children().remove();
+			$.ajax({
+				'url': '<?php echo $this->url(array('module' => 'captive',
+				                                    'controller' => 'index',
+				                                    'action' => 'group-templates'),
+				                             'default',
+				                             true); ?>/id/' + groupId,
+				'success': function(data) {
+					$.each(data, function(idx, elem) {
+						$('#template_id').append('<option value="' + elem.id + '">'+elem.name+'</option>');
+					});
+
+					var optionSelected = $('select#template_id option[value=<?php echo $this->entity->getTemplateId(); ?>]');
+					if (!optionSelected.length) {
+						var optionSelected = $('select#template_id option[value='+oldTemplate+']');
+					}
+
+					$(optionSelected).attr('selected','selected');
+				}
+			});
+	     });
 
 });
 <?php
