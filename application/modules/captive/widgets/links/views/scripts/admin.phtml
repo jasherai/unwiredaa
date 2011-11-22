@@ -54,6 +54,26 @@
 
 			$(this).parent().before(cloned);
 		});
+
+	/*	$('#content form').submit(function(){
+
+			$('div.devicelink').find('input').each(function(){
+				if ($(this).val().length > 0) {
+					return true;
+				}
+
+				var fieldset = $(this).parents('fieldset:first');
+    			if ($(fieldset).children('.devicelink').length > 1) {;
+    				$(this).parents('.devicelink:first').remove();
+    			} else {
+    				if ($(fieldset).parents('.linkwidget:first').find('fieldset').length < 2) {
+    					$(fieldset).parents('.linkwidget:first').remove();
+    				} else {
+    					$(fieldset).parent().remove();
+					}
+    			}
+			});
+		}); */
 	});
 <?php
     $this->headScript()->captureEnd();
