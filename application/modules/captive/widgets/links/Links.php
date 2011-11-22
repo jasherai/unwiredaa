@@ -90,6 +90,10 @@ class Widget_Links extends Unwired_Widget_Abstract
 
         $data = array_merge($this->_config, $data);
 
+        if (!is_array($data['links']) || empty($data['links'])) {
+            $data['links'] = array(array('other' => array('href' => '', 'content' => '')));
+        }
+
         $this->getView()->linksData = $data['links'];
         $this->getView()->linksDecorate = $data['decorate'];
 
