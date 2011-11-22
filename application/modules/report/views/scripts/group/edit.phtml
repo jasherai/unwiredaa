@@ -1,0 +1,84 @@
+<h1><?php
+	if ($this->entity->getGroupId()) {
+		echo $this->translate('report_group_title_edit').' '.$this->entity->getTitle();
+	} else {
+		echo $this->translate('report_group_title_add');
+	}
+?></h1>
+<?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/jstree/jquery.jstree.js'));
+	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
+
+	$groupsAssigned = $this->entity->getGroupsAssigned();
+	
+	$this->headScript()->captureStart();
+
+?>
+var adminGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
+var groupsAssigned = <?php echo Zend_Json::encode($groupsAssigned);?>;
+
+$(function () {
+	$("label[for=groups_assigned]").siblings('label').remove();
+	$("label[for=groups_assigned]").after($('.grouptree'));
+	$("label[for=available_roles]").parent().hide();
+
+	var init_select = new Array();
+
+	$.each(groupsAssigned, function (idx, data) {
+		init_select.push('group_' + idx);
+	});
+
+	groupIds = [];
+
+    $(".grouptree")
+        .jstree({
+            "plugins" : ["themes","html_data","ui"],
+            "core" : { "initially_open" : init_select },
+            "ui" : { select_multiple_modifier: 'on',
+            		 disable_selecting_children: true,
+					 select_limit : -1,
+					 "initially_select" : init_select
+					}
+        })
+        .bind("select_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			if (groupIds.indexOf(groupId) == -1) {
+				groupIds.push(groupId);
+
+				var newRole = $("label[for=available_roles]").parent().clone();
+
+				$(newRole).children('label').attr('for', 'selgrp' + groupId)
+											.html(data.rslt.obj.children('a:first').text() + ' ');
+											
+				$(newRole).children('input').attr('id', 'selgrp' + groupId)
+											 .attr('name', 'groups_assigned[' + groupId + ']')
+											 .val(groupId);											
+											
+				$("label[for=available_roles]").parent().before(newRole);
+
+				newRole.show();
+			}
+	     })
+        .bind("deselect_node.jstree", function (event, data) {
+			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
+
+			var idx = groupIds.indexOf(groupId);
+
+			if (idx != -1) {
+				groupIds.splice(idx, 1);
+				$('#selgrp'+groupId).parent().remove();
+			}
+	     })
+
+});
+<?php
+	$this->headScript()->captureEnd();
+
+
+	echo $this->form;
+?>
+
+<div class="grouptree span-8">
+	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
+</div>

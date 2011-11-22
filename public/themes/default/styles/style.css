@@ -343,6 +343,10 @@ form div.buttons {
 	background-image: url('../images/icons/24x24/reset.png') !important;
 }
 
+.tools a.reports {
+	background-image: url('../images/icons/24x24/view.png') !important;
+}
+
 .tools a.view {
 	background-image: url('../images/icons/24x24/view.png');
 }

@@ -1,0 +1,78 @@
+<h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?></h1>
+
+<?php
+echo $this->paginationControl ( $this->paginator, 'Sliding', 'partial/pagination.phtml' );
+
+$acl = Zend_Registry::get ( 'acl' );
+
+?>
+<form class="span-19 last" method="get"
+	action="<?php
+	
+	echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'index', 'id' => $this->parent->getCodetemplateId () ), null, true );
+	?>">
+	<table class="listing">
+		<thead>
+			<tr>
+				<th><?php echo $this->translate('report_index_id');?></th>
+				<th><?php echo $this->translate('report_index_title');?></th>
+				<th>
+					<div class="buttons span-18">
+
+						<a id="addlink" class="button small green"
+							href="<?php
+							
+							echo $this->url ( array ('action' => 'add' ), null, false );
+							?>"><span><?php echo $this->translate('report_group_add');?></span></a>
+					</div>
+
+				</th>
+
+			</tr>
+			<tr>
+				<th></th>
+				<th><input type="text" name="title"
+					value="<?php echo $this->filter['title']; ?>" /></th>
+				<th class="tools"><a name="index" class="icon filter"><?php echo $this->translate('report_index_button_filter'); ?></a>
+					<a name="index" class="icon reset"><?php echo $this->translate('report_index_button_reset'); ?></a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+		foreach ( $this->paginator as $user ) :
+			?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+				<td class="column_id"><?php echo $user->getGroupId(); ?></td>
+				<td><?php echo $user->getTitle(); ?></td>
+
+				<td class="tools">
+				  <?php
+			$actions = array ('reports', 'generate', 'delete' );
+			
+			foreach ( $actions as $action ) :
+				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $action )) {
+					continue;
+				}
+				
+				?>
+					<a
+					href="<?php
+				
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getGroupId () ), null, true );
+				?>"
+					class="icon <?php echo $action?>"><?php
+				
+				echo $this->translate ( 'report_group_button_' . $action );
+				?></a>
+				   <?php
+			endforeach
+			;
+			?>
+			</td>
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
+	</table>
+</form>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
