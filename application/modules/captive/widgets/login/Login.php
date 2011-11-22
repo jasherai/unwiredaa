@@ -17,4 +17,11 @@ class Widget_Login extends Unwired_Widget_Abstract
         }
     }
 
+    public function renderAdmin($content, $params = array())
+    {
+        /**
+         * @todo Login widget administration
+         */
+        return '';
+    }
 }
