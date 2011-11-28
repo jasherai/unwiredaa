@@ -40,7 +40,16 @@
     			<li><a href="#imprint-<?php echo $languageId; ?>"><?php echo $this->languages[$languageId]->getName(); ?></a></li>
     		<?php endforeach; ?>
     		</ul>
-    		<?php foreach ($this->contents['imprint'] as $languageId => $content) :?>
+    		<?php
+    		    foreach ($this->contents['imprint'] as $languageId => $content) :
+
+    		    /**
+    		     * Skip disabled languages
+    		     */
+    		    if (!isset($this->languages[$languageId])) {
+    		        continue;
+    		    }
+    		?>
     		<div class="formelement" id="imprint-<?php echo $languageId; ?>">
     			<div class="span-17 formelement">
     				<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$languageId]->getName(); ?></label>
@@ -74,7 +83,16 @@
     			<li><a href="#terms-<?php echo $languageId; ?>"><?php echo $this->languages[$languageId]->getName(); ?></a></li>
     		<?php endforeach; ?>
     		</ul>
-    		<?php foreach ($this->contents['terms'] as $languageId => $content) :?>
+    		<?php
+    		    foreach ($this->contents['terms'] as $languageId => $content) :
+
+    		    /**
+    		     * Skip disabled languages
+    		     */
+    		    if (!isset($this->languages[$languageId])) {
+    		        continue;
+    		    }
+    		?>
     		<div class="formelement" id="terms-<?php echo $languageId; ?>">
     			<div class="span-17 formelement">
     				<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$languageId]->getName(); ?></label>
