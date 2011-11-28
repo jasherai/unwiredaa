@@ -117,10 +117,10 @@ class Captive_Form_SplashPage extends Unwired_Form
 
 	    if ($entity && $entity->getSplashId()) {
 	        $exclude = 'splash_id != \'' . $entity->getSplashId() . '\'';
-	    }
 
-	    $this->getElement('title')->getValidator('Db_NoRecordExists')
-	                                    ->setExclude($exclude);
+    	    $this->getElement('title')->getValidator('Db_NoRecordExists')
+                                ->setExclude($exclude);
+	    }
 
 	    return parent::isValid($data);
 	}
