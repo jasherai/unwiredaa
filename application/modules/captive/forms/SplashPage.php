@@ -116,7 +116,7 @@ class Captive_Form_SplashPage extends Unwired_Form
 	    $exclude = '';
 
 	    if ($entity && $entity->getSplashId()) {
-	        $exclude = 'splash_id != ' . $entity->getSplashId();
+	        $exclude = 'splash_id != \'' . $entity->getSplashId() . '\'';
 	    }
 
 	    $this->getElement('title')->getValidator('Db_NoRecordExists')

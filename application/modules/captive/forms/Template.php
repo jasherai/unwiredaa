@@ -142,7 +142,7 @@ class Captive_Form_Template extends Unwired_Form
 	    $exclude = '';
 
 	    if ($entity && $entity->getTemplateId()) {
-	        $exclude = 'template_id != ' . $entity->getTemplateId();
+	        $exclude = 'template_id != \'' . $entity->getTemplateId() . '\'';
 	    }
 
 	    $this->getElement('name')->getValidator('Db_NoRecordExists')
