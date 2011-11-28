@@ -1,0 +1,80 @@
+<h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?></h1>
+
+<?php
+echo $this->paginationControl ( $this->paginator, 'Sliding', 'partial/pagination.phtml' );
+
+$acl = Zend_Registry::get ( 'acl' );
+
+?>
+
+<div class="buttons span-18">
+
+	<a id="addlink" class="button small green"
+		href="<?php
+		
+		echo $this->url ( array ('action' => 'generate' ), null, false );
+		?>"><span><?php echo $this->translate('report_group_button_generate');?></span></a>
+</div>
+<br />
+<form class="span-19 last" method="get"
+	action="<?php
+	
+	echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'index', 'id' => $this->parent->getTitle () ), null, true );
+	?>">
+	<table class="listing">
+		<thead>
+			<tr>
+				<th><?php echo $this->translate('report_index_id');?></th>
+				<th><?php echo $this->translate('report_index_date');?></th>
+				<th><?php echo $this->translate('report_index_view');?></th>
+				
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+		foreach ( $this->paginator as $user ) :
+			?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+				<td class="column_id"><?php echo $user->getItemId(); ?></td>
+				<td><?php echo $user->getDateAdded(); ?></td>
+				<td class="tools">
+					
+				  <?php
+			$actions = array ('view');
+			
+			foreach ( $actions as $action ) :
+				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $action )) {
+					continue;
+				}
+				
+				?>
+					<a
+					href="<?php
+				
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getItemId () ), null, true );
+				?>"
+					class="icon view"><?php
+				
+				echo $this->translate ( 'report_group_button_' . $action );
+				?></a>
+			<?php endforeach; ?>
+				
+				</td>
+
+
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
+	</table>
+</form>
+
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
+
+<div class="buttons span-18">
+
+	<a id="addlink" class="button small green"
+		href="<?php
+		
+		echo $this->url ( array ('action' => 'generate' ), null, false );
+		?>"><span><?php echo $this->translate('report_group_button_generate');?></span></a>
+</div>

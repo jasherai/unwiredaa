@@ -1,0 +1,13 @@
+<h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
+
+<?php
+
+
+$acl = Zend_Registry::get ( 'acl' );
+
+?>
+
+<?php echo $this->report->getHtmldata()?>
+
+</form>
+
