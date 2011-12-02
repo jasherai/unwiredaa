@@ -215,4 +215,77 @@ class Captive_ContentController extends Unwired_Controller_Crud
         $this->view->template = $template;
         $this->view->contents = $contents;
     }
+
+    public function filesAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $splashId = (int) $this->getRequest()->getParam('splash', 0);
+
+        if (!$splashId) {
+            $templateId = (int) $this->getRequest()->getParam('template', 0);
+        }
+
+        if (!$splashId && !$templateId) {
+            return;
+        }
+
+        $serviceFiles = new Captive_Service_Files();
+
+        if ($splashId) {
+            $files = $serviceFiles->getSplashPageFiles($splashId);
+        } else {
+            $files = $serviceFiles->getTemplateFiles($templateId);
+        }
+
+        $this->view->files = $files;
+    }
+
+    public function uploadAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        if (!$this->getRequest()->isPost()) {
+            return;
+        }
+
+        $serviceFiles = new Captive_Service_Files();
+
+        $splashId = (int) $this->getRequest()->getParam('splash', 0);
+
+        $path = $serviceFiles->getSplashPagePath($splashId);
+
+        if (!$splashId) {
+            $templateId = (int) $this->getRequest()->getParam('template', 0);
+            $path = $serviceFiles->getTemplatePath($templateId);
+        }
+
+        if (!$splashId && !$templateId) {
+            $this->view->uploadError = 'content_upload_error_no_destination';
+            return;
+        }
+
+        $upload = new Zend_File_Transfer();
+
+        $upload->setDestination($path);
+
+        // Returns all known internal file information
+        $files = $upload->getFileInfo();
+
+        foreach ($files as $file => $info) {
+            // file uploaded ?
+            if (!$upload->isUploaded($file)) {
+                $this->view->uploadError = 'content_upload_error_no_file';
+                return;
+            }
+
+            // validators are ok ?
+            if (!$upload->isValid($file)) {
+                $this->view->uploadError = 'content_upload_error_invalid_file';
+                return;
+            }
+        }
+
+        $upload->receive();
+    }
 }

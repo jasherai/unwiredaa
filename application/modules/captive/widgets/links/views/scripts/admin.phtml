@@ -10,9 +10,48 @@
 * license available at http://www.unwired.at/license.html
 */
     if (!$this->hasLinkWidgetScripts) :
+    $this->headScript()->appendFile($this->baseUrl('scripts/filebrowser.js'));
     $this->headScript()->captureStart();
 ?>
 	$(document).ready(function(){
+		var templatePath = '<?php echo $this->baseUrl('data/templates/' . (isset($this->splashPage) ? $this->splashPage->getTemplateId() : $this->template->getTemplateId()))?>';
+		var splashpagePath = '<?php echo $this->baseUrl('data/splashpages/' . (isset($this->splashPage) ? $this->splashPage->getSplashId() : ''))?>';
+
+		$('select.contenttype').live('change', function(){
+			$(this).parent().next().children(':not(input, label)').remove();
+			if ($(this).val() == 'text') {
+				$(this).parent().next().children('input').show();
+			} else {
+				var input = $(this).parent().next().children('input');
+
+				$(input).hide();
+
+				var imageHtml = $(input).val().replace(/\:templatePath:/gi, templatePath)
+							   			      .replace(/\:splashpagePath:/gi, splashpagePath);
+
+				var image = $(imageHtml);
+
+				if (!image.length) {
+					image = $('<img src="<?php echo $this->baseUrl('themes/default/images/icons/24x24/view.png'); ?>" />');
+				}
+				$(image).css({'cursor' : 'pointer'})
+						.addClass('changeImage');
+
+
+				$(input).after(image);
+
+				$(image).wrap('<div class="span-5 last" />');
+
+				$(image).load(function(){
+					if ($(this).width() > 150) {
+						$(this).width(150);
+					}
+				});
+			}
+		});
+
+		$('select.contenttype').change();
+
 		$('select.deviceSelect').change(function(){
 			var inputs = $(this).parents(".devicelink:first").find('input');
 			var select = this;
@@ -54,6 +93,37 @@
 
 			$(this).parent().before(cloned);
 		});
+
+		createFileBrowser('<?php echo $this->url(array('module' => 'captive',
+		                                               'controller' => 'content',
+		                                               'action' => 'files',
+		                                               'splash' => isset($this->splashPage) ? $this->splashPage->getSplashId() : null,
+		                                               'template' => !isset($this->splashPage) ? $this->content->getTemplateId() : null),
+		                                         'default',
+		                                         true); ?>',
+                          '<?php echo $this->url(array('module' => 'captive',
+		                                               'controller' => 'content',
+		                                               'action' => 'upload',
+		                                               'splash' => isset($this->splashPage) ? $this->splashPage->getSplashId() : null,
+		                                               'template' => !isset($this->splashPage) ? $this->content->getTemplateId() : null),
+		                                         'default',
+		                                         true); ?>');
+
+		$('.changeImage').live('click', function(){
+			openFileBrowser($(this).parent().prev(), '<?php echo $this->baseUrl(); ?>/');
+		});
+
+	$('.linkcontent').live('change', function(){
+		if ($(this).parent().prev().find('select').val() !== 'image') {
+			return;
+		}
+
+		var newValue = $(this).val().replace(templatePath, ':templatePath:').replace(splashpagePath, ':splashpagePath:');
+
+		$(this).val('<img src="' + newValue + '" alt="" />');
+
+		$(this).parent().prev().find('select').change();
+	});
 
 	/*	$('#content form').submit(function(){
 
@@ -134,13 +204,28 @@
         		?>
         	</select>
     	</div>
-    	<div class="span-6">
+    	<div class="span-5">
     		<label><?php echo $this->translate('widget_links_admin_link_href'); ?></label>
-    		<input class="span-6 last" type="text" name="<?php echo $this->prefix; ?>[content][links][<?php echo $linkCounter;?>][<?php echo $device;?>][href]" value="<?php echo $linkData['href']?>" />
+    		<input class="span-5 last" type="text" name="<?php echo $this->prefix; ?>[content][links][<?php echo $linkCounter;?>][<?php echo $device;?>][href]" value="<?php echo $linkData['href']?>" />
     	</div>
-    	<div class="span-7">
+    	<div class="span-2">
+	    	<label><?php echo $this->translate('widget_links_admin_link_contenttype'); ?></label>
+        	<select class="contenttype" name="contentType<?php echo $linkCounter; ?><?php echo $device; ?>">
+        		<?php
+        		    $isImage = preg_match('/\<img/i', $linkData['content']);
+        		?>
+        			<option value="text" <?php echo !$isImage ? 'selected="selected"' : '';?>><?php
+        			    echo $this->translate('widget_links_admin_contenttype_text');
+        			?></option>
+        			<option value="image" <?php echo $isImage ? 'selected="selected"' : '';?>><?php
+        			    echo $this->translate('widget_links_admin_contenttype_image');
+        			?></option>
+
+        	</select>
+    	</div>
+    	<div class="span-5">
     		<label><?php echo $this->translate('widget_links_admin_link_content'); ?></label>
-    		<input class="span-7 last" type="text" name="<?php echo $this->prefix; ?>[content][links][<?php echo $linkCounter;?>][<?php echo $device;?>][content]" value="<?php echo $this->escape($linkData['content']);?>" />
+    		<input class="span-5 last linkcontent" type="text" name="<?php echo $this->prefix; ?>[content][links][<?php echo $linkCounter;?>][<?php echo $device;?>][content]" value="<?php echo $this->escape($linkData['content']);?>" />
     	</div>
 
     	<div class="span-1 last">
