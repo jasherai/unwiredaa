@@ -2,22 +2,21 @@
 -- version 3.3.9
 -- http://www.phpmyadmin.net
 --
--- ????: localhost
--- ????? ?? ??????????: 
--- ?????? ?? ???????: 5.5.8
--- ?????? ?? PHP: 5.3.5
+-- Хост: localhost
+-- Време на генериране: 
+-- Версия на сървъра: 5.5.8
+-- Версия на PHP: 5.3.5
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- ??: `uwaa`
+-- БД: `uwaa`
 --
 
 -- --------------------------------------------------------
 
 --
--- ????????? ?? ??????? `report_codetemplate`
+-- Структура на таблица `report_codetemplate`
 --
 
 DROP TABLE IF EXISTS `report_codetemplate`;
@@ -26,23 +25,22 @@ CREATE TABLE IF NOT EXISTS `report_codetemplate` (
   `class_name` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`codetemplate_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
--- ???? (?????) ?? ??????? ? ????????? `report_codetemplate`
+-- Дъмп (схема) на данните в таблицата `report_codetemplate`
 --
 
 INSERT INTO `report_codetemplate` (`codetemplate_id`, `class_name`, `title`) VALUES
 (1, 'Report_Service_CodeTemplate_UpDown', 'Up/Down Traffic'),
 (2, 'Report_Service_CodeTemplate_AccessPointsCount', 'Access Point Count'),
 (3, 'Report_Service_CodeTemplate_ConnectedCDevices', 'Connected Client Devices'),
-(4, 'Report_Service_CodeTemplate_PartConnectedCDevices', 'Connected Client Devices(No Internet)'),
-(5, 'Report_Service_CodeTemplate_InternetConnectedCDevices', 'Internet Connected Client Devices');
+(4, 'Report_Service_CodeTemplate_InternetConnectedCDevices', 'Client Devices By Authentication Method');
 
 -- --------------------------------------------------------
 
 --
--- ????????? ?? ??????? `report_groups`
+-- Структура на таблица `report_groups`
 --
 
 DROP TABLE IF EXISTS `report_groups`;
@@ -59,35 +57,37 @@ CREATE TABLE IF NOT EXISTS `report_groups` (
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`report_group_id`),
   KEY `template_id` (`codetemplate_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
--- ???? (?????) ?? ??????? ? ????????? `report_groups`
+-- Дъмп (схема) на данните в таблицата `report_groups`
 --
-
 
 -- --------------------------------------------------------
 
 --
--- ????????? ?? ??????? `report_groups_node`
+-- Структура на таблица `report_groups_node`
 --
 
 DROP TABLE IF EXISTS `report_groups_node`;
 CREATE TABLE IF NOT EXISTS `report_groups_node` (
-  `report_group_id` int(10) unsigned NOT NULL,
+  `report_group_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
-  PRIMARY KEY (`report_group_id`,`group_id`)
+  PRIMARY KEY (`report_group_id`,`group_id`),
+  KEY `group_id` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- ???? (?????) ?? ??????? ? ????????? `report_groups_node`
+-- Дъмп (схема) на данните в таблицата `report_groups_node`
 --
 
+INSERT INTO `report_groups_node` (`report_group_id`, `group_id`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
 --
--- ????????? ?? ??????? `report_groups_recepients`
+-- Структура на таблица `report_groups_recepients`
 --
 
 DROP TABLE IF EXISTS `report_groups_recepients`;
@@ -97,17 +97,16 @@ CREATE TABLE IF NOT EXISTS `report_groups_recepients` (
   `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`recepient_id`),
   KEY `group_id` (`report_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
--- ???? (?????) ?? ??????? ? ????????? `report_groups_recepients`
+-- Дъмп (схема) на данните в таблицата `report_groups_recepients`
 --
-
 
 -- --------------------------------------------------------
 
 --
--- ????????? ?? ??????? `report_items`
+-- Структура на таблица `report_items`
 --
 
 DROP TABLE IF EXISTS `report_items`;
@@ -120,10 +119,33 @@ CREATE TABLE IF NOT EXISTS `report_items` (
   `report_group_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`item_id`),
   KEY `group_id` (`report_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
--- ???? (?????) ?? ??????? ? ????????? `report_items`
+-- Ограничения за дъмпнати таблици
 --
 
-SET FOREIGN_KEY_CHECKS=1;
+--
+-- Ограничения за таблица `report_groups`
+--
+ALTER TABLE `report_groups`
+  ADD CONSTRAINT `report_groups_ibfk_1` FOREIGN KEY (`codetemplate_id`) REFERENCES `report_codetemplate` (`codetemplate_id`);
+
+--
+-- Ограничения за таблица `report_groups_node`
+--
+ALTER TABLE `report_groups_node`
+  ADD CONSTRAINT `report_groups_node_ibfk_3` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
+  ADD CONSTRAINT `report_groups_node_ibfk_2` FOREIGN KEY (`report_group_id`) REFERENCES `report_groups` (`report_group_id`);
+
+--
+-- Ограничения за таблица `report_groups_recepients`
+--
+ALTER TABLE `report_groups_recepients`
+  ADD CONSTRAINT `report_groups_recepients_ibfk_1` FOREIGN KEY (`report_group_id`) REFERENCES `report_groups` (`report_group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ограничения за таблица `report_items`
+--
+ALTER TABLE `report_items`
+  ADD CONSTRAINT `report_items_ibfk_1` FOREIGN KEY (`report_group_id`) REFERENCES `report_groups` (`report_group_id`);
