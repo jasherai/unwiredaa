@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 /**
  * DB table gateway for group table
@@ -21,7 +21,7 @@ class Groups_Model_DbTable_Group extends Zend_Db_Table_Abstract {
 	 */
 	protected $_name = 'group';
 
-	protected $_dependentTables = array('Users_Model_DbTable_AdminGroup');
+	protected $_dependentTables = array('Users_Model_DbTable_AdminGroup', 'Report_Model_DbTable_Node');
 
 	protected $_referenceMap = array(
             'Role'  => array(
