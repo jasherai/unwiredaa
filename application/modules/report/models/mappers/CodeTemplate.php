@@ -14,7 +14,7 @@
  * Mapper for Reports_Model_CodeTemplate
  * @author G. Sokolov <joro@web-teh.net>
  */
-class Report_Model_Mapper_Index extends Unwired_Model_Mapper
+class Report_Model_Mapper_CodeTemplate extends Unwired_Model_Mapper
 {
 
 	protected $_modelClass = 'Report_Model_CodeTemplate';

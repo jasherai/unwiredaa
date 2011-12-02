@@ -24,7 +24,7 @@ class Report_Service_CodeTemplate_ConnectedCDevices extends Report_Service_CodeT
         $html = '';
         
         
-        $html .= '<table border=1>';
+        $html .= '<table class="listing">';
         $html .= '<tr><th>Group Name</th><th>Clients Connected</th></tr>';
         $html .= '<tr><th>Total</th><th style="text-align:right;">'.$data['totals'].'</th>';
         foreach ($result as $key => $value) {

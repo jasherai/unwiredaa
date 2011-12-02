@@ -1,5 +1,24 @@
-<h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
+<a href="/report">Reports</a> &raquo;
+<a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent_parent->getTitle();?> </a> &raquo;
+<a href="/report/group/reports/id/<?php echo $this->parent->getReportGroupId()?>"><?php echo $this->parent->getTitle(); ?> Results</a> &raquo;
+<a href="/report/group/view/id/<?php echo $this->report->getItemId()?>"><?php echo $this->translate('report_group_heading_result'); ?>  at <?php echo $this->parent->getDateAdded(); ?></a>
 
+<h1><?php echo $this->translate('report_group_heading_result'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
+
+<table width="100%" class="listing">
+<th colspan="4"><?php echo $this->translate('report_result_parameters'); ?></th>
+<tr>
+	<td><?php echo $this->translate('report_result_parameters_description'); ?></td><td colspan="3"><?php echo $this->parent->getDescription(); ?></td>
+</tr>
+<tr>
+	<td><?php echo $this->translate('report_result_parameters_datefrom'); ?></td><td><?php echo $this->parent->getDateFrom();?></td><td><?php echo $this->translate('report_result_parameters_dateto'); ?></td><td><?php echo $this->parent->getDateTo();?></td>
+</tr>
+<tr>
+	<td><?php echo $this->translate('report_result_parameters_devicegroups'); ?></td><td colspan="3"><?php echo str_replace("\n", ", ", $this->parent->getGroupsAssignedFormatted());?></td>
+</tr>
+</table>
+
+<h3>Results</h3>
 <?php
 
 

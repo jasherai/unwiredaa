@@ -1,3 +1,6 @@
+<a href="/report">Reports</a> &raquo;
+<a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent->getTitle();?> </a>
+
 <h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?></h1>
 
 <?php
@@ -16,6 +19,9 @@ $acl = Zend_Registry::get ( 'acl' );
 			<tr>
 				<th><?php echo $this->translate('report_index_id');?></th>
 				<th><?php echo $this->translate('report_index_title');?></th>
+				<th><?php echo $this->translate('report_index_from');?></th>
+				<th><?php echo $this->translate('report_index_to');?></th>
+				<th><?php echo $this->translate('report_index_devices');?></th>
 				<th>
 					<div class="buttons span-18">
 
@@ -31,7 +37,7 @@ $acl = Zend_Registry::get ( 'acl' );
 			</tr>
 			<tr>
 				<th></th>
-				<th><input type="text" name="title"
+				<th colspan="4"><input type="text" name="title"
 					value="<?php echo $this->filter['title']; ?>" /></th>
 				<th class="tools"><a name="index" class="icon filter"><?php echo $this->translate('report_index_button_filter'); ?></a>
 					<a name="index" class="icon reset"><?php echo $this->translate('report_index_button_reset'); ?></a>
@@ -43,9 +49,11 @@ $acl = Zend_Registry::get ( 'acl' );
 		foreach ( $this->paginator as $user ) :
 			?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-				<td class="column_id"><?php echo $user->getGroupId(); ?></td>
+				<td class="column_id"><?php echo $user->getReportGroupId(); ?></td>
 				<td><?php echo $user->getTitle(); ?></td>
-
+				<td><?php echo $user->getDateFrom(); ?></td>
+				<td><?php echo $user->getDateTo(); ?></td>
+				<td><?php echo nl2br($user->getGroupsAssignedFormatted()); ?></td>
 				<td class="tools">
 				  <?php
 			$actions = array ('reports', 'generate', 'delete' );
@@ -59,7 +67,7 @@ $acl = Zend_Registry::get ( 'acl' );
 					<a
 					href="<?php
 				
-				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getGroupId () ), null, true );
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getReportGroupId () ), null, true );
 				?>"
 					class="icon <?php echo $action?>"><?php
 				

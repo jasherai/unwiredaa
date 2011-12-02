@@ -17,7 +17,7 @@
 class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role_Interface,
 																 Zend_Acl_Resource_Interface
 {
-	protected $_groupId = null;
+	protected $_reportGroupId = null;
 	
 	protected $_codetemplateId = null;
 
@@ -57,6 +57,18 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 		} elseif (is_string($_recepients)) {
 			$this->_recepients = explode(', ', $_recepients);
 		}
+	}
+	
+	/**
+	 * @return the $groupsAssigned
+	 */
+	public function getGroupsAssignedFormatted() {
+		$groups = $this->getGroupsAssigned();
+		$result = array();
+		foreach ($groups as $key => $value) {
+			$result[] = $value->getName();
+		}
+		return implode("\n", $result);
 	}
 
 	/**
@@ -114,15 +126,15 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 	/**
 	 * @return the $groupId
 	 */
-	public function getGroupId() {
-		return $this->_groupId;
+	public function getReportGroupId() {
+		return $this->_reportGroupId;
 	}
 
 	/**
-	 * @param integer $groupId
+	 * @param integer $reportGroupId
 	 */
-	public function setGroupId($groupId) {
-		$this->_groupId = $groupId;
+	public function setReportGroupId($reportGroupId) {
+		$this->_reportGroupId = $reportGroupId;
 
 		return $this;
 	}

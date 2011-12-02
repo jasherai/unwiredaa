@@ -27,20 +27,20 @@ class Report_Model_Mapper_Result extends Unwired_Model_Mapper
 	/**
 	 * @return the $_group_id
 	 */
-	public function getGroupId() {
+	public function getReportGroupId() {
 		return $this->_group_id;
 	}
 
 	/**
 	 * @param number $_group_id
 	 */
-	public function setGroupId($_group_id) {
+	public function setReportGroupId($_group_id) {
 		$this->_group_id = $_group_id;
 	}
 
 	public function findby($conditions, $limit, $order) {
 		if ($this->_group_id != 0) {
-			$conditions['group_id'] = $this->_group_id;
+			$conditions['report_group_id'] = $this->_group_id;
 		}
 		
 		return parent::findBy($conditions, $limit, $order);
@@ -48,7 +48,7 @@ class Report_Model_Mapper_Result extends Unwired_Model_Mapper
 	
 	public function fetchAll() {
 		if ($this->_group_id != 0) {
-			$conditions['group_id'] = $this->_group_id;
+			$conditions['report_group_id'] = $this->_group_id;
 		}
 		
 		return parent::findBy($conditions);

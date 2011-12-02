@@ -25,7 +25,7 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
         $html = '';
         
         
-        $html .= '<table border=1>';
+        $html .= '<table class="listing">';
         $html .= '<tr><th>Group Name</th><th style="text-align: center;">Internet Connected Clients</th><th style="text-align: center;">MAC Authenticated</th></tr>';
         $html .= '<tr><th>Total</th><th style="text-align:right;">'.$data['totals']['total'].'</th><th style="text-align:right;">'.$data['totals']['mac'].'</th>';
         foreach ($result as $key => $value) {

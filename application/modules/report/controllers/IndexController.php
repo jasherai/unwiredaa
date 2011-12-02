@@ -13,14 +13,25 @@
 class Report_IndexController extends Unwired_Controller_Crud
 {
 
+	public function preDispatch() {
+		
+		$reportMapper = new Report_Model_Mapper_CodeTemplate();
+		
+		$this->_defaultMapper = $reportMapper;
+		
+		parent::preDispatch();
+	}
+	
 	public function indexAction()
 	{
-		$groupService = new Groups_Service_Group();
-		$reportMapper = new Report_Model_Mapper_Index();
-
-		$filter = $this->_getFilters();
+		//$groupService = new Groups_Service_Group();
 		
-		$groupService->prepareMapperListingByAdmin($reportMapper, null, false, $filter);
+
+		
+		
+		//$filter = $this->_getFilters();
+		
+		//$groupService->prepareMapperListingByAdmin($reportMapper, null, false, $filter);
 
 		$this->_index();
 	}

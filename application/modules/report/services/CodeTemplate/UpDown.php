@@ -23,33 +23,36 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
         $groupTotals = $data['totals'];
         
         $html = '';
-        
         foreach ($groupIds as $topgid) {
-            
+            //print_r($groupTotals[$topgid]);
             if (!isset($groupTotals[$topgid]) || ($groupTotals[$topgid]['up'] == 0 && $groupTotals[$topgid]['down'] == 0)){
                 continue;
             }
             
-            $html .= '<table border=1>';
+            $html .= '<table class="listing">';
             $html .= '<tr><th>Group / User Name</th><th style="text-align: center;">Total Bytes Up</th><th style="text-align: center;">Total Bytes Down</td></tr>';
-            $htmlGroupTot = '<tr><td><strong>'.$groupTotals[$topgid]['name'].'</strong></td><td style="text-align: right;"><strong>'.$groupTotals[$topgid]['up'].'</strong></td><td style="text-align: right;"><strong>'.$groupTotals[$topgid]['down'].'</strong></td></tr>';
+            $htmlGroupTot = '<tr><td><strong>'.$groupTotals[$topgid]['name'].'</strong></td><td style="text-align: right;"><strong>'.$groupTotals[$topgid]['up'].'b</strong></td><td style="text-align: right;"><strong>'.$groupTotals[$topgid]['down'].'b</strong></td></tr>';
             $html .= $htmlGroupTot;
             
-            foreach ($result as $key => $value) {
+            foreach ($result[$topgid] as $key => $value) {
                 if ($topgid == $value['group_id']) {
-                    $html .= '<tr><td> ' . $value['username'] . ' <!--('.$value['user_id'].')--></td><td style="text-align: right;">'.$value['total_bytes_up'].'</td><td style="text-align: right;">'.$value['total_bytes_down'].'</td></tr>';
+                    $html .= '<tr><td> ' . $value['username'] . ' <!--('.$value['user_id'].')--></td><td style="text-align: right;">'.$value['total_bytes_up'].'b</td><td style="text-align: right;">'.$value['total_bytes_down'].'b</td></tr>';
                  }
             }
             
             $html .= $htmlGroupTot;
             $html .= '</table>';
         }
+        
+        //$html = '';
+        
+        
         return $html;
     }
 
     protected function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-
+		
         $groupRel = $this->_getGroupRelations($groupIds);
         
         $select = $db->select()
@@ -60,25 +63,30 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
                 ->where('a.start_time >= ?', $dateFrom)
                 ->where('a.start_time <= ?', $dateTo)
                 ->group('user_id');
-
+		
         $result = $db->fetchAll($select);
 
         $groupTotals = array();
+        $data = array();
         
         foreach ($groupRel as $gid => $topgid) {
+        	
             if (!isset($groupTotals[$topgid])){
                 $groupTotals[$topgid] = array('up' => 0, 'down' => 0, 'name' => '');
             }
             foreach ($result as $key => $value) {
                 if ($gid == $value['group_id']) {
-                    $groupTotals[$topgid]['up'] += $value['total_bytes_up'];
-                    $groupTotals[$topgid]['down'] += $value['total_bytes_down'];
-                    $groupTotals[$topgid]['name'] = $value['group_name'];
+                    $groupTotals[$value['group_id']]['up'] += $value['total_bytes_up'];
+                    $groupTotals[$value['group_id']]['down'] += $value['total_bytes_down'];
+                    $groupTotals[$value['group_id']]['name'] = $value['group_name'];
+                    
+                    $data[$value['group_id']][] = $value;
                  }
+                 
             }
         }
         
-        return array('data' => $result, 'totals' => $groupTotals);
+        return array('data' => $data, 'totals' => $groupTotals);
     }
 
 }

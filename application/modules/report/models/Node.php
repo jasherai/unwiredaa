@@ -47,7 +47,4 @@ class Report_Model_Node extends Unwired_Model_Generic
 		$this->_groupId = $_groupId;
 	}
 
-	
-
-
 }

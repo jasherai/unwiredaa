@@ -25,9 +25,9 @@ class Report_Model_DbTable_Items extends Zend_Db_Table_Abstract {
 	
 	protected $_referenceMap = array(
             'Group'  => array(
-                'columns'           => 'group_id',
+                'columns'           => 'report_group_id',
                 'refTableClass'     => 'Report_Model_DbTable_Group',
-                'refColumns'        => 'group_id'
+                'refColumns'        => 'report_group_id'
                 )
              );
 }

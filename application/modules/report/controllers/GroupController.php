@@ -15,7 +15,7 @@ class Report_GroupController extends Unwired_Controller_Crud {
 	public function indexAction() {
 		$groupService = new Groups_Service_Group ();
 		$reportMapper = new Report_Model_Mapper_Group ();
-		$reportCodeTemplateMapper = new Report_Model_Mapper_Index ();
+		$reportCodeTemplateMapper = new Report_Model_Mapper_CodeTemplate ();
 		
 		$filter = $this->_getFilters ();
 		
@@ -89,21 +89,27 @@ class Report_GroupController extends Unwired_Controller_Crud {
 		$reportMapper = new Report_Model_Mapper_Group ();
 		$resultMapper = new Report_Model_Mapper_Result();
 		
+		$ctMapper = new Report_Model_Mapper_CodeTemplate();
 		
-		$resultMapper->findby(array('group_id' => $this->getRequest()->getParam('id')), 0, 'date_added DESC');
+		
+		$resultMapper->findby(array('report_group_id' => $this->getRequest()->getParam('id')), 0, 'date_added DESC');
 		
 		$this->_defaultMapper = $resultMapper;
 		
 		$parent_id = $this->getRequest ()->getParam ( 'id' );
+		
 		$parent = $reportMapper->find ( $parent_id );
 		
+		$parent_parent = $ctMapper->find($parent->getCodetemplateId());
+		
+		$this->view->assign ( 'parent_parent', $parent_parent );
 		$this->view->assign ( 'parent', $parent );
 		
 		$this->_index($resultMapper);
 	}
 	
 	public function generateAction() {
-		$ctMapper = new Report_Model_Mapper_Index();
+		$ctMapper = new Report_Model_Mapper_CodeTemplate();
 		$rMapper = new Report_Model_Mapper_Group();
 		$iMapper = new Report_Model_Mapper_Result();
 		$report = $rMapper->find($this->getRequest()->getParam('id'));
@@ -114,25 +120,28 @@ class Report_GroupController extends Unwired_Controller_Crud {
 		$reportGenerator = new $className;
 		
 		
-		$result = $reportGenerator->getReport($report->getGroupsAssigned(), $report->getDateFrom(), $report->getDateTo());
+		$result = $reportGenerator->getReport(array_keys($report->getGroupsAssigned()), $report->getDateFrom(), $report->getDateTo());
 		
 		$entity = new Report_Model_Items();
 		$entity->setDateAdded(date('Y-m-d H:i:s'));
 		$entity->setData($result['data']);
 		$entity->setHtmldata($result['html']);
-		$entity->setGroupId($this->getRequest()->getParam('id'));
+		$entity->setReportGroupId($this->getRequest()->getParam('id'));
 		$iMapper->save($entity);
-		$this->_helper->redirector->gotoUrlAndExit('/report/group/view/id/'.$this->getRequest()->getParam('id'));
+		$this->_helper->redirector->gotoUrlAndExit('/report/group/view/id/'.$entity->getItemId());
 	}
 	
 	public function viewAction() {
 		
 		$rMapper = new Report_Model_Mapper_Result();
 		$report = $rMapper->find($this->getRequest()->getParam('id'));
+		$ctMapper = new Report_Model_Mapper_CodeTemplate();
 		
 		$gMapper = new Report_Model_Mapper_Group();
-		$parent = $gMapper->find($report->getGroupId());
+		$parent = $gMapper->find($report->getReportGroupId());
+		$parent_parent = $ctMapper->find($parent->getCodetemplateId());
 		
+		$this->view->parent_parent = $parent_parent;
 		$this->view->parent = $parent;
 		$this->view->report = $report;
 	}

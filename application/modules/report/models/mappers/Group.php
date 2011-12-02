@@ -20,6 +20,8 @@ class Report_Model_Mapper_Group extends Unwired_Model_Mapper
 	protected $_modelClass = 'Report_Model_Group';
 	protected $_dbTableClass = 'Report_Model_DbTable_Group';
 	
+	
+	
 	public function save(Unwired_Model_Generic $model)
 	{
 		try {
@@ -27,12 +29,12 @@ class Report_Model_Mapper_Group extends Unwired_Model_Mapper
 	
 			$nodes = new Report_Model_DbTable_Node();
 	
-			$nodes->delete(array('group_id = ?' => $model->getGroupId()));
+			$nodes->delete(array('report_group_id = ?' => $model->getReportGroupId()));
 	
 			foreach ($model->getGroupsAssigned() as $groupId => $nodeId) {
 				$nodes->insert(array(
-						'group_id' => $model->getGroupId(),
-						'node_id' => $nodeId
+						'report_group_id' => $model->getReportGroupId(),
+						'group_id' => $nodeId
 				));
 			}
 			
@@ -40,11 +42,11 @@ class Report_Model_Mapper_Group extends Unwired_Model_Mapper
 			
 			$nodes = new Report_Model_DbTable_Recepients();
 			
-			$nodes->delete(array('group_id = ?' => $model->getGroupId()));
+			$nodes->delete(array('report_group_id = ?' => $model->getReportGroupId()));
 			
 			foreach ($model->getRecepients() as $groupId => $email) {
 				$nodes->insert(array(
-						'group_id' => $model->getGroupId(),
+						'report_group_id' => $model->getReportGroupId(),
 						'email' => $email
 				));
 			}
@@ -65,8 +67,15 @@ class Report_Model_Mapper_Group extends Unwired_Model_Mapper
 	
 		$groupsAssigned = array();
 		foreach ($groupRows as $groupRow) {
-			$groupsAssigned[$groupRow->node_id] = $groupRow->node_id;
+			
+			$groupsAssigned[$groupRow->group_id] = new Nodes_Model_Node();
+			$tmp = $groupRow->findParentRow('Groups_Model_DbTable_Group');
+			
+			$groupsAssigned[$groupRow->group_id]->setName($tmp->name);
+			$groupsAssigned[$groupRow->group_id]->setGroupId($tmp->group_id);
+			//$groupsAssigned[$groupRow->node_id]->setMac($tmp[0]->mac);
 		}
+
 	
 		$model->setGroupsAssigned($groupsAssigned);
 		

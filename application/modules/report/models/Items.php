@@ -20,7 +20,7 @@ class Report_Model_Items extends Unwired_Model_Generic  implements Zend_Acl_Role
 	
 	protected $_itemId = null;
 	
-	protected $_groupId = null;
+	protected $_reportGroupId = null;
 	
 	protected $_title = null;
 	
@@ -52,8 +52,8 @@ class Report_Model_Items extends Unwired_Model_Generic  implements Zend_Acl_Role
 	/**
 	 * @return the $_groupId
 	 */
-	public function getGroupId() {
-		return $this->_groupId;
+	public function getReportGroupId() {
+		return $this->_reportGroupId;
 	}
 
 	/**
@@ -91,8 +91,8 @@ class Report_Model_Items extends Unwired_Model_Generic  implements Zend_Acl_Role
 	/**
 	 * @param int $_groupId
 	 */
-	public function setGroupId($_groupId) {
-		$this->_groupId = $_groupId;
+	public function setReportGroupId($_groupId) {
+		$this->_reportGroupId = $_groupId;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 <h1><?php
-	if ($this->entity->getGroupId()) {
+	if ($this->entity->getReportGroupId()) {
 		echo $this->translate('report_group_title_edit').' '.$this->entity->getTitle();
 	} else {
 		echo $this->translate('report_group_title_add');

@@ -23,7 +23,7 @@ class Report_Model_DbTable_Group extends Zend_Db_Table_Abstract {
 
 	protected $_dependentTables = array('Report_Model_DbTable_Items', 
 										'Report_Model_DbTable_Recepients',
-										'Report_Model_DbTable_Node',
+										'',
 			);
 	
 	protected $_referenceMap = array(
@@ -31,6 +31,11 @@ class Report_Model_DbTable_Group extends Zend_Db_Table_Abstract {
                 'columns'           => 'template_id',
                 'refTableClass'     => 'Report_Model_DbTable_Codetemplate',
                 'refColumns'        => 'codetemplate_id'
-                )
+                ),
+			'Report' => array(
+					'columns'           => 'group_id',
+					'refTableClass'     => 'Groups_Model_DbTable_Group',
+					'refColumns'        => 'group_id'
+				)
              );
 }

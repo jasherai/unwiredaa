@@ -30,7 +30,7 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
 
         
         foreach ($groupTotals as $k => $v) {
-			$html .= '<table border=1>';
+			$html .= '<table class="listing">';
 			$html .= '<tr><td>Group / AP Name</td><td>AP Count / AP Status</td></tr>';
         
 			$htmlGroupTot = '<tr><td><strong>Total: </strong></td><td><strong>' . $v['cnt'] .'</strong></td></tr>';
