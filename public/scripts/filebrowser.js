@@ -13,12 +13,18 @@ function reloadFiles() {
 			$('#fileBrowser').find('.fileList').html(ulist);
 		}
 	});
+	
+	$('#uploader_frame').remove();
 }
 
 function createFileBrowser(cbkUrl, uplUrl)
 {
 	callbackUrl = cbkUrl;
 	uploadUrl = uplUrl;
+	
+	if($('#fileBrowser').length > 0) {
+		return;
+	}
 	
 	$('body').append('<div id="fileBrowser"><div class="fileList"></div><div class="fileUpload"><form method="post" action="'
 					 +uploadUrl+'" enctype="multipart/form-data"></form></div></div>');
