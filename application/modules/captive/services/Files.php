@@ -68,7 +68,7 @@ class Captive_Service_Files
 
 
         if (!file_exists($path)) {
-            @mkdir($path, null, true);
+            @mkdir($path, 0755, true);
             return array();
         }
 
