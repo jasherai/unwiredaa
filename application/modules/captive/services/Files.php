@@ -88,6 +88,48 @@ class Captive_Service_Files
         return $files;
     }
 
+    public function copyToSplashpages($files)
+    {
+        if (!Zend_Registry::isRegistered('splashpages')) {
+            return true;
+        }
+
+        $splashpages = Zend_Registry::get('splashpages');
+        $paths = Zend_Registry::get('shellpaths');
+
+        foreach ($splashpages as $splashpage) {
+            foreach ($files as $file) {
+                $cmd = "{$paths['scp']} -r ";
+
+                /**
+                 * Build ssh/scp command
+                 */
+                if (isset($splashpage['sshoptions'])) {
+                    foreach ($splashpage['sshoptions'] as $switch => $value) {
+                        $cmd .= "-{$switch} {$value}";
+                    }
+                }
+
+                $localPath = "{$file['destination']}/{$file['name']}";
+
+                $cmd .= " {$localPath} ";
+
+                $remotePath = (isset($splashpage['user']) ? " {$splashpage['user']}@" : '')
+                              . "{$splashpage['host']}:{$splashpage['publicpath']}/"
+                              . str_replace(PUBLIC_PATH, '', $localPath);
+
+                $cmd .= " {$remotePath}";
+
+                exec($cmd, $output, $cmdResult);
+
+                if (APPLICATION_ENV == 'development') {
+                    Zend_Debug::dump($output, 'cmd output');
+                    Zend_Debug::dump($cmdResult, 'cmd result');
+                }
+            }
+        }
+    }
+
     public function getSplashPagePath($splashId)
     {
         return $this->_getPath() . 'splashpages/' . (int) $splashId . '/upload';

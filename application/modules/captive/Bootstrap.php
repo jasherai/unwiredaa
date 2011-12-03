@@ -29,4 +29,31 @@ class Captive_Bootstrap extends Unwired_Application_Module_Bootstrap
 
         return $widgetLoader;
     }
+
+    protected function _initSplashpage()
+    {
+        $splashpageOptions = $this->getOption('splashpage');
+
+        if (!$splashpageOptions || !is_array($splashpageOptions)) {
+            $splashPageOptions = array();
+        }
+
+        Zend_Registry::set('splashpages', $splashpageOptions);
+
+        return $splashpageOptions;
+    }
+
+    protected function _initShellPaths()
+    {
+        $shellpaths = $this->getOption('shellpaths');
+
+        if (!$shellpaths || !is_array($shellpaths)) {
+            $shellpaths = array('scp' => '/usr/bin/scp',
+                                'ssh' => '/usr/bin/ssh');
+        }
+
+        Zend_Registry::set('shellpaths', $shellpaths);
+
+        return $shellpaths;
+    }
 }

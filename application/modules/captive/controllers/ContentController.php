@@ -287,5 +287,7 @@ class Captive_ContentController extends Unwired_Controller_Crud
         }
 
         $upload->receive();
+
+        $serviceFiles->copyToSplashpages($files);
     }
 }
