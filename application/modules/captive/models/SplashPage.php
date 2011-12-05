@@ -6,7 +6,7 @@ class Captive_Model_SplashPage extends Unwired_Model_Generic implements Zend_Acl
 
 	protected $_title = null;
 
-	protected $_active = 0;
+	protected $_active = 1;
 
 	protected $_templateId = null;
 
