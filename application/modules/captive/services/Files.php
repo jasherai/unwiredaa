@@ -99,7 +99,7 @@ class Captive_Service_Files
 
         foreach ($splashpages as $splashpage) {
             foreach ($files as $file) {
-                $cmd = "{$paths['scp']} -r ";
+                $cmd = "{$paths['scp']} -r -p ";
 
                 /**
                  * Build ssh/scp command
