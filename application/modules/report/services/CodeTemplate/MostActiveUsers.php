@@ -10,10 +10,12 @@
  * (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
  * license available at http://www.unwired.at/license.html
  */
-class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeTemplate_Abstract {
+class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTemplate_Abstract {
 
     protected $_node = 'node';
     protected $_group = 'group';
+    protected $_internet_sess = 'acct_internet_session';
+    protected $_network_user = 'network_user';
 
     protected function getTemplate($groupIds, $data) {
         
@@ -31,19 +33,20 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
         $html = '';
         foreach ($groupTotals as $k => $v) {
 			$html .= '<table class="listing">';
-			$html .= '<tr><th>Device Group</th><th>Device Name</th><th>Device Mac</th><th>AP Status</th></tr>';
-        
-			$htmlGroupTot = '<tr><td colspan="3"><strong>Total: </strong></td><td><strong>' . $v['cnt'] .'</strong></td></tr>';
+			$html .= '<tr><th>Device Name</th><th>Download</th><th>Upload</th></tr>';
+			
+        	
+			$htmlGroupTot = '<tr><td><strong>Total: </strong></td><td style="text-align: right;"><strong>' . $groupTotals[$k]['down_total'] .'b</strong></td><td style="text-align: right;"><strong>' . $groupTotals[$k]['up_total'] .'b</strong></td></tr>';
 	        $html .= $htmlGroupTot;
 	            
 			foreach ($result[$k] as $key => $value) {
-				$html .= '<tr><td>'.$value['group_name'].'</td><td> ' . $value['name'] . '</td><td>'.$value['mac'].'</td><td>'.(($value['status'] == 'enabled')?($value['online_status'] == 1 ? 'Online': 'Offline'):'Planning').'</td></tr>';
+				$html .= '<tr><td>'.$value['username'].'</td><td style="text-align: right;">'.$value['down_total'].'b</td><td style="text-align: right;">'.$value['up_total'].'b</td></tr>';
 			}
 	            
 			$html .= $htmlGroupTot;
 			$html .= '</table><br/>';
         }
-        
+
         //}
 
         return $html;
@@ -56,27 +59,24 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
         foreach ($groupIds as $k => $v) {
         	
         	
-        	$groupTotals[$v] = array('cnt' => 0, 'offline_cnt' => 0, 'online_cnt' => 0);
+        	$groupTotals[$v] = array('cnt' => 0, 'down_total' => 0, 'up_total' => 0);
 	        $groupRel = $this->_getGroupRelations(array($v));
 	        
 	        $select = $db->select()
-	                ->from(array('a' => $this->_node))
-	                ->join(array('b' => $this->_group), 'b.group_id = a.group_id', array('group_id', 'name as group_name'))
-	                ->where('b.group_id IN (?)', $groupRel);
-			
-	             
+	                ->from(array('a' => $this->_internet_sess), 'SUM(a.total_bytes_up) as up_total, SUM(a.total_bytes_down) as down_total')
+	                ->join(array('c' => $this->_network_user), 'a.user_id = c.user_id')
+	                ->join(array('b' => $this->_group), 'b.group_id = c.group_id', array('group_id', 'name as group_name'))
+	                ->where('b.group_id IN (?)', $groupRel)
+	                ->group('a.user_id')
+	                ->order('down_total DESC')
+	                ->limit(50);
+	        
 	        $result[$v] = $db->fetchAll($select);
 			
             foreach ($result[$v] as $key => $value) {
-                
-				$groupTotals[$v]['cnt'] += 1;
-				if ($value['online_status'] == 1){
-					$groupTotals[$v]['online_cnt'] += 1;
-				}else{
-					$groupTotals[$v]['offline_cnt'] += 1;
-				}
-                    
-				//$groupTotals[$v]['name'] = $value['name'];
+
+				$groupTotals[$v]['down_total'] += $value['down_total'];
+				$groupTotals[$v]['up_total'] += $value['up_total'];
             }
         }
         

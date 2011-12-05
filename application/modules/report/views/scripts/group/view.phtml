@@ -1,4 +1,4 @@
-<a href="/report">Reports</a> &raquo;
+<a href="/report"><?php echo $this->translate('report_index_heading'); ?></a> &raquo;
 <a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent_parent->getTitle();?> </a> &raquo;
 <a href="/report/group/reports/id/<?php echo $this->parent->getReportGroupId()?>"><?php echo $this->parent->getTitle(); ?> Results</a> &raquo;
 <a href="/report/group/view/id/<?php echo $this->report->getItemId()?>"><?php echo $this->translate('report_group_heading_result'); ?>  at <?php echo $this->parent->getDateAdded(); ?></a>
