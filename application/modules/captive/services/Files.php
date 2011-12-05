@@ -125,7 +125,7 @@ class Captive_Service_Files
 
                 exec($cmd, $output, $cmdResult);
                 if ($cmdResult) {
-                    $mkdirCmd = $paths['ssh'] . $sshOptions . "--cmd \" mkdir -m 0777 -p " . dirname($remotePath) . '"';
+                    $mkdirCmd = $paths['ssh'] . $sshOptions . " --cmd \" mkdir -m 0777 -p " . dirname($remotePath) . '"';
                     exec($mkdirCmd, $output, $cmdResuls);
                     exec($cmd, $output, $cmdResult);
                 }
