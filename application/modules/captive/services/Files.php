@@ -123,7 +123,8 @@ class Captive_Service_Files
                 $cmd .= ' ' . (isset($splashpage['user']) ? " {$splashpage['user']}@" : '')
                       . "{$splashpage['host']}:{$remotePath}";
 
-                if (exec($cmd, $output, $cmdResult)) {
+                exec($cmd, $output, $cmdResult);
+                if ($cmdResult) {
                     $mkdirCmd = $paths['ssh'] . $sshOptions . "--cmd \" mkdir -m 0777 -p " . dirname($remotePath) . '"';
                     exec($mkdirCmd, $output, $cmdResuls);
                     exec($cmd, $output, $cmdResult);
