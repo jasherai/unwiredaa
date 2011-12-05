@@ -106,7 +106,7 @@ class Captive_Service_Files
                  */
                 if (isset($splashpage['sshoptions'])) {
                     foreach ($splashpage['sshoptions'] as $switch => $value) {
-                        $cmd .= "-{$switch} {$value}";
+                        $cmd .= " -{$switch} {$value}";
                     }
                 }
 
