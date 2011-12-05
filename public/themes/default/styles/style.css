@@ -355,6 +355,10 @@ form div.buttons {
 	background-image: url('../images/icons/24x24/edit.png');
 }
 
+.tools a.generate {
+    background-image: url('../images/icons/24x24/gear.png');
+}
+
 .tools a.content {
 	background-image: url('../images/icons/24x24/edit_content.png');
 }
