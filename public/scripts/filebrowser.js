@@ -69,6 +69,9 @@ function openFileBrowser(elem, prefix)
 	}
 	
 	buttons['Select'] = function() {
+		if (!$('#fileBrowser').find('input[type=radio]:checked').length) {
+			return;
+		}
 		$(elem).val(prefix + $('#fileBrowser').find('input[type=radio]:checked').val());
 		$(elem).change();
 		$(this).dialog('close');
