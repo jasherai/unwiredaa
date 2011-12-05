@@ -104,25 +104,33 @@ class Captive_Service_Files
                 /**
                  * Build ssh/scp command
                  */
+                $sshOptions = '';
                 if (isset($splashpage['sshoptions'])) {
                     foreach ($splashpage['sshoptions'] as $switch => $value) {
-                        $cmd .= " -{$switch} {$value}";
+                        $sshOptions .= " -{$switch} {$value}";
                     }
                 }
+
+                $cmd .= $sshOptions;
 
                 $localPath = "{$file['destination']}/{$file['name']}";
 
                 $cmd .= " {$localPath} ";
 
-                $remotePath = (isset($splashpage['user']) ? " {$splashpage['user']}@" : '')
-                              . "{$splashpage['host']}:{$splashpage['publicpath']}/"
+                $remotePath = "{$splashpage['publicpath']}"
                               . str_replace(PUBLIC_PATH, '', $localPath);
 
-                $cmd .= " {$remotePath}";
+                $cmd .= ' ' . (isset($splashpage['user']) ? " {$splashpage['user']}@" : '')
+                      . "{$splashpage['host']}:{$remotePath}";
 
-                exec($cmd, $output, $cmdResult);
+                if (exec($cmd, $output, $cmdResult)) {
+                    $mkdirCmd = $paths['ssh'] . $sshOptions . "--cmd \" mkdir -m 0777 -p " . dirname($remotePath) . '"';
+                    exec($mkdirCmd, $output, $cmdResuls);
+                    exec($cmd, $output, $cmdResult);
+                }
 
                 if (APPLICATION_ENV == 'development') {
+                    Zend_Debug::dump($mkdirCmd, 'mkdir');
                     Zend_Debug::dump($cmd, 'cmd');
                     Zend_Debug::dump($output, 'cmd output');
                     Zend_Debug::dump($cmdResult, 'cmd result');
