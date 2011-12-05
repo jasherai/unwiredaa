@@ -131,14 +131,16 @@ class Captive_Service_Files
                     exec($cmd, $output, $cmdResult);
                 }
 
-                if (APPLICATION_ENV == 'development') {
-                    Zend_Debug::dump($mkdirCmd, 'mkdir');
-                    Zend_Debug::dump($cmd, 'cmd');
-                    Zend_Debug::dump($output, 'cmd output');
-                    Zend_Debug::dump($cmdResult, 'cmd result');
+                if ($cmdResult) {
+
+                    @unlink($localPath);
+
+                    return false;
                 }
             }
         }
+
+        return true;
     }
 
     public function getSplashPagePath($splashId)

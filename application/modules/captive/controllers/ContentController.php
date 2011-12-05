@@ -288,6 +288,8 @@ class Captive_ContentController extends Unwired_Controller_Crud
 
         $upload->receive();
 
-        $serviceFiles->copyToSplashpages($files);
+        if (!$serviceFiles->copyToSplashpages($files)) {
+            $this->view->uploadError = 'content_upload_error_replicate_file';
+        }
     }
 }
