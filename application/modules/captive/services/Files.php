@@ -120,12 +120,13 @@ class Captive_Service_Files
                 $remotePath = "{$splashpage['publicpath']}"
                               . str_replace(PUBLIC_PATH, '', $localPath);
 
-                $cmd .= ' ' . (isset($splashpage['user']) ? " {$splashpage['user']}@" : '')
-                      . "{$splashpage['host']}:{$remotePath}";
+                $remoteUserHost = (isset($splashpage['user']) ? " {$splashpage['user']}@" : '') . "{$splashpage['host']}";
+
+                $cmd .= " {$remoteUserHost}:{$remotePath}";
 
                 exec($cmd, $output, $cmdResult);
                 if ($cmdResult) {
-                    $mkdirCmd = $paths['ssh'] . $sshOptions . " --cmd \" mkdir -m 0777 -p " . dirname($remotePath) . '"';
+                    $mkdirCmd = "{$paths['ssh']} {$sshOptions} {$remoteUserHost} --cmd \" mkdir -m 0777 -p " . dirname($remotePath) . '"';
                     exec($mkdirCmd, $output, $cmdResuls);
                     exec($cmd, $output, $cmdResult);
                 }
