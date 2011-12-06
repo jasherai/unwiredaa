@@ -29,14 +29,14 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
         foreach ($groupTotals as $k => $v) {            
             
             $html .= '<table class="listing">';
-            $html .= '<tr><th>Group / User Name</th><th style="text-align: center;">Total Bytes Up</th><th style="text-align: center;">Total Bytes Down</td></tr>';
-            $htmlGroupTot = '<tr><td><strong>'.$v['total']['name'].'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_down']).'</strong></td></tr>';
+            $html .= '<tr><th>Group / User Name</th><th style="text-align: center;">Total Bytes Up</th><th style="text-align: center;">Total Bytes Down</td><th style="text-align: center;">Total Bytes Transfered</td></tr>';
+            $htmlGroupTot = '<tr><td><strong>'.$v['total']['name'].'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_down']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_down']+$groupTotals[$k]['total']['bytes_up']).'</strong></td></tr>';
             $html .= $htmlGroupTot;
             foreach ($v['ap'] as $kk => $vv) {
-            	$html .= '<tr><td><strong><i>&nbsp;&nbsp;&nbsp;&nbsp;Node '.$vv['name'].' ('.$vv['mac'].')</strong></i></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_down']).'</strong></td></tr>';
+            	$html .= '<tr><td><strong><i>&nbsp;&nbsp;&nbsp;&nbsp;Node '.$vv['name'].' ('.$vv['mac'].')</strong></i></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_down']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_down']+$vv['bytes_up']).'</strong></td></tr>';
             	
             	foreach ($result[$k][$kk] as $key => $value) {
-            		$html .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value['username'] . ' </td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_up']).'</td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_down']).'</td></tr>';
+            		$html .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value['username'] . ' </td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_up']).'</td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_down']).'</td><td style="text-align: right;"><strong>'.$this->_convertTraffic($value['bytes_down']+$value['bytes_up']).'</strong></td></tr>';
             	}
             	
             }

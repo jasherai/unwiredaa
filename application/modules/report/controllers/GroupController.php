@@ -150,5 +150,27 @@ class Report_GroupController extends Unwired_Controller_Crud {
 	{
 		$this->_delete();
 	}
+	
+	public function deleteresultAction()
+	{
+		$rMapper = new Report_Model_Mapper_Result();
+		
+		if (!$this->getAcl()->isAllowed($this->_currentUser, $rMapper->getEmptyModel(), 'delete')) {
+			$this->view->uiMessage('access_not_allowed_delete', 'error');
+			$this->_setAutoRedirect(true);
+			$this->_gotoIndex();
+		}
+		
+		$id = (int) $this->getRequest()->getParam('id');
+		$entity = $rMapper->find($id);
+		$rMapper->delete($entity);
+		
+		
+		$this->_helper->redirector->gotoRouteAndExit(array( 'module' => $this->getRequest()->getParam('module'),
+															'controller' => $this->getRequest()->getParam('controller'),
+															'action' => 'reports',
+															'id' => $entity->getReportGroupId()), 'default', true);
+		
+	}
 
 }

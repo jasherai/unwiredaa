@@ -58,10 +58,10 @@ $acl = Zend_Registry::get ( 'acl' );
 				<td class="tools">
 					
 				  <?php
-			$actions = array ('view');
+			$actions = array ('view', 'deleteresult');
 			
-			foreach ( $actions as $action ) :
-				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $action )) {
+			
+				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'view' )) {
 					continue;
 				}
 				
@@ -69,13 +69,27 @@ $acl = Zend_Registry::get ( 'acl' );
 					<a
 					href="<?php
 				
-				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getItemId () ), null, true );
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'view', 'id' => $user->getItemId () ), null, true );
 				?>"
 					class="icon view"><?php
 				
-				echo $this->translate ( 'report_group_button_' . $action );
+				echo $this->translate ( 'report_group_button_view' );
 				?></a>
-			<?php endforeach; ?>
+				<?php 
+				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'delete' )) {
+					continue;
+				}
+				
+				?>
+					<a
+					href="<?php
+				
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'deleteresult', 'id' => $user->getItemId () ), null, true );
+				?>"
+					class="icon delete"><?php
+				
+				echo $this->translate ( 'report_group_button_view' );
+				?></a
 				
 				</td>
 
