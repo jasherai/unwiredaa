@@ -31,7 +31,7 @@ $(function () {
 	function showTemplateSelectGroup()
 	{
 		if ($('#template_id option').length > 0) {
-			if (!$('#template_id').parent().find('ul.errors')) {
+			if (!$('#template_id').parent().find('ul.errors').length) {
 				return;
 			}
 
@@ -42,7 +42,7 @@ $(function () {
 				$(ulErrors).find('li.nogroup').remove();
 			}
 		} else {
-			if (!$('#template_id').parent().find('ul.errors')) {
+			if (!$('#template_id').parent().find('ul.errors').length) {
 				$('#template_id').parent().append('<ul class="errors" />');
 			}
 
