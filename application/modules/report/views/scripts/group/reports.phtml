@@ -29,14 +29,14 @@ $acl = Zend_Registry::get ( 'acl' );
 
 	<a id="addlink" class="button small green"
 		href="<?php
-		
+
 		echo $this->url ( array ('action' => 'generate' ), null, false );
 		?>"><span><?php echo $this->translate('report_group_button_generate');?></span></a>
 </div>
 <br />
 <form class="span-19 last" method="get"
 	action="<?php
-	
+
 	echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'index', 'id' => $this->parent->getTitle () ), null, true );
 	?>">
 	<table class="listing">
@@ -45,7 +45,7 @@ $acl = Zend_Registry::get ( 'acl' );
 				<th><?php echo $this->translate('report_index_id');?></th>
 				<th><?php echo $this->translate('report_index_date');?></th>
 				<th><?php echo $this->translate('report_index_view');?></th>
-				
+
 			</tr>
 		</thead>
 		<tbody>
@@ -56,41 +56,41 @@ $acl = Zend_Registry::get ( 'acl' );
 				<td class="column_id"><?php echo $user->getItemId(); ?></td>
 				<td><?php echo $user->getDateAdded(); ?></td>
 				<td class="tools">
-					
+
 				  <?php
 			$actions = array ('view', 'deleteresult');
-			
-			
+
+
 				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'view' )) {
 					continue;
 				}
-				
+
 				?>
 					<a
 					href="<?php
-				
+
 				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'view', 'id' => $user->getItemId () ), null, true );
 				?>"
 					class="icon view"><?php
-				
+
 				echo $this->translate ( 'report_group_button_view' );
 				?></a>
-				<?php 
+				<?php
 				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'delete' )) {
 					continue;
 				}
-				
+
 				?>
 					<a
 					href="<?php
-				
+
 				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'deleteresult', 'id' => $user->getItemId () ), null, true );
 				?>"
 					class="icon delete"><?php
-				
+
 				echo $this->translate ( 'report_group_button_view' );
-				?></a
-				
+				?></a>
+
 				</td>
 
 
@@ -106,7 +106,7 @@ $acl = Zend_Registry::get ( 'acl' );
 
 	<a id="addlink" class="button small green"
 		href="<?php
-		
+
 		echo $this->url ( array ('action' => 'generate' ), null, false );
 		?>"><span><?php echo $this->translate('report_group_button_generate');?></span></a>
 </div>
