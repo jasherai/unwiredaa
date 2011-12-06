@@ -28,6 +28,30 @@ $(function () {
     endif;
 ?>
 
+	function showTemplateSelectGroup()
+	{
+		if ($('#template_id option').length > 0) {
+			if (!$('#template_id).parent().find('ul.errors')) {
+				return;
+			}
+
+			var ulErrors = !$('#template_id).parent().find('ul.errors');
+			if ($(ulErrors).children().length == 1) {
+				$(ulErrors).remove();
+			} else {
+				$(ulErrors).find('li.nogroup').remove();
+			}
+		} else {
+			if (!$('#template_id).parent().find('ul.errors')) {
+				$('#template_id).parent().append('<ul class="errors" />');
+			}
+
+			$('#template_id).parent()
+							  .find('ul.errors')
+							    .prepend('<li class="nogroup"><?php echo $this->translate('captive_index_edit_form_template_select_group');?></li>');
+		}
+	}
+
     $(".grouptree")
         .jstree({
             "plugins" : ["themes","html_data","ui"],
