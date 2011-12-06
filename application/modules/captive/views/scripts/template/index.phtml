@@ -14,14 +14,14 @@
 			<?php
 			if ($acl->isAllowed($this->currentUser, 'captive_template', 'add')) :
 			?>
-			<a class="add" href="<?php
+		<!-- 	<a class="add" href="<?php
 				echo $this->url(array('module' => 'captive',
 									  'controller' => 'template',
 									  'action' => 'add'), null, true);
 				?>"><img src="<?php
 					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
 				?>" alt="<?php echo $this->translate('captive_template_index_button_add'); ?>" /> <?php echo $this->translate('captive_template_index_button_add'); ?></a>
-
+		-->
 			<?php
 			endif;
 			?>
