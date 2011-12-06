@@ -36,6 +36,10 @@ class Captive_IndexController extends Unwired_Controller_Crud
 		     */
 		        $this->_autoRedirect = false;
 
+		        if (!$entity) {
+		            $entity = new Captive_Model_SplashPage();
+		        }
+
 		        $result = parent::_add($mapper, $entity, $form);
 
 		        if (!$result) {
