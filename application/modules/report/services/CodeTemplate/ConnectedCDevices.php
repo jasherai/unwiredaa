@@ -45,48 +45,55 @@ class Report_Service_CodeTemplate_ConnectedCDevices extends Report_Service_CodeT
 
     protected function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-		
+	
         foreach ($groupIds as $k => $v) {
         
-        	$groupRel = $this->_getGroupRelations($groupIds);
-        	
+        	$groupRel = $this->_getGroupRelations(array($v));
+        	 
 	        $select = $db->select()
-		        ->from(array('c' => $this->_group), array('group_name' => 'name', 'group_id'))
-		        ->join(array('b' => $this->_network_user), 'b.group_id = c.group_id', array('username'))
-		        ->joinLeft(array('a' => $this->_internet_sess), 'a.user_id = b.user_id AND a.start_time >= '.$dateFrom.' AND a.start_time <= '.$dateTo.' AND groupname = "Guest"', array('*'))
-		        ->where('c.group_id IN (?)', $groupRel);
-	        
+	        	->from(array('a' => 'acct_internet_session'), array('*'))
+	        	->join(array('b' => 'acct_internet_roaming'), 'a.session_id = b.session_id')
+	        	->join(array('c' => 'node'), 'b.node_id = c.node_id')
+	        	->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
+	        	->joinLeft(array('e' => 'network_user'), 'a.user_id = e.user_id', array('username'))
+	        	->where('a.start_time >= ?', $dateFrom)
+	        	->where('a.start_time <= ?', $dateTo)
+		        ->where('a.groupname = "Guest"')
+		        ->where('d.group_id IN (?)', $groupRel);
+
 	        $_iresult = $db->fetchAll($select);
+	        
 	    	$iresult = array();
 	    	$groupTotals[$v] = 0;
 	        foreach ($_iresult as $key => $value) {
-	        	
-	        	if ($value['username'] == '') {
-	        		$value['cnt_by_group'] = 0;
+	        	if (!isset($iresult[$v]['normal'][$value['username']])) {
+	        		$groupTotals[$v] ++;
+	        		$iresult[$v]['normal'][$value['username']] = $value;
 	        	}
-	        	$groupTotals[$v] ++;
-	        	$iresult[$v]['normal'][] = $value;
 	        }
 	        
 
 	        $select = $db->select()
-		        ->from(array('c' => $this->_group), array('group_name' => 'name', 'group_id'))
-		        ->join(array('b' => $this->_network_user), 'b.group_id = c.group_id', array('username'))
-		        ->joinLeft(array('a' => $this->_internet_sess), 'a.user_id = b.user_id AND a.start_time >= '.$dateFrom.' AND a.start_time <= '.$dateTo.' AND groupname = "MACAuthenticated"', array('*'))
-		        ->where('c.group_id IN (?)', $groupRel)
-		        ->group('c.group_id');
-	        
+		        ->from(array('a' => 'acct_internet_session'), array('*'))
+		        ->join(array('b' => 'acct_internet_roaming'), 'a.session_id = b.session_id')
+		        ->join(array('c' => 'node'), 'b.node_id = c.node_id')
+		        ->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
+		        ->joinLeft(array('e' => 'network_user'), 'a.user_id = e.user_id', array('username'))
+		        ->where('d.group_id IN (?)', $groupRel)
+		        ->where('a.start_time >= ?', $dateFrom)
+		        ->where('a.start_time <= ?', $dateTo)
+		        ->where('(a.groupname = "MACAuthenticated" OR a.groupname = "Authenticated")');
+			
 	        $_mresult = $db->fetchAll($select);
 	   		$maccount[$v] = 0;
 	        foreach ($_mresult as $key => $value) {
 	        
-	        	if ($value['username'] == '') {
-	        		$value['cnt_by_group'] = 0;
+	        	if (!isset($iresult[$v]['mac'][$value['username']])) {
+	        		$iresult[$v]['mac'][$value['username']] = $value;
+	        		$maccount[$v] ++;
 	        	}
-	        
-	        	$iresult[$v]['mac'][] = $value;
 	        	
-	        	$maccount[$v] ++;
+	        	
 	        }
 	        
         }

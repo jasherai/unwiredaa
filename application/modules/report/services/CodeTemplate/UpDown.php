@@ -18,14 +18,6 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
     protected $_node = 'node';
     protected $_roaming_table = 'acct_internet_roaming';
     
-    private function _convertTraffic($amount) {
-    	if ($amount < 1000000) {
-    		return number_format($amount/100000, 2).'KB';
-    	} else {
-    		return number_format($amount/1000000, 2).'MB';
-    	}
-    }
-    
     
     protected function getTemplate($groupIds, $data) {
         //$groupRel = $this->_getGroupRelations($groupIds);
@@ -38,34 +30,21 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
             
             $html .= '<table class="listing">';
             $html .= '<tr><th>Group / User Name</th><th style="text-align: center;">Total Bytes Up</th><th style="text-align: center;">Total Bytes Down</td></tr>';
-            $htmlGroupTot = '<tr><td><strong>'.$v['total']['name'].'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['down']).'</strong></td></tr>';
+            $htmlGroupTot = '<tr><td><strong>'.$v['total']['name'].'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($groupTotals[$k]['total']['bytes_down']).'</strong></td></tr>';
             $html .= $htmlGroupTot;
             foreach ($v['ap'] as $kk => $vv) {
-            	$html .= '<tr><td><strong><i>&nbsp;&nbsp;&nbsp;&nbsp;Node '.$vv['name'].' ('.$vv['mac'].')</strong></i></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['down']).'</strong></td></tr>';
+            	$html .= '<tr><td><strong><i>&nbsp;&nbsp;&nbsp;&nbsp;Node '.$vv['name'].' ('.$vv['mac'].')</strong></i></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($vv['bytes_down']).'</strong></td></tr>';
             	
             	foreach ($result[$k][$kk] as $key => $value) {
-            		$html .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value['username'] . ' <!--('.$value['user_id'].')--></td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_up']).'</td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_down']).'</td></tr>';
+            		$html .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value['username'] . ' </td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_up']).'</td><td style="text-align: right;">'.$this->_convertTraffic($value['bytes_down']).'</td></tr>';
             	}
             	
             }
             
-            
-            
-            /*
-            foreach ($result[$k] as $key => $value) {
-                if ($topgid == $value['group_id']) {
-                    $html .= '<tr><td> ' . $value['username'] . ' <!--('.$value['user_id'].')--></td><td style="text-align: right;">'.$value['total_bytes_up'].'b</td><td style="text-align: right;">'.$value['total_bytes_down'].'b</td></tr>';
-                 }
-            }
-            */
-//             /$html .= $htmlGroupTot;
+ 
             $html .= '</table>';
         }
-        
 
-        //$html = '';
-        
-        
         return $html;
     }
 
@@ -75,39 +54,45 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
         $groupRel = $this->_getGroupRelations($groupIds);
         
         $select = $db->select()
-                ->from(array('a' => $this->_inet_table), array('*', 'SUM(total_bytes_up) as bytes_up', 'SUM(total_bytes_down) as bytes_down'))
-                ->join(array('b' => $this->_network_user), 'a.user_id = b.user_id', array('group_id', 'username'))
-                ->join(array('c' => $this->_group), 'b.group_id = c.group_id', array('group_name' => 'name'))
-                ->join(array('d' => $this->_roaming_table), 'a.session_id = d.session_id', array('node_id'))
-                ->join(array('e' => $this->_node), 'd.node_id = e.node_id', array('node_name' => 'name', 'node_mac' => 'mac'))
-                ->where('b.group_id IN (?)', $groupRel)
+                ->from(array('a' => 'acct_internet_roaming'), array('*', 'SUM(a.total_bytes_up) as bytes_up', 'SUM(a.total_bytes_down) as bytes_down'))
+                ->join(array('b' => 'acct_internet_session'), 'a.session_id = b.session_id', array())
+                ->join(array('c' => 'network_user'), 'b.user_id = c.user_id', array('username'), array())
+                ->join(array('d' => 'node'), 'a.node_id = d.node_id', array('node_name' => 'name', 'node_mac' => 'mac'))
+                ->join(array('e' => 'group'), 'd.group_id = e.group_id', array('group_id', 'group_name' => 'name'))
+                ->where('e.group_id IN (?)', $groupRel)
                 ->where('a.start_time >= ?', $dateFrom)
                 ->where('a.start_time <= ?', $dateTo)
-                ->group('user_id');
+                ->where('NOT ISNULL(a.stop_time)')
+                ->group('a.session_id');
 		
         $result = $db->fetchAll($select);
-		
+   
         
         $data = array();
         foreach ($result as $key => $value) {
         	if (!isset($groupTotals[$value['group_id']])){
-        		$groupTotals[$value['group_id']] = array('total' => array('up' => 0, 'down' => 0, 'name' => ''));
+        		$groupTotals[$value['group_id']] = array('total' => array('bytes_up' => 0, 'bytes_down' => 0, 'name' => ''));
         	}
         	
-        	$groupTotals[$value['group_id']]['total']['up'] += $value['bytes_up'];
-        	$groupTotals[$value['group_id']]['total']['down'] += $value['bytes_down'];
+        	$groupTotals[$value['group_id']]['total']['bytes_up'] += $value['bytes_up'];
+        	$groupTotals[$value['group_id']]['total']['bytes_down'] += $value['bytes_down'];
         	$groupTotals[$value['group_id']]['total']['name'] = $value['group_name'];
         	
         	if (!isset($groupTotals[$value['group_id']]['ap'][$value['node_id']])){
-        		$groupTotals[$value['group_id']]['ap'][$value['node_id']] = array('up' => 0, 'down' => 0, 'name' => '');
+        		$groupTotals[$value['group_id']]['ap'][$value['node_id']] = array('bytes_up' => 0, 'bytes_down' => 0, 'name' => '');
         	}
         	
-        	$groupTotals[$value['group_id']]['ap'][$value['node_id']]['up'] += $value['bytes_up'];
-        	$groupTotals[$value['group_id']]['ap'][$value['node_id']]['down'] += $value['bytes_down'];
+        	$groupTotals[$value['group_id']]['ap'][$value['node_id']]['bytes_up'] += $value['bytes_up'];
+        	$groupTotals[$value['group_id']]['ap'][$value['node_id']]['bytes_down'] += $value['bytes_down'];
         	$groupTotals[$value['group_id']]['ap'][$value['node_id']]['name'] = $value['node_name'];
         	$groupTotals[$value['group_id']]['ap'][$value['node_id']]['mac'] = $value['node_mac'];
         	
-        	$data[$value['group_id']][$value['node_id']][] = $value;
+        	if (isset($data[$value['group_id']][$value['node_id']][$value['username']])) {
+        		$data[$value['group_id']][$value['node_id']][$value['username']]['bytes_up'] += $value['bytes_up'];
+        		$data[$value['group_id']][$value['node_id']][$value['username']]['bytes_down'] += $value['bytes_down'];
+        	} else {
+        		$data[$value['group_id']][$value['node_id']][$value['username']] = $value;
+        	}
         }
         
         return array('data' => $data, 'totals' => $groupTotals);

@@ -23,16 +23,17 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
         $groupTotals = $data['totals'];
         
         $html = '';
+       
         
         foreach ($result as $k => $v) {
         
 	        $html .= '<table class="listing">';
-	        $html .= '<tr><th>Group Name</th><th style="text-align: center;">Internet Connected Clients</th><th style="text-align: center;">MAC Authenticated</th></tr>';
-	        $html .= '<tr><td><strong>Total</td><td style="text-align:right;"><strong>'.$groupTotals['total'][$k].'</strong></td><td style="text-align:right;"><strong>'.$groupTotals['mac'][$k].'</strong></td>';
+	        $html .= '<tr><th>Group Name</th><th style="text-align: center;">Garden Users</th><th style="text-align: center;">Internet Connected Clients</th><th style="text-align: center;">MAC Authenticated</th></tr>';
+	        $html .= '<tr><td><strong>Total</td><td style="text-align:right;"><strong>'.$groupTotals['garden'][$k].'</strong></td><td style="text-align:right;"><strong>'.$groupTotals['total'][$k].'</strong></td><td style="text-align:right;"><strong>'.(((int)$groupTotals['mac'][$k] > 0)?$groupTotals['mac'][$k]:0).'</strong></td></tr>';
 	        foreach ($v as $key => $value) {
-	        	$html .= '<tr><td>'.$value['group_name'].'</td><td style="text-align:right;">'.$value['cnt_by_group'].'</td><td style="text-align:right;">'.$value['mac'].'</td>';	
+	        	$html .= '<tr><td>'.$value['garden']['group_name'].'</td><td style="text-align:right;">'.$value['garden']['cnt_by_group'].'</td><td style="text-align:right;">'.$value['normal']['cnt_by_group'].'</td><td style="text-align:right;">'.(($value['mac'] > 0)?$value['mac']:0).'</td></tr>';	
 	        }
-	        $html .= '<tr><th>Total</th><th style="text-align:right;">'.$data['totals']['total'].'</th><th style="text-align:right;">'.$data['totals']['mac'].'</th>';
+	        $html .= '<tr><td><strong>Total</td><td style="text-align:right;"><strong>'.$groupTotals['garden'][$k].'</strong></td><td style="text-align:right;"><strong>'.$groupTotals['total'][$k].'</strong></td><td style="text-align:right;"><strong>'.(((int)$groupTotals['mac'][$k] > 0)?$groupTotals['mac'][$k]:0).'</strong></td></tr>';
         }
         
         return $html;
@@ -41,44 +42,68 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
     protected function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		
+        $iresult = array();
+        
         foreach ($groupIds as $k => $v) {
         
-        	$groupRel = $this->_getGroupRelations($groupIds);
+        	$groupRel = $this->_getGroupRelations(array($v));
+        	
+        	$select = $db->select()
+	        	->from(array('a' => 'acct_garden_session'), array('COUNT(*) as cnt_by_group'))
+	        	->join(array('b' => 'acct_garden_roaming'), 'a.session_id = b.session_id')
+	        	->join(array('c' => 'node'), 'b.node_id = c.node_id')
+	        	->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
+	        	->where('d.group_id IN (?)', $groupRel)
+	        	->where('a.start_time >= ?', $dateFrom)
+	        	->where('a.start_time <= ?', $dateTo)
+	        	->where('NOT ISNULL(a.stop_time)')
+	        	->group('d.group_id');
+  			
+        	$_gresult = $db->fetchAll($select);
+        	
+        	$gtotals[$v] = 0;
+        	foreach ($_gresult as $key => $value) {
+        	
+        		$gtotals[$v] += $value['cnt_by_group']; 
+        		$iresult[$v][$value['group_id']]['garden'] = $value;
+        	}
         	
 	        $select = $db->select()
-		        ->from(array('c' => $this->_group), array('group_name' => 'name', 'group_id'))
-		        ->joinLeft(array('b' => $this->_network_user), 'b.group_id = c.group_id', array('username'))
-		        ->joinLeft(array('a' => $this->_internet_sess), 'a.user_id = b.user_id AND a.start_time >= '.$dateFrom.' AND a.start_time <= '.$dateTo, array('COUNT(*) as cnt_by_group'))
-		        ->where('c.group_id IN (?)', $groupRel)
-		        ->group('c.group_id');
+		        ->from(array('a' => 'acct_internet_session'), array('COUNT(*) as cnt_by_group'))
+		        ->join(array('b' => 'acct_internet_roaming'), 'a.session_id = b.session_id')
+		        ->join(array('c' => 'node'), 'b.node_id = c.node_id')
+		        ->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
+		        ->where('d.group_id IN (?)', $groupRel)
+		        ->where('a.start_time >= ?', $dateFrom)
+		        ->where('a.start_time <= ?', $dateTo)
+		        ->where('NOT ISNULL(a.stop_time)')
+		        ->group('d.group_id');
 	        
 	        $_iresult = $db->fetchAll($select);
-	    	$iresult = array();
+	    	
 	    	$groupTotals[$v] = 0;
 	        foreach ($_iresult as $key => $value) {
 	        	
-	        	if ($value['username'] == '') {
-	        		$value['cnt_by_group'] = 0;
-	        	}
 	        	$groupTotals[$v] += $value['cnt_by_group'];
-	        	$iresult[$v][$value['group_id']] = $value;
+	        	$iresult[$v][$value['group_id']]['normal'] = $value;
 	        }
 	        
 
 	        $select = $db->select()
-		        ->from(array('c' => $this->_group), array('group_name' => 'name', 'group_id'))
-		        ->joinLeft(array('b' => $this->_network_user), 'b.group_id = c.group_id', array('username'))
-		        ->joinLeft(array('a' => $this->_internet_sess), 'a.user_id = b.user_id AND a.start_time >= '.$dateFrom.' AND a.start_time <= '.$dateTo.' AND groupname = "MACAuthenticated"', array('COUNT(*) as cnt_by_group'))
-		        ->where('c.group_id IN (?)', $groupRel)
-		        ->group('c.group_id');
+		        ->from(array('a' => 'acct_internet_session'), array('COUNT(*) as cnt_by_group'))
+		        ->join(array('b' => 'acct_internet_roaming'), 'a.session_id = b.session_id')
+		        ->join(array('c' => 'node'), 'b.node_id = c.node_id')
+		        ->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
+		        ->where('d.group_id IN (?)', $groupRel)
+		        ->where('a.start_time >= ?', $dateFrom)
+		        ->where('a.start_time <= ?', $dateTo)
+		        ->where('NOT ISNULL(a.stop_time)')
+		        ->where('(a.groupname = "MACAuthenticated" OR a.groupname = "Authenticated")')
+		        ->group('d.group_id');
 	        
 	        $_mresult = $db->fetchAll($select);
 	   		$maccount[$v] = 0;
 	        foreach ($_mresult as $key => $value) {
-	        
-	        	if ($value['username'] == '') {
-	        		$value['cnt_by_group'] = 0;
-	        	}
 	        
 	        	$iresult[$v][$value['group_id']]['mac'] = $value['cnt_by_group'];
 	        	
@@ -87,7 +112,7 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
         }
         
         
-        return array ('data' => $iresult, 'totals' => array('total' => $groupTotals, 'mac' => $maccount) );
+        return array ('data' => $iresult, 'totals' => array('garden' => $gtotals, 'total' => $groupTotals, 'mac' => $maccount) );
         
        
     }

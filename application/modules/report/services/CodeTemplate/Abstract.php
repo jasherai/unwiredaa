@@ -45,6 +45,16 @@ abstract class Report_Service_CodeTemplate_Abstract {
 		return array_keys($relations);
 	}
 	
+	protected function _convertTraffic($amount) {
+		if ($amount < 1000000) {
+			return number_format($amount/1000, 2).'KB';
+		} if ($amount < 1000000000) {
+			return number_format($amount/1000000, 2).'MB';
+		} else {
+			return number_format($amount/1000000000, 2).'GB';
+		}
+	}
+	
 	public function getReport($groupIds, $dateFrom, $dateTo) {
 		$data = $this->getData ( $groupIds, $dateFrom, $dateTo );
 		
