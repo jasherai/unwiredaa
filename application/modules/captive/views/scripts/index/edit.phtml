@@ -35,7 +35,7 @@ $(function () {
 				return;
 			}
 
-			var ulErrors = !$('#template_id').parent().find('ul.errors');
+			var ulErrors = $('#template_id').parent().find('ul.errors');
 			if ($(ulErrors).children().length == 1) {
 				$(ulErrors).remove();
 			} else {
