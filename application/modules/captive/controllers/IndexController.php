@@ -72,6 +72,11 @@ class Captive_IndexController extends Unwired_Controller_Crud
         $this->_edit(null, new Captive_Form_SplashPage());
     }
 
+    public function deleteAction()
+    {
+        parent::_delete();
+    }
+
     public function groupTemplatesAction()
     {
         $this->_helper->layout->disableLayout();
