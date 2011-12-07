@@ -62,7 +62,8 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
 	        $select = $db->select()
 	                ->from(array('a' => $this->_node))
 	                ->join(array('b' => $this->_group), 'b.group_id = a.group_id', array('group_id', 'name as group_name'))
-	                ->where('b.group_id IN (?)', $groupRel);
+	                ->where('b.group_id IN (?)', $groupRel)
+			->order(array('b.name', 'a.name'));
 			
 	             
 	        $result[$v] = $db->fetchAll($select);
