@@ -217,7 +217,8 @@ set crontabs.@crontab[2].enabled=0
 	if ($this->node->getSettings()->getTrafficlimit() > 0) :
 ?>
 set custom.limits=traffic
-set custom.limits.traffic=4000
+set custom.limits.traffic=<?php echo $this->node->getSettings()->getTrafficlimit(); ?>
+
 <?php
 	endif;
 ?>
