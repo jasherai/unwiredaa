@@ -84,7 +84,7 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 		        	->join(array('c' => 'node'), 'b.node_id = c.node_id')
 		        	->join(array('d' => 'group'), 'c.group_id = d.group_id', array('d.name as group_name','d.group_id'))
 		        	->where('d.group_id IN (?)', $groupRel)
-			        ->where('DATE(a.start_time) BETWEEN ? AND ?', $dateFrom, $dateTo)
+			        ->where("DATE(a.start_time) BETWEEN '$dateFrom' AND '$dateTo'")
 		        	->where('NOT ISNULL(a.stop_time)')
 		        	->group('d.group_id');
 
@@ -101,9 +101,9 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 				        ->join(array('b' => 'acct_internet_roaming'), 'a.session_id = b.session_id')
 				        ->join(array('c' => 'node'), 'b.node_id = c.node_id')
 				        ->where('c.group_id IN (?)', $groupRel)
-				        ->where('DATE(a.start_time) BETWEEN ? AND ?', $dateFrom, $dateTo)
+				        ->where("DATE(a.start_time) BETWEEN '$dateFrom' AND '$dateTo'")
 				        ->where('NOT ISNULL(a.stop_time)')
-				        ->where('a.groupname = "'.$user_type_val.'"')
+				        ->where("a.groupname = '$user_type_val'")
 				        ->group('c.group_id');
 
 			   	$totals[$user_type_key][$v] = 0;
