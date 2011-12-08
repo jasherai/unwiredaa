@@ -33,14 +33,26 @@ class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTem
         $html = '';
         foreach ($groupTotals as $k => $v) {
 			$html .= '<table class="listing">';
-			$html .= '<tr><th>Device Name</th><th>Download</th><th>Upload</th></tr>';
+			$html .= '<tr><th>Device Name</th>
+<th>Download</th>
+<th>Upload</th>
+<th>Total</th>
+</tr>';
 			
         	
-			$htmlGroupTot = '<tr><td><strong>Total: </strong></td><td style="text-align: right;"><strong>' . $this->_convertTraffic($groupTotals[$k]['down_total']) .'</strong></td><td style="text-align: right;"><strong>' . $this->_convertTraffic($groupTotals[$k]['up_total']) .'</strong></td></tr>';
+			$htmlGroupTot = '<tr><td><strong>Total: </strong></td>
+<td style="text-align: right;"><strong>' . $this->_convertTraffic($groupTotals[$k]['down_total']) .'</strong></td>
+<td style="text-align: right;"><strong>' . $this->_convertTraffic($groupTotals[$k]['up_total']) .'</strong></td>
+<td style="text-align: right;"><strong>' . $this->_convertTraffic($groupTotals[$k]['traffic_total']) .'</strong></td>
+</tr>';
 	        $html .= $htmlGroupTot;
 	            
 			foreach ($result[$k] as $key => $value) {
-				$html .= '<tr><td>'.$value['username'].'</td><td style="text-align: right;">'.$this->_convertTraffic($value['down_total']).'</td><td style="text-align: right;">'.$this->_convertTraffic($value['up_total']).'</td></tr>';
+				$html .= '<tr><td>'.$value['username'].'</td>
+<td style="text-align: right;">'.$this->_convertTraffic($value['down_total']).'</td>
+<td style="text-align: right;">'.$this->_convertTraffic($value['up_total']).'</td>
+<td style="text-align: right;">'.$this->_convertTraffic($value['traffic_total']).'</td>
+</tr>';
 			}
 	            
 			$html .= $htmlGroupTot;
@@ -66,13 +78,14 @@ class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTem
                 $select = $db->select()
                                 ->from(array('u' => 'network_user'), 'u.*')
                         ->join(array('s' => 'acct_internet_session'), 'u.user_id = s.user_id')
-                        ->join(array('r' => 'acct_internet_roaming'), 's.session_id = r.session_id', 'SUM(r.total_bytes_up) as up_total, SUM(r.total_bytes_down) as down_total')
+                        ->join(array('r' => 'acct_internet_roaming'), 's.session_id = r.session_id', 'SUM(r.total_bytes_up) as up_total, SUM(r.total_bytes_down) as down_total, SUM(r.total_bytes_up)+SUM(r.total_bytes_down) as traffic_total')
                         ->join(array('n' => 'node'), 'r.node_id = n.node_id')
                         ->join(array('g' => 'group'), 'n.group_id = g.group_id', array('group_id', 'name as group_name'))
                         ->where('g.group_id IN (?)', $groupRel)
-                        ->where('DATE(r.start_time) BETWEEN ? AND ? ', $dateFrom, $dateTo)
+                        ->where("DATE(r.start_time) BETWEEN '$dateFrom' AND '$dateTo' ")
+			->where ( 'NOT ISNULL(r.stop_time)' )
                         ->group('u.user_id')
-                        ->order('down_total DESC') /*order by total (up+down) might be better?*/
+                        ->order('traffic_total DESC') /*order by total (up+down) is better -> move the + from php to sql*/
                         ->limit(50);
 	        
 	        $result[$v] = $db->fetchAll($select);
@@ -81,6 +94,7 @@ class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTem
 
 				$groupTotals[$v]['down_total'] += $value['down_total'];
 				$groupTotals[$v]['up_total'] += $value['up_total'];
+				$groupTotals[$v]['traffic_total'] += $value['traffic_total'];
             }
         }
         
