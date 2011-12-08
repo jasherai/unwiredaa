@@ -61,32 +61,18 @@ class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTem
         	
         	$groupTotals[$v] = array('cnt' => 0, 'down_total' => 0, 'up_total' => 0);
 	        $groupRel = $this->_getGroupRelations(array($v));
-/*	        
-	        $select = $db->select()
-        			->from(array('a' => 'network_user'), 'a.*')
-	                ->join(array('b' => 'acct_internet_session'), 'a.user_id = b.user_id', 'SUM(b.total_bytes_up) as up_total, SUM(b.total_bytes_down) as down_total')
-	                ->join(array('c' => 'acct_internet_roaming'), 'b.session_id = c.session_id')
-	                ->join(array('d' => 'node'), 'c.node_id = d.node_id')
-	                ->join(array('e' => 'group'), 'd.group_id = e.group_id', array('group_id', 'name as group_name'))
-	                ->where('e.group_id IN (?)', $groupRel)
-	                ->where('b.start_time >= ?', $dateFrom)
-	                ->where('b.start_time <= ?', $dateTo)
-	                ->group('a.user_id')
-	                ->order('down_total DESC')
-	                ->limit(50);
-*/
+
 /*use the roaming sessions, as the contain only the traffic of the nodes in the seleted groups, and are not harmed/multiplied by the number of roamings per user*/
                 $select = $db->select()
                                 ->from(array('u' => 'network_user'), 'u.*')
-                        ->join(array('s' => 'acct_internet_session'), 'u.user_id = s.user_id', 'SUM(r.total_bytes_up) as up_total, SUM(r.total_bytes_down) as down_total')
-                        ->join(array('r' => 'acct_internet_roaming'), 's.session_id = r.session_id')
+                        ->join(array('s' => 'acct_internet_session'), 'u.user_id = s.user_id')
+                        ->join(array('r' => 'acct_internet_roaming'), 's.session_id = r.session_id', 'SUM(r.total_bytes_up) as up_total, SUM(r.total_bytes_down) as down_total')
                         ->join(array('n' => 'node'), 'r.node_id = n.node_id')
                         ->join(array('g' => 'group'), 'n.group_id = g.group_id', array('group_id', 'name as group_name'))
                         ->where('g.group_id IN (?)', $groupRel)
-                        ->where('DATE(s.start_time) >= ?', $dateFrom)
-                        ->where('DATE(s.start_time) <= ?', $dateTo)
+                        ->where('DATE(r.start_time) BETWEEN ? AND ? ', $dateFrom, $dateTo)
                         ->group('u.user_id')
-                        ->order('down_total DESC')
+                        ->order('down_total DESC') /*order by total (up+down) might be better?*/
                         ->limit(50);
 	        
 	        $result[$v] = $db->fetchAll($select);
