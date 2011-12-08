@@ -83,9 +83,8 @@ class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTem
                         ->join(array('n' => 'node'), 'r.node_id = n.node_id')
                         ->join(array('g' => 'group'), 'n.group_id = g.group_id', array('group_id', 'name as group_name'))
                         ->where('g.group_id IN (?)', $groupRel)
-                        ->where('r.start_time >= ?', $dateFrom)
-                        ->where('r.start_time <= ?', $dateTo)
-                        ->where('r.stop_time IS NOT NULL')
+                        ->where('DATE(s.start_time) >= ?', $dateFrom)
+                        ->where('DATE(s.start_time) <= ?', $dateTo)
                         ->group('u.user_id')
                         ->order('down_total DESC')
                         ->limit(50);

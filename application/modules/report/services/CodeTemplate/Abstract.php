@@ -55,6 +55,17 @@ abstract class Report_Service_CodeTemplate_Abstract {
 		}
 	}
 	
+	protected function _getMac($dec) {
+		
+		$tmp = str_pad(base_convert($dec, 10, 16), 12, 0, STR_PAD_LEFT);
+		$result = '';
+		for ($i=0;$i<6;$i++) {
+			$result[] = substr($tmp, $i*2, 2);
+		}
+		return strtoupper(implode('-', $result));
+		
+	}
+	
 	public function getReport($groupIds, $dateFrom, $dateTo) {
 		$data = $this->getData ( $groupIds, $dateFrom, $dateTo );
 		
