@@ -26,15 +26,16 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
 		$groupTotals = $data ['totals'];
 		
 		$html = '';
+		$seperator = '<tr height=15><th style="border-top:solid navy 2px; background:none;" colspan=4></th></tr>';
 		$total_up = $total_down = 0;
 		foreach ( $groupTotals as $k => $v ) {
 			
-			$html .= '<table class="listing">';
-			$html .= '<tr><th>Group / User Name</th>
+			$html .= $seperator.'<tr><th>Group / User Name</th>
 <th style="text-align: center;">Download</th>
 <th style="text-align: center;">Upload</td>
 <th style="text-align: center;">Total</td></tr>';
-			$htmlGroupTot = '<tr><td><strong>' . $v ['total'] ['name'] . '</strong></td>
+			$htmlGroupTot = '
+<tr><td><strong>' . $v ['total'] ['name'] . '</strong></td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] ) . '</strong></td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_up'] ) . '</strong></td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] + $groupTotals [$k] ['total'] ['bytes_up'] ) . '</strong></td></tr>';
@@ -54,23 +55,19 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
 			
 			}
 			
-			$html .= '</table>';
 		}
-		
-		/*there shouldn`t be seperate tabels as the layout looks bad,. */
-		
-		/*but as there already are, we continue with it,.*/
-		$total_html = '<table class="listing"><tr>
-<th width=50%>Total</th>
-<th>Total Download</th>
-<th>Total Upload</th><th>Total</th></tr>
+		$total_html = '<tr>
+<th>Total</th>
+<th style="text-align: center;">Total Download</th>
+<th style="text-align: center;">Total Upload</th>
+<th style="text-align: center;">Total</th></tr>
 <tr><td></td>
-<td><strong>' . $this->_convertTraffic ( $total_down ) . '</strong></td>
-<td><strong>' . $this->_convertTraffic ( $total_up ) . '</strong></td>
-<td><strong>' . $this->_convertTraffic ( $total_up + $total_down ) . '</strong></td>
-</tr></table>';
+<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $total_down ) . '</strong></td>
+<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $total_up ) . '</strong></td>
+<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $total_up + $total_down ) . '</strong></td>
+</tr>';
 
-		return $total_html. $html . $total_html;
+		return '<table class="listing">'.$total_html. $html . $seperator . $total_html . '</table>';
 	}
 	
 	protected function getData($groupIds, $dateFrom, $dateTo) {
@@ -87,6 +84,7 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
 			->where ( 'e.group_id IN (?)', $groupRel )
 			->where("DATE(a.start_time) BETWEEN '$dateFrom' AND '$dateTo'")
 			->where ( 'NOT ISNULL(a.stop_time)' )
+			->order ( array('node_name ASC','username ASC') )
 			->group ( 'a.id');
 		
 		$result = $db->fetchAll ( $select );
