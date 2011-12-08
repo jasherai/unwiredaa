@@ -25,7 +25,7 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
         $html = '';
        
         
-        foreach ($result as $k => $v) {
+        foreach ($result as $k => $v) { /*show header with groupname ($k==group_id)*/
         
 	        $html .= '<table class="listing">';
 	        $html .= '<tr><th>Group Name</th><th style="text-align: center;">Garden Users</th><th style="text-align: center;">Internet Connected Clients</th><th style="text-align: center;">MAC Authenticated</th></tr>';
@@ -54,8 +54,7 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
 	        	->join(array('c' => 'node'), 'b.node_id = c.node_id')
 	        	->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
 	        	->where('d.group_id IN (?)', $groupRel)
-	        	->where('a.start_time >= ?', $dateFrom)
-	        	->where('a.start_time <= ?', $dateTo)
+	        	->where('DATE(a.start_time) BETWEEN ? AND ? ', $dateFrom, $dateTo)
 	        	->where('NOT ISNULL(a.stop_time)')
 	        	->group('d.group_id');
   			
@@ -74,8 +73,7 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
 		        ->join(array('c' => 'node'), 'b.node_id = c.node_id')
 		        ->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
 		        ->where('d.group_id IN (?)', $groupRel)
-		        ->where('a.start_time >= ?', $dateFrom)
-		        ->where('a.start_time <= ?', $dateTo)
+	        	->where('DATE(a.start_time) BETWEEN ? AND ? ', $dateFrom, $dateTo)
 		        ->where('NOT ISNULL(a.stop_time)')
 		        ->group('d.group_id');
 	        
@@ -95,8 +93,7 @@ class Report_Service_CodeTemplate_InternetConnectedCDevices extends Report_Servi
 		        ->join(array('c' => 'node'), 'b.node_id = c.node_id')
 		        ->join(array('d' => 'group'), 'c.group_id = d.group_id', array('group_name' => 'name', 'group_id'))
 		        ->where('d.group_id IN (?)', $groupRel)
-		        ->where('a.start_time >= ?', $dateFrom)
-		        ->where('a.start_time <= ?', $dateTo)
+	        	->where('DATE(a.start_time) BETWEEN ? AND ? ', $dateFrom, $dateTo)
 		        ->where('NOT ISNULL(a.stop_time)')
 		        ->where('(a.groupname = "MACAuthenticated" OR a.groupname = "Authenticated")')
 		        ->group('d.group_id');
