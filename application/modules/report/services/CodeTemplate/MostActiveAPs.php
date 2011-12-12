@@ -17,15 +17,13 @@ class Report_Service_CodeTemplate_MostActiveAPs extends Report_Service_CodeTempl
 
 		$result = $data ['data'];
 
-		$html = '';
-		$seperator = '<tr height=15><th style="border-top:solid navy 2px; background:none;" colspan=4></th></tr>';
-		$html .= $seperator.'<tr><th>Group / User Name</th>
+		$html = '<tr><th>Group</th><th>Node/AP Name</th>
 <th style="text-align: center;">Download</th>
 <th style="text-align: center;">Upload</td>
 <th style="text-align: center;">Total</td></tr>';
 
 		foreach ( $result as $k => $vv ) {
-			$html .= '<tr><td>'.$vv['group_name'].'/'.$vv['node_name'].' ('.$vv['node_mac'].') </td>
+			$html .= '<tr><td>'.$vv['group_name'].'</td><td><strong>'.$vv['node_name'].'</strong> ('.$vv['node_mac'].') </td>
 <td style="text-align: right;">' . $this->_convertTraffic ( $vv ['bytes_down'] ) . '</td>
 <td style="text-align: right;">' . $this->_convertTraffic ( $vv ['bytes_up'] ) . '</td>
 <td style="text-align: right;">' . $this->_convertTraffic ( $vv ['bytes_total'] ) . '</td></tr>';
