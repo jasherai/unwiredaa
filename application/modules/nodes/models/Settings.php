@@ -18,7 +18,7 @@ class Nodes_Model_Settings extends Unwired_Model_Generic
 {
 	protected $_nodeId = null;
 
-	protected $_ssid = null;
+	protected $_ssid = 'FreeWlanSkiamade';
 
 	protected $_activefrom = null;
 
