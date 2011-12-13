@@ -25,17 +25,44 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
 		$result = $data ['data'];
 		$groupTotals = $data ['totals'];
 		
-		$html = '';
+		$html = '
+        <script type="text/javascript">
+	      google.load("visualization", "1", {packages:["corechart"]});
+	      google.setOnLoadCallback(drawChart);
+	      function drawChart() {
+	        var data = new google.visualization.DataTable();
+	        data.addColumn("string", "Vendor");
+	        data.addColumn("number", "Traffic by Group");
+	    ';
+        	$html .= 'data.addRows('.count($groupTotals).');';
+        	$j = 0;
+	        foreach ($groupTotals as $key => $value) {
+	        	$html .= 'data.setValue('.$j.', 0, "'.$value['total']['name'].'");';
+	        	$html .= 'data.setValue('.$j.', 1, '.($value ['total'] ['bytes_down'] + $value['total'] ['bytes_up']).');';
+	        	$j++;
+	        }
+	        
+		$html .= '
+	        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
+	        chart.draw(data, {width: 450, height: 300, title: "Users by Vendor"});
+	      }
+	    </script>
+        
+        ';
+        
+        
+        $html .= '<div id="chart_div"></div>';
+		
 		$seperator = '<tr height=15><th style="border-top:solid navy 2px; background:none;" colspan=4></th></tr>';
 		$total_up = $total_down = 0;
 		foreach ( $groupTotals as $k => $v ) {
 			
-			$html .= $seperator.'<tr><th>Group / User Name</th>
+			$html .= $seperator.'<tr><th width="50%">Group / User Name</th>
 <th style="text-align: center;">Download</th>
 <th style="text-align: center;">Upload</td>
 <th style="text-align: center;">Total</td></tr>';
 			$htmlGroupTot = '
-<tr><td><strong>' . $v ['total'] ['name'] . '</strong></td>
+<tr><td width="50%"><strong>' . $v ['total'] ['name'] . '</strong></td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] ) . '</strong></td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_up'] ) . '</strong></td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] + $groupTotals [$k] ['total'] ['bytes_up'] ) . '</strong></td></tr>';
@@ -47,7 +74,7 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
 				$html .= '<tr><td><strong><i>&nbsp;&nbsp;&nbsp;&nbsp;Node ' . $vv ['name'] . ' (' . $vv ['mac'] . ')</strong></i></td><td style="text-align: right;"><strong>' . $this->_convertTraffic ( $vv ['bytes_down'] ) . '</strong></td><td style="text-align: right;"><strong>' . $this->_convertTraffic ( $vv ['bytes_up'] ) . '</strong></td><td style="text-align: right;"><strong>' . $this->_convertTraffic ( $vv ['bytes_down'] + $vv ['bytes_up'] ) . '</strong></td></tr>';
 				
 				foreach ( $result [$k] [$kk] as $key => $value ) {
-					$html .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value ['username'] . ' </td>
+					$html .= '<tr><td width="50%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value ['username'] . ' </td>
 <td style="text-align: right;">' . $this->_convertTraffic ( $value ['bytes_down'] ) . '</td>
 <td style="text-align: right;">' . $this->_convertTraffic ( $value ['bytes_up'] ) . '</td>
 <td style="text-align: right;"><strong>' . $this->_convertTraffic ( $value ['bytes_down'] + $value ['bytes_up'] ) . '</strong></td></tr>';

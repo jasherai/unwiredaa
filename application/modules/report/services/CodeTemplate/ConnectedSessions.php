@@ -23,6 +23,56 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 	        $html = '';
 
 		foreach ($result as $k => $v) {
+			
+			$html .= '
+			<script type="text/javascript">
+			google.load("visualization", "1", {packages:["corechart"]});
+			google.setOnLoadCallback(drawChart);
+			function drawChart() {
+			var data = new google.visualization.DataTable();
+			data.addColumn("string", "Status");
+			data.addColumn("number", "Traffic");
+			';
+			$html .= 'data.addRows(2);';
+			$j = 0;
+			$html .= 'data.setValue('.$j.', 0, "Offline");';
+			$html .= 'data.setValue('.$j.', 1, '.($totals['garden'][$k]).');';
+			$j++;
+			$html .= 'data.setValue('.$j.', 0, "Online");';
+			$html .= 'data.setValue('.$j.', 1, '.($totals['guest'][$k]+$totals['macauth'][$k]+$totals['auth'][$k]).');';
+			$j++;
+			
+			$html .= '
+			var chart = new google.visualization.PieChart(document.getElementById("chart_div'.$k.'"));
+			chart.draw(data, {width: 350, height: 300, title: "Traffic by Status"});
+			
+			var data = new google.visualization.DataTable();
+			data.addColumn("string", "Auth Method");
+			data.addColumn("number", "Traffic");
+			';
+			
+			$html .= 'data.addRows(3);';
+			$j = 0;
+			$html .= 'data.setValue('.$j.', 0, "Guest");';
+			$html .= 'data.setValue('.$j.', 1, '.($totals['guest'][$k]).');';
+			$j++;
+			$html .= 'data.setValue('.$j.', 0, "MAC Authenticated");';
+			$html .= 'data.setValue('.$j.', 1, '.($totals['macauth'][$k]).');';
+			$j++;
+			$html .= 'data.setValue('.$j.', 0, "Authenticated");';
+			$html .= 'data.setValue('.$j.', 1, '.($totals['auth'][$k]).');';
+			$j++;
+			
+			$html .= '
+			var chart = new google.visualization.PieChart(document.getElementById("chart_div2'.$k.'"));
+			chart.draw(data, {width: 350, height: 300, title: "Traffic by Authentication Method"});
+			}
+			</script>
+			
+			';
+			
+			
+			$html .= '<div id="chart_div'.$k.'" style="float: left;"></div><div id="chart_div2'.$k.'" style="float: left;"></div><div style="clear: both;"></div>';
 
 			$html .= '<table class="listing">';
 		        $html .= '<tr>

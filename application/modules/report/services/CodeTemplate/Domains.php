@@ -41,7 +41,7 @@ class Report_Service_CodeTemplate_Domains extends Report_Service_CodeTemplate_Ab
 	        
 		$html .= '
 	        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-	        chart.draw(data, {width: 450, height: 300, title: "Users by Vendor"});
+	        chart.draw(data, {width: 450, height: 300, title: "Domains"});
 	      }
 	    </script>
         

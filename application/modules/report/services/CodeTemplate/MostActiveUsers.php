@@ -23,14 +23,41 @@ class Report_Service_CodeTemplate_MostActiveUsers extends Report_Service_CodeTem
         $groupTotals = $data['totals'];
          
         
-        /*
-        foreach ($groupIds as $gid) {
-            if (!isset($groupTotals[$gid]) || $groupTotals[$gid]['cnt'] == 0){
-                continue;
-            }
-        */
+       $user = array();
+        foreach ($groupTotals as $k => $v) {
+        	foreach ($result[$k] as $key => $value) {
+        		$user[$value['username']] = $value['down_total'];
+        	}
+        }
 
-        $html = '';
+        $html = '
+        <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn("string", "User");
+        data.addColumn("number", "Traffic");
+        ';
+        $html .= 'data.addRows('.count($user).');';
+        $j = 0;
+        foreach ($user as $key => $value) {
+        	$html .= 'data.setValue('.$j.', 0, "'.$key.'");';
+        	$html .= 'data.setValue('.$j.', 1, '.$value.');';
+        	$j++;
+        }
+        
+        $html .= '
+        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
+        chart.draw(data, {width: 450, height: 300, title: "Most active users"});
+        }
+        </script>
+        
+        ';
+        
+        
+        $html .= '<div id="chart_div"></div>';
+        
         foreach ($groupTotals as $k => $v) {
 			$html .= '<table class="listing">';
 			$html .= '<tr><th>Device Name</th>

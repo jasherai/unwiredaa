@@ -27,8 +27,51 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
                 continue;
             }
         */
+        $counts = array('online' => 0, 'offline' => 0, 'planning' => 0);
+        foreach ($groupTotals as $k => $v) {
+        	foreach ($result[$k] as $key => $value) {
+        		if ($value['status'] == 'enabled') {
+        			if ($value['online_status'] == 1) {
+        				$counts['online']++;
+        			} else {
+        				$counts['offline']++;
+        			}
+        		} else {
+        			$counts['planning']++;
+        		}
+        	}
+        }
+        
+        
 
-        $html = '';
+        $html = '
+        <script type="text/javascript">
+	      google.load("visualization", "1", {packages:["corechart"]});
+	      google.setOnLoadCallback(drawChart);
+	      function drawChart() {
+	        var data = new google.visualization.DataTable();
+	        data.addColumn("string", "Status");
+	        data.addColumn("number", "AP Count");
+	    ';
+        	$html .= 'data.addRows(3);';
+        	$j = 0;
+	        foreach ($counts as $key => $value) {
+	        	$html .= 'data.setValue('.$j.', 0, "'.ucfirst($key).'");';
+	        	$html .= 'data.setValue('.$j.', 1, '.$value.');';
+	        	$j++;
+	        }
+	        
+		$html .= '
+	        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
+	        chart.draw(data, {width: 450, height: 300, title: "AP count by status"});
+	      }
+	    </script>
+        
+        ';
+        
+        
+        $html .= '<div id="chart_div"></div>';
+        
         foreach ($groupTotals as $k => $v) {
 			$html .= '<table class="listing">'; 
 			$html .= '<tr><th>Device Group</th><th>Device Name</th><th>Device Mac</th><th>AP Status</th></tr>';

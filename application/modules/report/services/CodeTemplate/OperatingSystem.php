@@ -40,7 +40,7 @@ class Report_Service_CodeTemplate_OperatingSystem extends Report_Service_CodeTem
         
         $html .= '
         var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-        chart.draw(data, {width: 450, height: 300, title: "Users by language"});
+        chart.draw(data, {width: 450, height: 300, title: "Users by OS"});
         }
         </script>
         
@@ -50,6 +50,8 @@ class Report_Service_CodeTemplate_OperatingSystem extends Report_Service_CodeTem
         $html .= '<table class="listing">';
         $html .= '<tr><th>Network username</th><th style="text-align: center;">MAC</th><th style="text-align: center;">OS</th></tr>';
         
+        //order by operating system title
+        ksort($result);
         foreach ($result as $k => $v) {            
             
             $html .= '<tr><td ><strong>'.$k.'</strong></td><td colspan="2"><strong>'.count($v).'</strong></td></tr>';

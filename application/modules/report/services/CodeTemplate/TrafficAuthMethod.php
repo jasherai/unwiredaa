@@ -19,11 +19,14 @@ class Report_Service_CodeTemplate_TrafficAuthMethod extends Report_Service_CodeT
 		$result = $data ['data'];
 		$groupTotals = $data ['totals'];
 		
+		ksort($groupTotals);
+		
 		$html = '';
 		$total_up = $total_down = 0;
 		
 		$html .= '<table class="listing">';
 		$html .= '<tr><th>Group / User Name</th><th style="text-align: center;">Download</th><th style="text-align: center;">Upload</td><th style="text-align: center;">Total</td></tr>';
+		
 		foreach ($groupTotals as $key => $value) {
 			$html .= '<tr><td><strong>'.$key.'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($value['bytes_down']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($value['bytes_up']).'</strong></td><td style="text-align: right;"><strong>'.$this->_convertTraffic($value['total']).'</strong></td></tr>';
 			foreach ($result[$key] as $k => $v) {
