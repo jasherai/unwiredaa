@@ -159,6 +159,12 @@ class Report_GroupController extends Unwired_Controller_Crud
 		$this->view->parent_parent = $parent_parent;
 		$this->view->parent = $parent;
 		$this->view->report = $report;
+
+		if ($this->_helper->contextSwitch->getCurrentContext() == 'csv') {
+		    $this->getResponse()->setHeader('Content-disposition',
+		                                    "attachment; filename={$parent->getTitle()}_" . str_replace(array(' ', '-'), '_', $report->getDateAdded()) . '.csv',
+		                                    true);
+		}
 	}
 
 	public function deleteAction()
