@@ -16,17 +16,17 @@ class Report_View_Helper_ArrayToCsv extends Zend_View_Helper_Abstract
 
     protected $_titles = true;
 
-    public function arrayToCSV($data, $titles = true)
+    public function arrayToCSV($data, $separator = ',', $titles = true)
     {
         $this->_titles = $titles;
 
-        $csv = $this->_convertToCsvString($data, true);
+        $csv = $this->_convertToCsvString($data, $separator, true);
         fclose($this->_getFp());
 
         return $csv;
     }
 
-    protected function _convertToCsvString($data)
+    protected function _convertToCsvString($data, $separator = ',')
     {
         $csv = '';
 
