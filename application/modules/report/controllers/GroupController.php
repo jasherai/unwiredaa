@@ -17,7 +17,7 @@ class Report_GroupController extends Unwired_Controller_Crud
         $contextSwitch = $this->_helper->getHelper('contextSwitch');
         $contextSwitch->addContext('csv', array(
                                                 'suffix'    => 'csv',
-                                                'headers'   => array('Content-Type' => 'text/csv',
+                                                'headers'   => array('Content-Type' => 'text/csv; charset=utf-8',
                                                                      'Content-disposition' => 'attachment; filename='
                                                                                             . date("Y-m-d_H-i-s") . '.csv'),
                                             ))
