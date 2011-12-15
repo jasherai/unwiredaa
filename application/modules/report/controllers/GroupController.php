@@ -162,7 +162,7 @@ class Report_GroupController extends Unwired_Controller_Crud
 
 		if ($this->_helper->contextSwitch->getCurrentContext() == 'csv') {
 		    $this->getResponse()->setHeader('Content-disposition',
-		                                    "attachment; filename={$parent->getTitle()}_" . str_replace(array(' ', '-'), '_', $report->getDateAdded()) . '.csv',
+		                                    "attachment; filename=" . str_replace(' ', '_', $parent->getTitle()) . '_' . str_replace(array(' ', '-'), '_', $report->getDateAdded()) . '.csv',
 		                                    true);
 		}
 	}
