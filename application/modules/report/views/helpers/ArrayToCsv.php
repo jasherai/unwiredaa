@@ -47,7 +47,7 @@ class Report_View_Helper_ArrayToCsv extends Zend_View_Helper_Abstract
 
         foreach ($data as $line) {
             if (is_array(current($firstElem))) {
-                $csv .= $this->_convertToCsvString($line);
+                $csv .= $this->_convertToCsvString($line, $separator);
             } else {
                 fputcsv($outstream, $line, ',', '"');
                 rewind($outstream);
