@@ -58,13 +58,10 @@ $acl = Zend_Registry::get ( 'acl' );
 				<td class="tools">
 
 				  <?php
-			$actions = array ('view', 'deleteresult');
+			// $actions = array ('view', 'deleteresult');
 
 
-				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'view' )) {
-					continue;
-				}
-
+				if ($acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'view' )) :
 				?>
 					<a
 					href="<?php
@@ -75,6 +72,24 @@ $acl = Zend_Registry::get ( 'acl' );
 
 				echo $this->translate ( 'report_group_button_view' );
 				?></a>
+
+				<a
+					href="<?php
+
+				    echo $this->url(array('module' => 'report',
+				    					  'controller' => 'group',
+				    					  'action' => 'view',
+				    					  'id' => $user->getItemId(),
+				                          'format' => 'csv' ), null, true );
+				?>"
+					class="icon csv"><?php
+
+				echo $this->translate ( 'report_group_button_csv' );
+				?></a>
+				<?php
+                    endif; // view allowed
+				?>
+
 				<?php
 				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'delete' )) {
 					continue;
