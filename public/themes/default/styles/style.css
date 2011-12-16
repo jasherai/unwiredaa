@@ -380,7 +380,7 @@ form div.buttons {
 }
 
 .tools a.generate {
-    background-image: url('../images/icons/24x24/keys.png');
+    background-image: url('../images/icons/24x24/gear.png');
 }
 
 /* buttons */
@@ -457,3 +457,6 @@ span.button.blue.small:hover button, span.button.blue.small:hover a, span.button
 .ml220 {
 	margin-left: 220px;
 }
+table.listing td.bold {font-weight: bold;}
+table.listing td.italic {font-style: italic;}
+table.listing td.right {float: none !important; text-align: right; }
