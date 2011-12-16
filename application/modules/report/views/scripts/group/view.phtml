@@ -29,7 +29,72 @@ $acl = Zend_Registry::get ( 'acl' );
 
 ?>
 
-<?php echo $this->report->getHtmldata()?>
 
-</form>
+<?php if (isset($this->data->graphics) && !empty($this->data->graphics)): ?>
+	<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+	<?php foreach ($this->data->graphics as $key => $value): ?>
+	google.setOnLoadCallback(drawChart<?php echo $key?>);
+    function drawChart<?php echo $key?>() {
+		var data = new google.visualization.DataTable();
+		<?php foreach ($value->headers as $k => $v): ?>
+		data.addColumn(<?php if (isset($value->rows[0][$k]) && is_numeric($value->rows[0][$k])): ?>"number"<?php else: ?>"string"<?php endif; ?>, "<?php echo $this->translate($v); ?>");
+		<?php endforeach; ?>
+   
+   		data.addRows(<?php echo count($value->rows); ?>);
+   		<?php $j = 0; ?>
+		<?php foreach ($value->rows as $k => $v): ?>
+			<?php foreach ($v as $kk => $vv): ?>
+			data.setValue(<?php echo $k?>, <?php echo $kk?>, <?php if (is_numeric($vv)): ?><?php echo $vv;?><?php else: ?>"<?php echo $this->translate($vv); ?>"<?php endif; ?>);
+			<?php endforeach; ?>
+		<?php endforeach; ?>
+       
+		var chart = new google.visualization.PieChart(document.getElementById("chart_div<?php echo $key ?>"));
+		chart.draw(data, {width: 350, height: 300, title: "<?php echo $this->translate($value->name) ?>"});
+	}
+	<?php endforeach; ?>
+	</script>
+	
+	<?php foreach ($this->data->graphics as $key => $value): ?>
+	<div id="chart_div<?php echo $key; ?>" style="float: left;"></div>
+	<?php endforeach; ?>
+	<div style="clear: both;"></div>
+<?php endif; ?>
 
+<?php if (isset($this->data->tables) && is_array($this->data->tables)): ?>
+	<?php foreach ($this->data->tables as $key => $value): ?>
+		<table class="listing">
+		<?php foreach ($value->colDefs as $kk => $vv): ?>
+		<tr>
+				<?php foreach ($value->colDefs[$kk] as $k => $v): ?>
+				<?php if (is_object($v)):?>
+					<th 
+						<?php if (isset($v->width)): ?>width="<?php echo $v->width?>"<?php endif; ?>
+						<?php if (isset($v->rowspan)): ?>rowspan="<?php echo $v->rowspan?>"<?php endif; ?>
+						<?php if (isset($v->colspan)): ?>colspan="<?php echo $v->colspan?>"<?php endif; ?>
+					><?php echo $this->translate($v->name); ?></th>
+				<?php else: ?>
+					<th><?php echo $this->translate($v); ?></th>
+				<?php endif; ?>
+				<?php endforeach; ?>
+		</tr>
+		<?php endforeach; ?>
+		<?php if (isset($value->rows)): ?>
+			<?php foreach ($value->rows as $k => $v): ?>
+			<tr>
+				<?php foreach ($v->data as $kk => $vv): ?>
+				
+				<td class="<?php echo (isset($v->class[$kk]))? $v->class[$kk]:'';?>" <?php if (is_object($vv) && isset($vv->rowspan)): ?>rowspan="<?php echo $vv->rowspan?>"<?php endif; ?> <?php if (is_object($vv) && isset($vv->colspan)): ?>colspan="<?php echo $vv->colspan?>"<?php endif; ?>>
+				<?php if (is_object($vv)):?>
+					<?php echo (isset($vv->translatable) && $vv->translatable)?$this->translate($vv->data):$vv->data?>
+				<?php else: ?>
+					<?php echo $vv?>
+				<?php endif; ?>
+				</td>
+				<?php endforeach; ?>
+			</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		</table>
+	<?php endforeach; ?>
+<?php endif; ?>

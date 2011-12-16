@@ -12,87 +12,8 @@
  */
 class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeTemplate_Abstract {
 
-    protected $_node = 'node';
-    protected $_group = 'group';
-
-    protected function getTemplate($groupIds, $data) {
-        
-        $result = $data['data'];
-        $groupTotals = $data['totals'];
-        
-        
-        /*
-        foreach ($groupIds as $gid) {
-            if (!isset($groupTotals[$gid]) || $groupTotals[$gid]['cnt'] == 0){
-                continue;
-            }
-        */
-        $counts = array('online' => 0, 'offline' => 0, 'planning' => 0);
-        foreach ($groupTotals as $k => $v) {
-        	foreach ($result[$k] as $key => $value) {
-        		if ($value['status'] == 'enabled') {
-        			if ($value['online_status'] == 1) {
-        				$counts['online']++;
-        			} else {
-        				$counts['offline']++;
-        			}
-        		} else {
-        			$counts['planning']++;
-        		}
-        	}
-        }
-        
-        
-
-        $html = '
-        <script type="text/javascript">
-	      google.load("visualization", "1", {packages:["corechart"]});
-	      google.setOnLoadCallback(drawChart);
-	      function drawChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn("string", "Status");
-	        data.addColumn("number", "AP Count");
-	    ';
-        	$html .= 'data.addRows(3);';
-        	$j = 0;
-	        foreach ($counts as $key => $value) {
-	        	$html .= 'data.setValue('.$j.', 0, "'.ucfirst($key).'");';
-	        	$html .= 'data.setValue('.$j.', 1, '.$value.');';
-	        	$j++;
-	        }
-	        
-		$html .= '
-	        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-	        chart.draw(data, {width: 450, height: 300, title: "AP count by status"});
-	      }
-	    </script>
-        
-        ';
-        
-        
-        $html .= '<div id="chart_div"></div>';
-        
-        foreach ($groupTotals as $k => $v) {
-			$html .= '<table class="listing">'; 
-			$html .= '<tr><th>Device Group</th><th>Device Name</th><th>Device Mac</th><th>AP Status</th></tr>';
-        
-			$htmlGroupTot = '<tr><td colspan="3"><strong>Total: </strong></td><td><strong>' . $v['cnt'] .'</strong></td></tr>';
-	        $html .= $htmlGroupTot;
-	            
-			foreach ($result[$k] as $key => $value) {
-				$html .= '<tr><td>'.$value['group_name'].'</td><td> ' . $value['name'] . '</td><td>'.$value['mac'].'</td><td>'.(($value['status'] == 'enabled')?($value['online_status'] == 1 ? 'Online': 'Offline'):'Planning').'</td></tr>';
-			}
-	            
-			$html .= $htmlGroupTot;
-			$html .= '</table><br/>';
-        }
-        
-        //}
-
-        return $html;
-    }
-
-    protected function getData($groupIds, $dateFrom, $dateTo) {
+   
+    public function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$groupTotals = array();
 		
@@ -103,8 +24,8 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
 	        $groupRel = $this->_getGroupRelations(array($v));
 	        
 	        $select = $db->select()
-	                ->from(array('a' => $this->_node))
-	                ->join(array('b' => $this->_group), 'b.group_id = a.group_id', array('group_id', 'name as group_name'))
+	                ->from(array('a' => 'node')) 
+	                ->join(array('b' => 'group'), 'b.group_id = a.group_id', array('group_id', 'name as group_name'))
 	                ->where('b.group_id IN (?)', $groupRel)
 			->order(array('b.name', 'a.name'));
 			
@@ -124,8 +45,63 @@ class Report_Service_CodeTemplate_AccessPointsCount extends Report_Service_CodeT
             }
         }
         
-        return array('data' => $result, 'totals' => $groupTotals);
+        $counts = array('online' => 0, 'offline' => 0, 'planning' => 0);
+        foreach ($groupTotals as $k => $v) {
+        	foreach ($result[$k] as $key => $value) {
+        		if ($value['status'] == 'enabled') {
+        			if ($value['online_status'] == 1) {
+        				$counts['online']++;
+        			} else {
+        				$counts['offline']++;
+        			}
+        		} else {
+        			$counts['planning']++;
+        		}
+        	}
+        }
         
+        
+        $tables = array();
+        $graphics = array();
+        
+        foreach ($counts as $key => $value): 
+        	$graphics[] = array('report_result_'.$key, $value);
+       	endforeach;
+       	
+       	foreach ($groupTotals as $k => $v) {
+       		$table = array(
+       			'colDefs' => array(
+       				array(
+       					'report_device_group', 'report_device_name', 'report_device_mac', 'report_result_ap_status'
+       				) 
+       			)
+       		);
+       		
+       		foreach ($result[$k] as $key => $value) {
+       			$table['rows'][] = array(
+       					'data' => array($value['group_name'], $value['name'], $value['mac'], 
+       							array('data' => (($value['status'] == 'enabled')?($value['online_status'] == 1 ? 'report_result_online': 'report_result_offline'):'report_result_planning'), 'translatable' => true)
+       				)
+       			);
+       		}
+       		
+       		$tables[] = $table;
+       	}
+        
+        $data = array(
+			'graphics' => array(
+				array(
+					'name' => 'report_status_ap_count',
+					'type' => 'piechart',
+					'headers' => array('report_result_status', 'report_result_ap_count'),
+					'rows' => $graphics
+				),
+			),
+			'tables' => $tables
+		);
+		
+		
+		return $data;
        
     }
 

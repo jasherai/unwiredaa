@@ -11,9 +11,6 @@
  */
 
 abstract class Report_Service_CodeTemplate_Abstract {
-	abstract protected function getTemplate($groupIds, $data);
-	
-	abstract protected function getData($groupIds, $dateFrom, $dateTo);
 	
 	//default report generator, to be replaced if table is to be made, @todo cleanup when reports!!!
 	protected $_group = 'group';
@@ -66,11 +63,16 @@ abstract class Report_Service_CodeTemplate_Abstract {
 		
 	}
 	
-	public function getReport($groupIds, $dateFrom, $dateTo) {
-		$data = $this->getData ( $groupIds, $dateFrom, $dateTo );
-		
-		$html = $this->getTemplate ( $groupIds, $data );
-		
-		return array ('data' => $data, 'html' => $html );
+	//alias of getData, override if you need different data for CSV
+	public function getCsv($groupIds, $dateFrom, $dateTo) {
+		return $this->getData($groupIds, $dateFrom, $dateTo);
 	}
+	
+	//alias of getData, override if you need different data for CSV
+	public function getPdf($groupIds, $dateFrom, $dateTo) {
+		return $this->getData($groupIds, $dateFrom, $dateTo);
+	}
+	
+	abstract public function getData($groupIds, $dateFrom, $dateTo);
+	
 }

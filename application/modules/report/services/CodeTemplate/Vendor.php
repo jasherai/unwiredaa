@@ -64,7 +64,7 @@ class Report_Service_CodeTemplate_Vendor extends Report_Service_CodeTemplate_Abs
         return $html;
     }
 
-    protected function getData($groupIds, $dateFrom, $dateTo) {
+    public function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		
         $groupRel = $this->_getGroupRelations($groupIds);
@@ -96,7 +96,48 @@ class Report_Service_CodeTemplate_Vendor extends Report_Service_CodeTemplate_Abs
         	$data[$vendors[$k]['name']][] = $value;
         }
         
-        return array('data' => $data, 'totals' => array());
+        foreach ($data as $key => $value):
+        $graphics[] = array($key, count($value));
+        endforeach;
+        
+        $table = array(
+        		'colDefs' => array(
+        				array(
+        						'report_result_vendor', array('name' => 'report_result_users', 'colspan' => 2)
+        				),
+        		),
+        );
+        
+        ksort($data);
+        
+        foreach ($data as $key => $value) {
+        	$table['rows'][] = array(
+        			'data' => array($key, array('data' => count($value), 'colspan' => 2)),
+        			'class' => array('bold', 'bold right')
+        	);
+        	foreach ($value as $k => $v) {
+        		$table['rows'][] = array(
+        				'data' => array($v['username'], $this->_getMac($v['user_mac']), $key)
+        		);
+        	}
+        }
+        
+        $tables[] = $table;
+        
+        $result = array(
+        		'graphics' => array(
+        				array(
+        						'name' => 'report_result_top_vendors',
+        						'type' => 'piechart',
+        						'headers' => array('report_result_vendor', 'report_result_users'),
+        						'rows' => $graphics
+        				),
+        		),
+        		'tables' => $tables
+        );
+        
+        return $result;
+        ;
     }
 
 }

@@ -12,56 +12,7 @@
  */
 class Report_Service_CodeTemplate_Domains extends Report_Service_CodeTemplate_Abstract {
 
-    //protected $_node = 'node';
-    //protected $_group = 'group';
-    //protected $_internet_sess = 'acct_internet_session';
-    //protected $_network_user = 'network_user';
-
-    protected function getTemplate($groupIds, $data) {
-        
-        $result = $data['data'];
-        $groupTotals = $data['totals'];
-
-        $html = '
-        <script type="text/javascript">
-	      google.load("visualization", "1", {packages:["corechart"]});
-	      google.setOnLoadCallback(drawChart);
-	      function drawChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn("string", "Vendor");
-	        data.addColumn("number", "Users Count");
-	    ';
-        	$html .= 'data.addRows('.count($result).');';
-        	$j = 0;
-	        foreach ($result as $key => $value) {
-	        	$html .= 'data.setValue('.$j.', 0, "'.$value['url'].'");';
-	        	$html .= 'data.setValue('.$j.', 1, '.$value['count'].');';
-	        	$j++;
-	        }
-	        
-		$html .= '
-	        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-	        chart.draw(data, {width: 450, height: 300, title: "Domains"});
-	      }
-	    </script>
-        
-        ';
-        
-        
-        $html .= '<div id="chart_div"></div>';
-        
-        $html .= '<table class="listing">';
-        $html .= '<tr><th>Domain</th><th>User Count</th></tr>';
-        foreach ($result as $k => $v) {
-			$html .= '<tr><td>'.$v['url'].'</td><td>'.$v['count'].'</td></tr>';
-        }
-        $html .= '</table><br/>';
-        //}
-		
-        return $html;
-    }
-
-    protected function getData($groupIds, $dateFrom, $dateTo) {
+    public function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		$groupTotals = array();
 		
@@ -83,13 +34,16 @@ class Report_Service_CodeTemplate_Domains extends Report_Service_CodeTemplate_Ab
 	        
 		$items = $db->fetchAll($select);
 		$result = array();
+		
 		foreach ($items as $key => $value) {
 			$res = preg_match('!http://([^/]+)/!', $value['user_url'], $matches);
-			if (!isset($result[$matches[1]])) {
-				$result[$matches[1]]['url'] = $matches[1];
-				$result[$matches[1]]['count'] = 1;
-			} else {
-				$result[$matches[1]]['count']++;
+			if ($res > 0) {
+				if (!isset($result[$matches[1]])) {
+					$result[$matches[1]]['url'] = $matches[1];
+					$result[$matches[1]]['count'] = 1;
+				} else {
+					$result[$matches[1]]['count']++;
+				}
 			}
 		}
 		
@@ -99,9 +53,45 @@ class Report_Service_CodeTemplate_Domains extends Report_Service_CodeTemplate_Ab
 			}
 			return ($a['count'] > $b['count']) ? -1 : 1;
 		});
-        
-        return array('data' => $result, 'totals' => $groupTotals);
-        
+		
+		$graphics = array();
+		$tables = array();
+		
+		foreach ($result as $key => $value):
+			$graphics[] = array($value['url'], $value['count']);
+		endforeach;
+		
+		$table = array(
+			'colDefs' => array(
+				array(
+					'report_result_domain', 'report_result_users'
+				)
+			),
+		);
+		
+		foreach ($result as $key => $value) {
+			$table['rows'][] = array(
+				'data' => array($value['url'], $value['count']),
+				'class' => array('', 'right')
+			);
+		}
+		
+		$tables[] = $table;
+		
+		$result = array(
+			'graphics' => array(
+				array(
+					'name' => 'report_result_top_domains',
+					'type' => 'piechart',
+					'headers' => array('report_result_domain', 'report_result_users'),
+					'rows' => $graphics
+				),
+			),
+			'tables' => $tables
+		);
+		
+		
+		return $result;
        
     }
 

@@ -11,62 +11,8 @@
  * license available at http://www.unwired.at/license.html
  */
 class Report_Service_CodeTemplate_OperatingSystem extends Report_Service_CodeTemplate_Abstract {
-    
-    protected function getTemplate($groupIds, $data) {
-        //$groupRel = $this->_getGroupRelations($groupIds);
-        
-        $result = $data['data'];
-        $groupTotals = $data['totals'];
-        
-        
-        $html = '';
-        
-        $html = '
-        <script type="text/javascript">
-        google.load("visualization", "1", {packages:["corechart"]});
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn("string", "Operating System");
-        data.addColumn("number", "Users Count");
-        ';
-        $html .= 'data.addRows('.count($result).');';
-        $j = 0;
-        foreach ($result as $key => $value) {
-        	$html .= 'data.setValue('.$j.', 0, "'.$key.'");';
-        	$html .= 'data.setValue('.$j.', 1, '.count($value).');';
-        	$j++;
-        }
-        
-        $html .= '
-        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-        chart.draw(data, {width: 450, height: 300, title: "Users by OS"});
-        }
-        </script>
-        
-        ';
-        
-        $html .= '<div id="chart_div"></div>';
-        $html .= '<table class="listing">';
-        $html .= '<tr><th>Network username</th><th style="text-align: center;">MAC</th><th style="text-align: center;">OS</th></tr>';
-        
-        //order by operating system title
-        ksort($result);
-        foreach ($result as $k => $v) {            
-            
-            $html .= '<tr><td ><strong>'.$k.'</strong></td><td colspan="2"><strong>'.count($v).'</strong></td></tr>';
- 
-            foreach ($v as $key => $value) {
-            	$html .= '<tr><td>'.$value['username'].'</td><td>'.$this->_getMac($value['user_mac']).'</td><td>'.$k.'</td></tr>'; 
-            }
-            
-        }
-		$html .= '</table>';
-	
-        return $html;
-    }
 
-    protected function getData($groupIds, $dateFrom, $dateTo) {
+    public function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 		
         $groupRel = $this->_getGroupRelations($groupIds);
@@ -109,7 +55,49 @@ class Report_Service_CodeTemplate_OperatingSystem extends Report_Service_CodeTem
         	}
         }
         
-        return array('data' => $data, 'totals' => array());
+        foreach ($data as $key => $value):
+       		$graphics[] = array($key, count($value));
+        endforeach;
+        
+        $table = array(
+        		'colDefs' => array(
+        				array(
+        						'report_result_os', array('name' => 'report_result_users', 'colspan' => 2)
+        				),
+        		),
+        );
+        
+        ksort($data);
+        
+        foreach ($data as $key => $value) {
+        	$table['rows'][] = array(
+        			'data' => array($key, array('data' => count($value), 'colspan' => 2)),
+        			'class' => array('bold', 'bold right')
+        	);
+        	foreach ($value as $k => $v) {
+        		$table['rows'][] = array(
+        			'data' => array($v['username'], $this->_getMac($v['user_mac']), $key)
+        		);
+        	}
+        }
+        
+        $tables[] = $table;
+        
+        $result = array(
+        		'graphics' => array(
+        				array(
+        						'name' => 'report_result_top_oses',
+        						'type' => 'piechart',
+        						'headers' => array('report_result_os', 'report_result_users'),
+        						'rows' => $graphics
+        				),
+        		),
+        		'tables' => $tables
+        );
+        
+        return $result;
+        
+        //return array('data' => $data, 'totals' => array());
     }
 
 }

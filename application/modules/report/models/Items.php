@@ -17,31 +17,17 @@
 class Report_Model_Items extends Unwired_Model_Generic  implements Zend_Acl_Role_Interface,
 																 Zend_Acl_Resource_Interface
 {
-
+	
 	protected $_itemId = null;
-
+	
 	protected $_reportGroupId = null;
-
+	
 	protected $_title = null;
-
+	
 	protected $_dateAdded = null;
-
+	
 	protected $_data = array();
-	protected $_htmldata = array();
-	/**
-	 * @return the $_htmldata
-	 */
-	public function getHtmldata() {
-		return $this->_htmldata;
-	}
-
-	/**
-	 * @param multitype: $_htmldata
-	 */
-	public function setHtmldata($_htmldata) {
-		$this->_htmldata = $_htmldata;
-	}
-
+	
 	/**
 	 * @return the $_itemId
 	 */
@@ -112,17 +98,20 @@ class Report_Model_Items extends Unwired_Model_Generic  implements Zend_Acl_Role
 	/**
 	 * @param array $_data
 	 */
+	
+	/**
+	 * @todo Serialized data in DB is in fact object of stdClass
+	 *       Fix this mess and keep constent data types
+	 */
 	public function setData($_data) {
-        /**
-         * @todo Serialized data in DB is in fact object of stdClass?!?!!?!?
-         *       Fix this mess and keep constent data types
-         */
-	    if (is_array($_data)) {
+		if (is_array($_data)) {
 			$this->_data = json_encode($_data);
+		} elseif (is_string($_data)) {
+			$this->_data = $_data;
 		} else {
-		    $dataStruct = @json_decode($_data);
-			$this->_data = (is_object($dataStruct) || is_array($dataStruct)) ? $_data : json_encode(array());
+			$this->_data = json_encode(array());
 		}
+		
 	}
 
 	/**
@@ -134,13 +123,13 @@ class Report_Model_Items extends Unwired_Model_Generic  implements Zend_Acl_Role
 	{
 		return $this->getTitle();
 	}
-
+	
 	/* (non-PHPdoc)
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	*/
 	public function getResourceId() {
 		return 'reports_items';
 	}
-
+	
 
 }

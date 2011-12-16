@@ -12,92 +12,8 @@
  */
 class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abstract {
 	
-	protected $_inet_table = 'acct_internet_session';
-	protected $_network_user = 'network_user';
-	protected $_group = 'group';
-	protected $_node = 'node';
-	protected $_roaming_table = 'acct_internet_roaming';
-	
-	protected function getTemplate($groupIds, $data) {
-		//$groupRel = $this->_getGroupRelations($groupIds);
-		
 
-		$result = $data ['data'];
-		$groupTotals = $data ['totals'];
-		
-		$html = '
-        <script type="text/javascript">
-	      google.load("visualization", "1", {packages:["corechart"]});
-	      google.setOnLoadCallback(drawChart);
-	      function drawChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn("string", "Vendor");
-	        data.addColumn("number", "Traffic by Group");
-	    ';
-        	$html .= 'data.addRows('.count($groupTotals).');';
-        	$j = 0;
-	        foreach ($groupTotals as $key => $value) {
-	        	$html .= 'data.setValue('.$j.', 0, "'.$value['total']['name'].'");';
-	        	$html .= 'data.setValue('.$j.', 1, '.($value ['total'] ['bytes_down'] + $value['total'] ['bytes_up']).');';
-	        	$j++;
-	        }
-	        
-		$html .= '
-	        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-	        chart.draw(data, {width: 450, height: 300, title: "Users by Vendor"});
-	      }
-	    </script>
-        
-        ';
-        
-        
-        $html .= '<div id="chart_div"></div>';
-		
-		$seperator = '<tr height=15><th style="border-top:solid navy 2px; background:none;" colspan=4></th></tr>';
-		$total_up = $total_down = 0;
-		foreach ( $groupTotals as $k => $v ) {
-			
-			$html .= $seperator.'<tr><th width="50%">Group / User Name</th>
-<th style="text-align: center;">Download</th>
-<th style="text-align: center;">Upload</td>
-<th style="text-align: center;">Total</td></tr>';
-			$htmlGroupTot = '
-<tr><td width="50%"><strong>' . $v ['total'] ['name'] . '</strong></td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] ) . '</strong></td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_up'] ) . '</strong></td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] + $groupTotals [$k] ['total'] ['bytes_up'] ) . '</strong></td></tr>';
-
-			$html .= $htmlGroupTot;
-			$total_up += $groupTotals [$k] ['total'] ['bytes_up'];
-			$total_down += $groupTotals [$k] ['total'] ['bytes_down'];
-			foreach ( $v ['ap'] as $kk => $vv ) {
-				$html .= '<tr><td><strong><i>&nbsp;&nbsp;&nbsp;&nbsp;Node ' . $vv ['name'] . ' (' . $vv ['mac'] . ')</strong></i></td><td style="text-align: right;"><strong>' . $this->_convertTraffic ( $vv ['bytes_down'] ) . '</strong></td><td style="text-align: right;"><strong>' . $this->_convertTraffic ( $vv ['bytes_up'] ) . '</strong></td><td style="text-align: right;"><strong>' . $this->_convertTraffic ( $vv ['bytes_down'] + $vv ['bytes_up'] ) . '</strong></td></tr>';
-				
-				foreach ( $result [$k] [$kk] as $key => $value ) {
-					$html .= '<tr><td width="50%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value ['username'] . ' </td>
-<td style="text-align: right;">' . $this->_convertTraffic ( $value ['bytes_down'] ) . '</td>
-<td style="text-align: right;">' . $this->_convertTraffic ( $value ['bytes_up'] ) . '</td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $value ['bytes_down'] + $value ['bytes_up'] ) . '</strong></td></tr>';
-				}
-			
-			}
-			
-		}
-		$total_html = '<tr>
-<th>Total</th>
-<th style="text-align: center;">Total Download</th>
-<th style="text-align: center;">Total Upload</th>
-<th style="text-align: center;">Total</th></tr>
-<tr><td></td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $total_down ) . '</strong></td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $total_up ) . '</strong></td>
-<td style="text-align: right;"><strong>' . $this->_convertTraffic ( $total_up + $total_down ) . '</strong></td>
-</tr>';
-
-		return '<table class="listing">'.$total_html. $html . $seperator . $total_html . '</table>';
-	}
-	
-	protected function getData($groupIds, $dateFrom, $dateTo) {
+	public function getData($groupIds, $dateFrom, $dateTo) {
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		
 		$groupRel = $this->_getGroupRelations ( $groupIds );
@@ -143,7 +59,96 @@ class Report_Service_CodeTemplate_UpDown extends Report_Service_CodeTemplate_Abs
 			}
 		}
 		
-		return array ('data' => $data, 'totals' => $groupTotals );
+		$tables = array();
+		$graphics = array();
+		
+		$total_up = $total_down = 0;
+		foreach ( $groupTotals as $k => $v ) {
+			$total_up += $groupTotals [$k] ['total'] ['bytes_up'];
+			$total_down += $groupTotals [$k] ['total'] ['bytes_down'];
+			
+			$graphics[] = array($groupTotals [$k]['total']['name'], ($groupTotals [$k]['total'] ['bytes_down'] + $groupTotals [$k]['total'] ['bytes_up']));
+			
+			$table = array(
+				'colDefs' => array(
+					array('report_result_group_username', 'report_result_download', 'report_result_upload', 'report_result_total'),
+				),
+				'rows' => array(
+					array(
+						'data' => array(
+							$v['total']['name'], 
+							$this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] ), 
+							$this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_up'] ),
+							$this->_convertTraffic ( $groupTotals [$k] ['total'] ['bytes_down'] + $groupTotals [$k] ['total'] ['bytes_up'] ) 
+						),
+						'class' => array('bold', 'bold right', 'bold right', 'bold right')
+					),
+				)
+			);
+			
+			foreach ( $v ['ap'] as $kk => $vv ) {
+				
+				$table['rows'][] = array(
+					'data' => array(
+						'&nbsp;&nbsp;&nbsp;&nbsp;'.$vv ['name'].' (' . $vv ['mac'] . ') ',
+						$this->_convertTraffic ( $vv ['bytes_down'] ),
+						$this->_convertTraffic ( $vv ['bytes_up'] ),
+						$this->_convertTraffic ( $vv ['bytes_down'] + $vv ['bytes_up'] )
+					),
+					'class' => array('bold italic', 'bold italic right', 'bold italic right', 'bold italic right')
+				);
+				
+				foreach ( $data [$k] [$kk] as $key => $value ) {
+					$table['rows'][] = array(
+						'data' => array(
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $value ['username'],
+							$this->_convertTraffic ( $value ['bytes_down'] ),
+							$this->_convertTraffic ( $value ['bytes_up'] ),
+							$this->_convertTraffic ( $value ['bytes_down'] + $value ['bytes_up'] )
+						),
+						'class' => array('', 'right', 'right', 'right')
+					);
+				}
+			}
+			
+			$tables[] = $table;
+			
+		}
+		
+		$total_table = array(
+			'colDefs' => array(
+				array(
+					array(
+						'name' => 'report_result_total',
+						'width' => '50%'
+					), 'report_result_total_download', 'report_result_total_upload', 'report_result_total'
+				)
+			),
+			'rows' => array(
+				array(
+					'data' => array('', $this->_convertTraffic($total_down), $this->_convertTraffic($total_up), $this->_convertTraffic(($total_down + $total_up))),
+					'class' => array('bold', 'bold right', 'bold right', 'bold right')
+				)
+			)
+		);
+		
+		array_unshift($tables, $total_table);
+		$tables[] = $total_table;
+		
+		$result = array(
+			'graphics' => array(
+				array(
+					'name' => 'report_result_group',
+					'type' => 'piechart',
+					'headers' => array('report_result_group', 'report_result_traffic'),
+					'rows' => $graphics
+				),
+			),
+			'tables' => $tables
+		);
+		
+		
+		return $result;
 	}
 
 }
