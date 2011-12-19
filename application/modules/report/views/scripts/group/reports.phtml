@@ -86,6 +86,19 @@ $acl = Zend_Registry::get ( 'acl' );
 
 				echo $this->translate ( 'report_group_button_csv' );
 				?></a>
+				<a
+					href="<?php
+
+				    echo $this->url(array('module' => 'report',
+				    					  'controller' => 'group',
+				    					  'action' => 'view',
+				    					  'id' => $user->getItemId(),
+				                          'format' => 'pdf' ), null, true );
+				?>"
+					class="icon pdf"><?php
+
+				echo $this->translate ( 'report_group_button_pdf' );
+				?></a>
 				<?php
                     endif; // view allowed
 				?>

@@ -1,0 +1,13 @@
+<?php echo $this->doctype();?>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" media="all" href="<?php echo "themes/{$this->theme}/styles/pdf.css"; ?>" />
+</head>
+<body>
+<?php
+    $this->pdf = true;
+    echo $this->render('group/view.phtml');
+?>
+</body>
+</html>

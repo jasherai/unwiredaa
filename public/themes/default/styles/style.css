@@ -363,6 +363,10 @@ form div.buttons {
     background-image: url('../images/icons/24x24/csv_file.png');
 }
 
+.tools a.pdf {
+    background-image: url('../images/icons/24x24/pdf.png');
+}
+
 .tools a.content {
 	background-image: url('../images/icons/24x24/edit_content.png');
 }

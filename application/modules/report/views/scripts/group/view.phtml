@@ -1,14 +1,16 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-
+<?php if (!isset($this->pdf)) :?>
 <a href="/report"><?php echo $this->translate('report_index_heading'); ?></a> &raquo;
 <a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent_parent->getTitle();?> </a> &raquo;
 <a href="/report/group/reports/id/<?php echo $this->parent->getReportGroupId()?>"><?php echo $this->parent->getTitle(); ?> Results</a> &raquo;
 <a href="/report/group/view/id/<?php echo $this->report->getItemId()?>"><?php echo $this->translate('report_group_heading_result'); ?>  at <?php echo $this->parent->getDateAdded(); ?></a>
-
+<?php endif; ?>
 <h1><?php echo $this->translate('report_group_heading_result'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
 
 <table width="100%" class="listing">
-<th colspan="4"><?php echo $this->translate('report_result_parameters'); ?></th>
+<tr>
+	<th colspan="4"><?php echo $this->translate('report_result_parameters'); ?></th>
+</tr>
 <tr>
 	<td><?php echo $this->translate('report_result_parameters_description'); ?></td><td colspan="3"><?php echo $this->parent->getDescription(); ?></td>
 </tr>
@@ -40,7 +42,7 @@ $acl = Zend_Registry::get ( 'acl' );
 		<?php foreach ($value->headers as $k => $v): ?>
 		data.addColumn(<?php if (isset($value->rows[0][$k]) && is_numeric($value->rows[0][$k])): ?>"number"<?php else: ?>"string"<?php endif; ?>, "<?php echo $this->translate($v); ?>");
 		<?php endforeach; ?>
-   
+
    		data.addRows(<?php echo count($value->rows); ?>);
    		<?php $j = 0; ?>
 		<?php foreach ($value->rows as $k => $v): ?>
@@ -48,13 +50,13 @@ $acl = Zend_Registry::get ( 'acl' );
 			data.setValue(<?php echo $k?>, <?php echo $kk?>, <?php if (is_numeric($vv)): ?><?php echo $vv;?><?php else: ?>"<?php echo $this->translate($vv); ?>"<?php endif; ?>);
 			<?php endforeach; ?>
 		<?php endforeach; ?>
-       
+
 		var chart = new google.visualization.PieChart(document.getElementById("chart_div<?php echo $key ?>"));
 		chart.draw(data, {width: 350, height: 300, title: "<?php echo $this->translate($value->name) ?>"});
 	}
 	<?php endforeach; ?>
 	</script>
-	
+
 	<?php foreach ($this->data->graphics as $key => $value): ?>
 	<div id="chart_div<?php echo $key; ?>" style="float: left;"></div>
 	<?php endforeach; ?>
@@ -68,7 +70,7 @@ $acl = Zend_Registry::get ( 'acl' );
 		<tr>
 				<?php foreach ($value->colDefs[$kk] as $k => $v): ?>
 				<?php if (is_object($v)):?>
-					<th 
+					<th
 						<?php if (isset($v->width)): ?>width="<?php echo $v->width?>"<?php endif; ?>
 						<?php if (isset($v->rowspan)): ?>rowspan="<?php echo $v->rowspan?>"<?php endif; ?>
 						<?php if (isset($v->colspan)): ?>colspan="<?php echo $v->colspan?>"<?php endif; ?>
@@ -81,9 +83,9 @@ $acl = Zend_Registry::get ( 'acl' );
 		<?php endforeach; ?>
 		<?php if (isset($value->rows)): ?>
 			<?php foreach ($value->rows as $k => $v): ?>
-			<tr>
+			<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
 				<?php foreach ($v->data as $kk => $vv): ?>
-				
+
 				<td class="<?php echo (isset($v->class[$kk]))? $v->class[$kk]:'';?>" <?php if (is_object($vv) && isset($vv->rowspan)): ?>rowspan="<?php echo $vv->rowspan?>"<?php endif; ?> <?php if (is_object($vv) && isset($vv->colspan)): ?>colspan="<?php echo $vv->colspan?>"<?php endif; ?>>
 				<?php if (is_object($vv)):?>
 					<?php echo (isset($vv->translatable) && $vv->translatable)?$this->translate($vv->data):$vv->data?>
