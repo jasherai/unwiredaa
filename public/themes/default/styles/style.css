@@ -206,7 +206,7 @@ table.listing tbody tr:hover {
 
 table.listing tr .tools {
     text-align: center;	
-	width: 130px;
+	width: 160px;
 }
 /*
 table.listing td.tools a img{
@@ -385,6 +385,10 @@ form div.buttons {
 
 .tools a.generate {
     background-image: url('../images/icons/24x24/gear.png');
+}
+
+.tools a.instant {
+    background-image: url('../images/icons/24x24/instant.png');
 }
 
 /* buttons */
