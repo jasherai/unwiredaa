@@ -18,27 +18,27 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 																 Zend_Acl_Resource_Interface
 {
 	protected $_reportGroupId = null;
-	
+
 	protected $_codetemplateId = null;
 
 	protected $_title = null;
-	
+
 	protected $_dateAdded = null;
-	
+
 	protected $_nodeId = null;
-	
+
 	protected $_dateFrom = null;
-	
+
 	protected $_dateTo = null;
-	
+
 	protected $_reportType = null;
-	
+
 	protected $_reportInterval = 'day';
-	
+
 	protected $_description = null;
-	
+
 	protected $_groupsAssigned = array();
-	
+
 	protected $_recepients = array();
 
 	/**
@@ -58,7 +58,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 			$this->_recepients = explode(', ', $_recepients);
 		}
 	}
-	
+
 	/**
 	 * @return the $groupsAssigned
 	 */
@@ -77,7 +77,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 	public function getGroupsAssigned() {
 		return $this->_groupsAssigned;
 	}
-	
+
 	/**
 	 * key = group id, value = role id
 	 * @param array $groupsAssigned
@@ -86,7 +86,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 		$this->_groupsAssigned = $groupsAssigned;
 		return $this;
 	}
-	
+
 	public function getGroupAssignedRoleId($groupId)
 	{
 		/**
@@ -94,7 +94,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 		 */
 		return isset($this->_groupsAssigned[$groupId]) ? $this->_groupsAssigned[$groupId] : false;
 	}
-	
+
 	/**
 	 * @return the $_reportType
 	 */
@@ -138,7 +138,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return the $templateId
 	 */
@@ -154,21 +154,21 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-		
+
 	/**
 	 * @return the $title
 	 */
 	public function getTitle() {
 		return $this->_title;
 	}
-	
+
 	/**
 	 * @param the $title
 	 */
 	public function setTitle($title) {
 		$this->_title = $title;
-		
-		return $this; 
+
+		return $this;
 	}
 
 	/**
@@ -177,7 +177,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 	public function getDateAdded() {
 		return $this->_dateAdded;
 	}
-	
+
 	/**
 	 * @param sql date $dateAdded
 	 */
@@ -186,7 +186,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return the $nodeId
 	 */
@@ -202,7 +202,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-	
+
 /**
 	 * @return sql date $dateFrom
 	 */
@@ -213,7 +213,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 			return date('Y-m-d');
 		}
 	}
-	
+
 	/**
 	 * @param sql date $dateFrom
 	 */
@@ -222,7 +222,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-	
+
 /**
 	 * @return sql date $dateTo
 	 */
@@ -233,7 +233,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 			return date('Y-m-d');
 		}
 	}
-	
+
 	/**
 	 * @param sql date $dateTo
 	 */
@@ -242,14 +242,14 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return the $description
 	 */
 	public function getDescription() {
 		return $this->_description;
 	}
-	
+
 	/**
 	 * @param string $description
 	 */
@@ -258,7 +258,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 
 		return $this;
 	}
-	
+
 	/**
 	 * ACL role unique identifier
 	 *
@@ -268,7 +268,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 	{
 		return $this->getTitle();
 	}
-	
+
 	/* (non-PHPdoc)
 	 * @see Zend_Acl_Resource_Interface::getResourceId()
 	*/

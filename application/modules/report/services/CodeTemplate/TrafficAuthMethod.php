@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unwired AA GUI
  *

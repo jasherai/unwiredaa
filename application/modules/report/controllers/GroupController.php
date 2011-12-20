@@ -151,34 +151,83 @@ class Report_GroupController extends Unwired_Controller_Crud {
 		$iMapper->save($entity);
 		$this->_helper->redirector->gotoUrlAndExit('/report/group/view/id/'.$entity->getItemId());
 	}
-	
+
 	public function instantAction() {
-		$ctMapper = new Report_Model_Mapper_CodeTemplate();
-		$rMapper = new Report_Model_Mapper_Group();
-		$iMapper = new Report_Model_Mapper_Result();
-		$report = $rMapper->find($this->getRequest()->getParam('id'));
-	
-		$parent = $ctMapper->find($report->getCodetemplateId());
-	
-		$className = $parent->getClassName();
+
+	    $codeTemplateId = (int) $this->getRequest()->getParam ( 'id',  1);
+
+	    $mapperCodeTemplate = new Report_Model_Mapper_CodeTemplate();
+
+	    $codeTemplate = $mapperCodeTemplate->find($codeTemplateId);
+
+	    if (!$codeTemplate) {
+	        $this->view->uiMessage('report_group_instant_codetemplate_notselected', 'error');
+			$this->_gotoIndex();
+	    }
+
+	    $groupService = new Groups_Service_Group();
+
+		$rootGroup = $groupService->getGroupTreeByAdmin();
+
+		$this->view->rootGroup = $rootGroup;
+
+		$this->view->instant = true;
+
+	    $form = new Report_Form_Instant();
+
+	    $this->view->form = $form;
+	    $this->_helper->viewRenderer->setScriptAction('edit');
+
+	    $report = new Report_Model_Group();
+
+		$report->setCodetemplateId($codeTemplate->getCodetemplateId());
+		$report->setDateAdded(date('Y-m-d H:i:s'));
+
+		$this->view->entity = $report;
+
+	    if (!$this->getRequest()->isPost()) {
+	        return;
+	    }
+
+	    if (!$form->isValid($this->getRequest()->getPost())) {
+	            try {
+					$report->fromArray($form->getValues());
+				} catch (Exception $e) {
+					// nothing
+				}
+	        return;
+	    }
+
+	    $report->fromArray($form->getValues());
+
+	    $groupsAssigned = $report->getGroupsAssigned();
+
+	    foreach ($groupsAssigned as $groupId => $value) {
+	        $group = $groupService->findGroup($groupId);
+	        $groupsAssigned[$groupId] = $group;
+	    }
+
+	    $report->setGroupsAssigned($groupsAssigned);
+
+		$className = $codeTemplate->getClassName();
 		$reportGenerator = new $className;
-	
-	
+
 		$result = $reportGenerator->getData(array_keys($report->getGroupsAssigned()), $report->getDateFrom(), $report->getDateTo());
-	
-		$this->view->parent_parent = $parent;
+
+		$this->view->parent_parent = $codeTemplate;
 		$this->view->parent = $report;
-		
-		$entity = new Report_Model_Items();
-		$entity->setDateAdded(date('Y-m-d H:i:s'));
-		$entity->setData($result);
-		$entity->setReportGroupId($this->getRequest()->getParam('id'));
-		
-		$this->view->report = $entity;
-		
-		$this->view->data = $entity->getData(true);
-		$this->_helper->viewRenderer->setViewScriptPathSpec('group/view.phtml');
-		
+
+		$items = new Report_Model_Items();
+		$items->setDateAdded(date('Y-m-d H:i:s'));
+		$items->setData($result);
+		$items->setReportGroupId($codeTemplate->getCodetemplateId());
+
+		$this->view->report = $items;
+
+		$this->view->data = $items->getData(true);
+		$this->_helper->viewRenderer->setScriptAction('view');
+
+		$this->_exportReportData($report, $items);
 	}
 
 	public function viewAction() {
@@ -198,10 +247,15 @@ class Report_GroupController extends Unwired_Controller_Crud {
 
 		$this->view->data = $report->getData(true);
 
+		$this->_exportReportData($parent, $report);
+	}
+
+	protected function _exportReportData(Report_Model_Group $reportGroup, Report_Model_Items $reportData)
+	{
 		if ($this->_helper->contextSwitch->getCurrentContext() == 'csv'
 		    || $this->_helper->contextSwitch->getCurrentContext() == 'pdf') {
 			$this->getResponse()->setHeader('Content-disposition',
-					"attachment; filename=" . str_replace(' ', '_', $parent->getTitle()) . '_' . str_replace(array(' ', '-'), '_', $report->getDateAdded())
+					"attachment; filename=" . str_replace(' ', '_', $reportGroup->getTitle()) . '_' . str_replace(array(' ', '-'), '_', $reportData->getDateAdded())
 			        . '_' . rand(1,10000) . '.' . $this->_helper->contextSwitch->getCurrentContext(),
 					true);
 		}
@@ -226,7 +280,6 @@ class Report_GroupController extends Unwired_Controller_Crud {
             //$dompdf->stream("sample_report.pdf");
             echo $dompdf->output();
 		}
-
 	}
 
 	public function deleteAction()

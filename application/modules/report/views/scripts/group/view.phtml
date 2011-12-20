@@ -1,13 +1,28 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <?php if (!isset($this->pdf)) :?>
 <a href="/report"><?php echo $this->translate('report_index_heading'); ?></a> &raquo;
-<a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent_parent->getTitle();?> </a> &raquo;
-<a href="/report/group/reports/id/<?php echo $this->parent->getReportGroupId()?>"><?php echo $this->parent->getTitle(); ?> Results</a> &raquo;
-<a href="/report/group/view/id/<?php echo $this->report->getItemId()?>"><?php echo $this->translate('report_group_heading_result'); ?>  at <?php echo $this->parent->getDateAdded(); ?></a>
-<?php endif; ?>
+<a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent_parent->getTitle();?> </a>
+    <?php if (!isset($this->instant)) :?>
+     &raquo;
+    <a href="/report/group/reports/id/<?php echo $this->parent->getReportGroupId()?>"><?php echo $this->parent->getTitle(); ?> Results</a> &raquo;
+    <a href="/report/group/view/id/<?php echo $this->report->getItemId()?>"><?php echo $this->translate('report_group_heading_result'); ?>  at <?php echo $this->parent->getDateAdded(); ?></a>
+    <?php endif; // instant?>
+<?php endif; // pdf?>
 <br /><br />
 <h1><?php echo $this->translate('report_group_heading_result'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
+<?php
+    if (!isset($this->pdf)) :
+?>
+<div class="buttons span-18">
+	<a class="button small blue" href="<?php echo $this->url(array('format' => 'csv'), 'default', false);?>"><span><?php
+	    echo $this->translate('report_group_button_csv');
+	?></span></a>
 
+	<a class="button small blue" href="<?php echo $this->url(array('format' => 'pdf'), 'default', false);?>"><span><?php
+	    echo $this->translate('report_group_button_pdf');
+	?></span></a>
+</div>
+<?php endif; // pdf?>
 <table width="100%" class="listing">
 <tr>
 	<th colspan="4"><?php echo $this->translate('report_result_parameters'); ?></th>

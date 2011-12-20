@@ -107,7 +107,7 @@ $html .=  '</pre>!';*/
 	        return $html.$total_html.'</table><br/>';
 	}
 
-	protected function getData($groupIds, $dateFrom, $dateTo) {
+	public function getData($groupIds, $dateFrom, $dateTo) {
 	        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			/*$groupRel = $this->_getGroupRelations($groupIds);*/
 
@@ -122,8 +122,8 @@ $html .=  '</pre>!';*/
 
 			$items = $db->fetchAll($select);
 			$result = array();
-			$tlds=array();
-			$total=0;
+			$tlds = array();
+			$total = 0;
 			foreach ($items as $key => $value) {
 				$total+=$value['cnt'];
 				$result[$value['sld'].'.'.$value['tld']]=$value['cnt'];
