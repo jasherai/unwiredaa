@@ -1,6 +1,6 @@
 <a href="/report"><?php echo $this->translate('report_index_heading'); ?></a> &raquo;
 <a href="/report/group/index/id/<?php echo $this->parent->getCodetemplateId()?>">Reports for <?php echo $this->parent->getTitle();?> </a>
-
+<br /><br /> 
 <h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?></h1>
 
 <?php
@@ -59,7 +59,7 @@ $acl = Zend_Registry::get ( 'acl' );
 				<td><?php echo nl2br($user->getGroupsAssignedFormatted()); ?></td>
 				<td class="tools">
 				  <?php
-			$actions = array ('reports', 'generate', 'delete' );
+			$actions = array ('reports', 'generate', 'instant', 'delete' );
 			
 			foreach ( $actions as $action ) :
 				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $action )) {

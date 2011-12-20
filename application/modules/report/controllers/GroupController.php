@@ -151,6 +151,35 @@ class Report_GroupController extends Unwired_Controller_Crud {
 		$iMapper->save($entity);
 		$this->_helper->redirector->gotoUrlAndExit('/report/group/view/id/'.$entity->getItemId());
 	}
+	
+	public function instantAction() {
+		$ctMapper = new Report_Model_Mapper_CodeTemplate();
+		$rMapper = new Report_Model_Mapper_Group();
+		$iMapper = new Report_Model_Mapper_Result();
+		$report = $rMapper->find($this->getRequest()->getParam('id'));
+	
+		$parent = $ctMapper->find($report->getCodetemplateId());
+	
+		$className = $parent->getClassName();
+		$reportGenerator = new $className;
+	
+	
+		$result = $reportGenerator->getData(array_keys($report->getGroupsAssigned()), $report->getDateFrom(), $report->getDateTo());
+	
+		$this->view->parent_parent = $parent;
+		$this->view->parent = $report;
+		
+		$entity = new Report_Model_Items();
+		$entity->setDateAdded(date('Y-m-d H:i:s'));
+		$entity->setData($result);
+		$entity->setReportGroupId($this->getRequest()->getParam('id'));
+		
+		$this->view->report = $entity;
+		
+		$this->view->data = $entity->getData(true);
+		$this->_helper->viewRenderer->setViewScriptPathSpec('group/view.phtml');
+		
+	}
 
 	public function viewAction() {
 
