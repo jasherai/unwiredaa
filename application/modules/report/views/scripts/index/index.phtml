@@ -18,7 +18,7 @@
 			<th><?php echo $this->translate('report_index_id');?></th>
 			<th><?php echo $this->translate('report_index_title');?></th>
 			<th></th>
-			
+
 		</tr>
 		<tr>
 			<th></th>
@@ -36,29 +36,26 @@
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
 			<td class="column_id"><?php echo $user->getCodetemplateId(); ?></td>
 			<td><?php echo $user->getTitle(); ?></td>
-			
+
 			<td class="tools">
-				  <?php
-					$actions = array('index');
-
-					foreach ($actions as $action) :
-						if (!$acl->isAllowed($this->currentUser, $user->getResourceId(), $action)) {
-							continue;
-						}
-
-						?>
 					<a href="<?php echo $this->url(array('module' => 'report',
 													     'controller' => 'group',
-													     'action' => $action,
+													     'action' => 'index',
 													     'id'	=> $user->getCodetemplateId()),
 												   null,
 												   true); ?>" class="icon view"><?php
 
-						echo $this->translate('report_index_button_' . $action);
+						echo $this->translate('report_index_button_index');
 				   ?></a>
-				   <?php
-					endforeach;
-				?>
+					<a href="<?php echo $this->url(array('module' => 'report',
+													     'controller' => 'group',
+													     'action' => 'instant',
+													     'id'	=> $user->getCodetemplateId()),
+												   null,
+												   true); ?>" class="icon instant"><?php
+
+						echo $this->translate('report_index_button_instant');
+				   ?></a>
 			</td>
 		</tr>
 		<?php endforeach; ?>

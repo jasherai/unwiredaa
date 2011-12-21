@@ -59,7 +59,7 @@ $acl = Zend_Registry::get ( 'acl' );
 				<td><?php echo nl2br($user->getGroupsAssignedFormatted()); ?></td>
 				<td class="tools">
 				  <?php
-			$actions = array ('reports', 'generate', 'instant', 'delete' );
+			$actions = array ('reports', 'generate', 'delete' );
 
 			foreach ( $actions as $action ) :
 				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $action )) {
@@ -70,7 +70,7 @@ $acl = Zend_Registry::get ( 'acl' );
 					<a
 					href="<?php
 
-				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => ($action == 'instant') ? $this->parent->getCodetemplateId() : $user->getReportGroupId() ), null, true );
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getReportGroupId() ), null, true );
 				?>"
 					class="icon <?php echo $action?>"><?php
 
