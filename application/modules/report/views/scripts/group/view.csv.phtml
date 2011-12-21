@@ -1,11 +1,6 @@
 <?php
     $reportData = $this->report->getData(true, true);
 
-    if (isset($reportData['data'])) {
-        $reportData = current($reportData['data']);
-    }
-
-
-    echo $this->arrayToCsv($reportData, ';');
+    echo $this->reportToCsv($reportData['tables'], ';');
 ?>
 

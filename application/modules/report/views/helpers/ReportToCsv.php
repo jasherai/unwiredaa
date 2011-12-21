@@ -19,9 +19,10 @@ class Report_View_Helper_ReportToCsv extends Zend_View_Helper_Abstract
     {
 
         $csv = '';
-
+//Zend_Debug::dump($data); die();
         foreach ($data as $table) {
-            $csv .= $this->_tableToCsvString($data, $separator);
+            $csv .= $this->_tableToCsvString($table, $separator);
+            $csv .= $this->_getCsvLine(array(''));
         }
 
         fclose($this->_getFp());
@@ -32,23 +33,40 @@ class Report_View_Helper_ReportToCsv extends Zend_View_Helper_Abstract
     protected function _tableToCsvString($data, $separator = ',')
     {
         $csv = '';
-
         foreach ($data['colDefs'] as $colDefRow) {
+            $titles = array();
+
             foreach ($colDefRow as $titleCol) {
-                $titles = array();
 
                 if (is_array($titleCol)) {
-                    $titles[] = $this->translate($titleCol['name']);
+                    $titles[] = $this->view->translate($titleCol['name']);
                 } else {
-                    $titles[] = $titleCol;
+                    $titles[] = $this->view->translate($titleCol);
                 }
 
-                $csv .= $this->_getCsvLine($titles, $separator);
             }
+            $csv .= $this->_getCsvLine($titles, $separator);
         }
 
         foreach ($data['rows'] as $row) {
-            $csv .= $this->_getCsvLine($row, $separator);
+            $rowData = array();
+
+            if (isset($row['data'])) {
+                $row = $row['data'];
+            }
+            foreach ($row as $field) {
+                if (is_array($field)) {
+                    if ($field['translatable'] == true) {
+                        $rowData[] = $this->view->translate($field['data']);
+                    } else {
+                        $rowData[] = str_replace('  ', '', html_entity_decode($field['data']));
+                    }
+                } else {
+                    $rowData[] = $this->view->translate(str_replace('  ', '', html_entity_decode($field)));
+                }
+            }
+
+            $csv .= $this->_getCsvLine($rowData, $separator);
         }
 
         return $csv;
