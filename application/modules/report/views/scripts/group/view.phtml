@@ -12,13 +12,14 @@
 <h1><?php echo $this->translate('report_group_heading_result'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
 <?php
     if (!isset($this->pdf)) :
+    $request = Zend_Controller_Front::getInstance()->getRequest();
 ?>
 <div class="buttons span-18">
-	<a class="button small blue" href="<?php echo $this->url(array('format' => 'csv'), 'default', false);?>"><span><?php
+	<a class="button small blue" href="<?php echo $this->url(array_merge($request->getParams(), array('format' => 'csv')), 'default', false);?>"><span><?php
 	    echo $this->translate('report_group_button_csv');
 	?></span></a>
 
-	<a class="button small blue" href="<?php echo $this->url(array('format' => 'pdf'), 'default', false);?>"><span><?php
+	<a class="button small blue" href="<?php echo $this->url(array_merge($request->getParams(), array('format' => 'pdf')), 'default', false);?>"><span><?php
 	    echo $this->translate('report_group_button_pdf');
 	?></span></a>
 </div>
@@ -79,7 +80,7 @@ $acl = Zend_Registry::get ( 'acl' );
 	<div style="clear: both;"></div>
 <?php endif; ?>
 
-<?php if (isset($this->data->tables) && is_array($this->data->tables)): ?>
+<?php if (isset($this->data->tables) && (is_array($this->data->tables) || is_object($this->data->tables))): ?>
 	<?php foreach ($this->data->tables as $key => $value): ?>
 		<table class="listing">
 		<?php foreach ($value->colDefs as $kk => $vv): ?>

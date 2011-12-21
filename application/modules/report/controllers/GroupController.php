@@ -29,6 +29,8 @@ class Report_GroupController extends Unwired_Controller_Crud {
                             		))
             		  ->addActionContext('view', 'csv')
             		  ->addActionContext('view', 'pdf')
+            		  ->addActionContext('instant', 'csv')
+            		  ->addActionContext('instant', 'pdf')
             		  ->initContext();
 
 		parent::init();
@@ -185,11 +187,18 @@ class Report_GroupController extends Unwired_Controller_Crud {
 
 		$this->view->entity = $report;
 
-	    if (!$this->getRequest()->isPost()) {
+	    if (!$this->getRequest()->isPost() && !$this->getRequest()->getParam('groups_assigned')) {
 	        return;
 	    }
 
-	    if (!$form->isValid($this->getRequest()->getPost())) {
+	    $groupsAssigned = $this->getRequest()->getParam('groups_assigned');
+
+	    if (is_string($groupsAssigned)) {
+	        $groupsAssigned = array($groupsAssigned => $groupsAssigned);
+	        $this->getRequest()->setParam('groups_assigned', $groupsAssigned);
+	    }
+
+	    if (!$form->isValid($this->getRequest()->getParams())) {
 	            try {
 					$report->fromArray($form->getValues());
 				} catch (Exception $e) {
@@ -201,6 +210,10 @@ class Report_GroupController extends Unwired_Controller_Crud {
 	    $report->fromArray($form->getValues());
 
 	    $groupsAssigned = $report->getGroupsAssigned();
+
+	    if (!$this->getRequest()->isPost()) {
+	        $groupsAssigned = array_combine($groupsAssigned, $groupsAssigned);
+	    }
 
 	    foreach ($groupsAssigned as $groupId => $value) {
 	        $group = $groupService->findGroup($groupId);
@@ -246,7 +259,7 @@ class Report_GroupController extends Unwired_Controller_Crud {
 		$this->view->report = $report;
 
 		$this->view->data = $report->getData(true);
-
+//Zend_Debug::dump($this->view->data); die();
 		$this->_exportReportData($parent, $report);
 	}
 

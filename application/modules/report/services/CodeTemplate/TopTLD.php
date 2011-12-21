@@ -75,7 +75,7 @@ class Report_Service_CodeTemplate_TopTLD extends Report_Service_CodeTemplate_Abs
 	        return $html.$total_html.'</table><br/>';
 	}
 
-	protected function getData($groupIds, $dateFrom, $dateTo) {
+	public function getData($groupIds, $dateFrom, $dateTo) {
 	        $db = Zend_Db_Table_Abstract::getDefaultAdapter();
 			/*$groupRel = $this->_getGroupRelations($groupIds);*/
 
