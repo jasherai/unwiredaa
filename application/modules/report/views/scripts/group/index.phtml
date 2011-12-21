@@ -59,10 +59,17 @@ $acl = Zend_Registry::get ( 'acl' );
 				<td><?php echo nl2br($user->getGroupsAssignedFormatted()); ?></td>
 				<td class="tools">
 				  <?php
-			$actions = array ('reports', 'generate', 'delete' );
+			$actions = array (array('action' => 'reports', 'permission' => 'view'), array('action' => 'generate', 'permission' => 'view'), 'delete' );
 
 			foreach ( $actions as $action ) :
-				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $action )) {
+			    if (is_array($action)) {
+			        $permission = $action['permission'];
+			        $action = $action['action'];
+			    } else {
+			        $permission = $action;
+			    }
+
+				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $permission )) {
 					continue;
 				}
 
