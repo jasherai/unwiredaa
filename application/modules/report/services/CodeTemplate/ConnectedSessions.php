@@ -11,15 +11,15 @@
  */
 
 class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeTemplate_Abstract {
-	
+
 	protected function getTemplate($groupIds, $data) {
 		$result = $data ['data'];
 		$totals = $data ['totals'];
 		$nullstr = "-";
 		$html = '';
-		
+
 		foreach ( $result as $k => $v ) {
-			
+
 			$html .= '<table class="listing">';
 			$html .= '<tr>
 <th rowspan=2 style="vertical-align: bottom;">Group Name</th>
@@ -32,7 +32,7 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 <th style="text-align: center;">MAC Auth.</th>
 <th style="text-align: center;">Password A.</th>
 </tr>';
-			
+
 			$totals_garden = $totals ['garden'] [$k] - ($totals ['guest'] [$k] + $totals ['macauth'] [$k] + $totals ['auth'] [$k]);
 			$html .= '<tr><td><strong>Total</td>
 <td style="text-align:right;"><strong>' . ((( int ) $totals_garden > 0) ? $totals_garden : $nullstr) . '</strong></td>
@@ -59,20 +59,20 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 <td style="text-align:right;"><strong>' . ((( int ) $totals ['garden'] [$k] > 0) ? $totals ['garden'] [$k] : $nullstr) . '</strong></td>
 </tr>';
 		}
-		
+
 		return $html;
 	}
-	
+
 	public function getData($groupIds, $dateFrom, $dateTo) {
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		$result = array ();
 		$totals = array (); //Garden,Guest,MacAuth,Auth
 		$user_types = array ("guest" => "Guest", "macauth" => "MACAuthenticated", "auth" => "Authenticated" );
-		
+
 		foreach ( $groupIds as $k => $v ) {
-			
+
 			$groupRel = $this->_getGroupRelations ( array ($v ) );
-			
+
 			/*all users (garden)*/
 			$select = $db->select ()->from ( array ('a' => 'acct_garden_session' ), array ('COUNT(*) as cnt_by_group' )	)
 				->join ( array ('b' => 'acct_garden_roaming' ), 'a.session_id = b.session_id' )
@@ -82,17 +82,17 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 				->where ( "DATE(a.start_time) BETWEEN '$dateFrom' AND '$dateTo'" )
 				->where ( 'NOT ISNULL(a.stop_time)' )
 				->group ( 'd.group_id' );
-			
+
 			$totals ['garden'] [$v] = 0;
 			foreach ( $db->fetchAll ( $select ) as $key => $value ) {
 				$totals ['garden'] [$v] += $value ['cnt_by_group'];
 				$result [$v] [$value ['group_id']] ['garden'] = $value ['cnt_by_group'];
 				$result [$v] [$value ['group_id']] ['name'] = $value ['group_name'];
 			}
-			
+
 			foreach ( $user_types as $user_type_key => $user_type_val ) {
 				$select = $db->select ()->from ( array ('a' => 'acct_internet_session' ), array ('COUNT(*) as cnt_by_group' ) )->join ( array ('b' => 'acct_internet_roaming' ), 'a.session_id = b.session_id' )->join ( array ('c' => 'node' ), 'b.node_id = c.node_id' )->where ( 'c.group_id IN (?)', $groupRel )->where ( "DATE(a.start_time) BETWEEN '$dateFrom' AND '$dateTo'" )->where ( 'NOT ISNULL(a.stop_time)' )->where ( "a.groupname = '$user_type_val'" )->group ( 'c.group_id' );
-				
+
 				$totals [$user_type_key] [$v] = 0;
 				foreach ( $db->fetchAll ( $select ) as $key => $value ) {
 					$totals [$user_type_key] [$v] += $value ['cnt_by_group'];
@@ -100,12 +100,12 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 				}
 			}
 		}
-		
+
 		$tables = array();
-		
+
 		$nullstr = '-';
-		
-		
+
+
 		foreach ($result as $k => $v) {
 			$table = array(
 					'colDefs' => array(
@@ -123,9 +123,9 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 							),
 					)
 			);
-			
+
 			$totals_garden = $totals ['garden'] [$k] - ($totals ['guest'] [$k] + $totals ['macauth'] [$k] + $totals ['auth'] [$k]);
-			
+
 			$total_row =  array(
 				'data' => array(
 					array('data' => 'report_result_total', 'translatable' => true),
@@ -137,31 +137,31 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 				),
 				'class' => array('bold', 'bold right', 'bold right', 'bold right', 'bold right', 'bold right')
 			);
-			
+
 			$table['rows'][] = $total_row;
-			
+
 			foreach ( $v as $key => $value ) {
-				
-				$value_garden = ($value ['garden'] * 1) - (($value ['guest'] * 1) + ($value ['macauth'] * 1) + ($value ['auth'] * 1));
-				
+
+				$value_garden = ($value ['garden'] * 1) - (($value ['guest'] * 1) + (isset($value ['macauth']) ? $value['macauth'] * 1 : 0) + (isset($value ['auth']) ? $value['auth'] * 1 : 0));
+
 				$table['rows'][] = array(
 					'data' => array(
 						$value['name'],
 						((( int ) $value_garden > 0) ? $value_garden : $nullstr),
 						((( int ) $value ['guest'] > 0) ? $value ['guest'] : $nullstr),
-						((( int ) $value ['macauth'] > 0) ? $value ['macauth'] : $nullstr),
-						((( int ) $value ['auth'] > 0) ? $value ['auth'] : $nullstr),
+						((isset($value['macauth']) && ( int ) $value ['macauth'] > 0) ? $value ['macauth'] : $nullstr),
+						((isset($value['auth']) && ( int ) $value ['auth'] > 0) ? $value ['auth'] : $nullstr),
 						((( int ) $value ['garden'] > 0) ? $value ['garden'] : $nullstr),
 					),
 					'class' => array('', 'right', 'right', 'right', 'right', 'right')
 				);
 			}
-				
+
 			$table['rows'][] = $total_row;
-			
+
 			$tables[] = $table;
 		}
-		
+
 		$k = $groupIds[0];
 		$report = array(
 			'graphics' => array(
@@ -187,7 +187,7 @@ class Report_Service_CodeTemplate_ConnectedSessions extends Report_Service_CodeT
 			),
 			'tables' => $tables
 		);
-		
+
 		return $report;
 	}
 }

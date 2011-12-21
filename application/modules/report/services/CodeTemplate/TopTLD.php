@@ -28,20 +28,27 @@ class Report_Service_CodeTemplate_TopTLD extends Report_Service_CodeTemplate_Abs
 			$items = $db->fetchAll($select);
 			$result = array();
 			$total=0;
+
+
 			foreach ($items as $key => $value) {
 				$total+=$value['cnt'];
-				if (!is_array($result[$value['tld']]['sld'])){
-					$result[$value['tld']]['sld']=array();
-					$result[$value['tld']]['count']=$value['cnt'];
+				if (!isset($result[$value['tld']])) {
+				    $result[$value['tld']] = array('sld' => array(),
+				                                   'count' => 0);
 				}
-				else {
-					$result[$value['tld']]['count']+=$value['cnt'];
-				}
+
+
+				$result[$value['tld']]['count']+=$value['cnt'];
+
 				if ($value['cnt']>100) {
-					$result[$value['tld']]['sld'][$value['sld']]=$value['cnt'];
+					$result[$value['tld']]['sld'][$value['sld']] = $value['cnt'];
 				} else {
-					if (!$result[$value['tld']]['sld']['[other]']) $result[$value['tld']]['sld']['[other]']=$value['cnt'];
-					else $result[$value['tld']]['sld']['[other]']+=$value['cnt'];
+					if (!isset($result[$value['tld']]['sld']['report_result_other_domain'])) {
+					    $result[$value['tld']]['sld']['report_result_other_domain']=$value['cnt'];
+					}
+					else  {
+					    $result[$value['tld']]['sld']['report_result_other_domain']+=$value['cnt'];
+					}
 				}
 			}
 
@@ -51,7 +58,44 @@ class Report_Service_CodeTemplate_TopTLD extends Report_Service_CodeTemplate_Abs
 				}
 				return ($a['count'] > $b['count']) ? -1 : 1;
 			});
-	        return array('data' => $result,'total' => $total);
+
+//			Zend_Debug::dump($result); die();
+
+			$report = array('graphics' => array(),
+			                'tables' => array('tld' => array('colDefs' => array(array('report_result_tld',
+			                                                                    	  array('name' =>'report_result_request_count',
+			                                                                    	        'width' => '20%'))),
+			                                                 'rows' => array())));
+
+    	    $graphics = array();
+
+            foreach ($result as $tld => $values) {
+                if (count($report['tables']['tld']['rows'])) {
+                    $report['tables']['tld']['rows'][] = array('data' => array('&nbsp;','&nbsp;'),
+                                                               'class' => array('bold', 'bold right'));
+                }
+                $report['tables']['tld']['rows'][] = array('data' => array('.' . $tld, $values['count']),
+                                                           'class' => array('bold', 'bold right'));
+
+                $graphics[] = array($tld, $values['count']);
+
+                foreach ($values['sld'] as $sld => $count) {
+                    if ($sld == 'report_result_other_domain') {
+                        $report['tables']['tld']['rows'][] = array('data' => array(array('data' => 'report_result_other_domain', 'translatable' => true), $count),
+                                                              'class' => array('', 'right'));
+                    } else {
+                    $report['tables']['tld']['rows'][] = array('data' => array('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $sld . '.' . $tld, $count),
+                                                              'class' => array('', 'right'));
+                    }
+                }
+            }
+
+            $report['graphics'] = array('tld' => array('name' => 'report_result_tld',
+			                                           'type' => 'piechart',
+													   'headers' => array('report_result_tld', 'report_result_request_count'),
+			                                           'rows' => $graphics));
+
+	        return $report;
 	}
 }
 
