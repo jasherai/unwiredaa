@@ -188,6 +188,16 @@ class Report_GroupController extends Unwired_Controller_Crud {
 		$this->view->entity = $report;
 
 	    if (!$this->getRequest()->isPost() && !$this->getRequest()->getParam('groups_assigned')) {
+	        $dateTo = new Zend_Date();
+
+	        $dateTo->setDay(1)
+	               ->addMonth(1)
+	               ->subDay(1);
+
+	        $form->getElement('date_from')->setValue(date('Y-m-01'));
+
+	        $form->getElement('date_to')->setValue($dateTo->toString('yyyy-MM-dd'));
+
 	        return;
 	    }
 
