@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Unwired AA GUI
  *
@@ -10,70 +9,8 @@
  * (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
  * license available at http://www.unwired.at/license.html
  */
-class Report_Service_CodeTemplate_TopTLD extends Report_Service_CodeTemplate_Abstract {
-
-	protected function getTemplate($groupIds, $data) {
-
-	        $result = $data['data'];
-	        $total = $data['total'];
-
-        	$html = '
-	        <script type="text/javascript">
-		      google.load("visualization", "1", {packages:["corechart"]});
-		      google.setOnLoadCallback(drawChart);
-		      function drawChart() {
-		        var data = new google.visualization.DataTable();
-		        data.addColumn("string", "TLD");
-		        data.addColumn("number", "Requests");
-		    ';
-	        	$html .= 'data.addRows('.count($result).');';
-	        	$j = 0;
-		        foreach ($result as $key => $value) {
-		        	$html .= 'data.setValue('.$j.', 0, "'.$key.'");';
-		        	$html .= 'data.setValue('.$j.', 1, '.$value['count'].');';
-		        	$j++;
-		        }
-
-			$html .= '
-		        var chart = new google.visualization.PieChart(document.getElementById("chart_div"));
-		        chart.draw(data, {width: 450, height: 300, title: "Top Level Domains"});
-		      }
-		    </script>
-	        ';
-
-	        $html .= '<div id="chart_div"></div>';
-
-		$head_html = '<tr><th>Domain</th><th>Requests</th><th>Share</th></tr>';
-
-		$total_html = $head_html.'<tr><td><strong>Total</strong></td><td><strong>'.$total.'</strong></td><td>-</td></tr>';
-
-	        $html .= '<table class="listing">'.$total_html;
-
-		$other_tld=0;
-	        foreach ($result as $k => $v) {
-			$total+=$v['cnt'];
-			if ($v['count']>100)
-			{
-				$html .= $head_html.'<tr><td><strong>*.'.$k.'</strong></td>
-<td><strong>'.$v['count'].'</strong></td>
-<td><strong>'.round($v['count']*100/$total,2).'%</strong></td></tr>';
-				if (!((count($v['sld'])==1) && ($v['sld']['[other]']))) /*do not list one [other].**/
-					 foreach ($v['sld'] as $sk => $sv) {
-						$html .= '<tr><td>'.$sk.'.'.$k.'</td>
-<td>'.$sv.'</td>
-<td>'.round($sv*100/$total,2).'%</td></tr>';
-					}
-		        } else	{
-				$other_tld+=$v['cnt'];
-			}
-		}
-		if ($other_tld>0) {
-			$html .= $head_html.'<tr><td><strong>*.[other]</strong></td>
-<td><strong>'.$other_tld.'</strong></td>
-<td><strong>'.round($other_tld*100/$total,2).'%</strong></td></tr>';
-		}
-	        return $html.$total_html.'</table><br/>';
-	}
+class Report_Service_CodeTemplate_TopTLD extends Report_Service_CodeTemplate_Abstract
+{
 
 	public function getData($groupIds, $dateFrom, $dateTo) {
 	        $db = Zend_Db_Table_Abstract::getDefaultAdapter();

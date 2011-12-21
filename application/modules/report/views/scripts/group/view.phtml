@@ -101,7 +101,13 @@ $acl = Zend_Registry::get ( 'acl' );
 		<?php if (isset($value->rows)): ?>
 			<?php foreach ($value->rows as $k => $v): ?>
 			<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-				<?php foreach ($v->data as $kk => $vv): ?>
+				<?php
+				    foreach ($v->data as $kk => $vv):
+
+				    if (isset($v->class) && is_object($v->class)) {
+				        $v->class = (array) $v->class;
+				    }
+				?>
 
 				<td class="<?php echo (isset($v->class[$kk]))? $v->class[$kk]:'';?>" <?php if (is_object($vv) && isset($vv->rowspan)): ?>rowspan="<?php echo $vv->rowspan?>"<?php endif; ?> <?php if (is_object($vv) && isset($vv->colspan)): ?>colspan="<?php echo $vv->colspan?>"<?php endif; ?>>
 				<?php if (is_object($vv)):?>
