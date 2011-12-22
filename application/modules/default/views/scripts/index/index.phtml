@@ -70,7 +70,7 @@
 					'<p><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</p>' +
 					'<p><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</p>' +
 					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_up')?>:</strong> ' + data.total_bytes_up + '</p>' +
-					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_down')?>:</strong> ' + data.total_bytes_down + '</p>';
+					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_down')?>:</strong> ' + data.total_bytes_down + '</p>'
 				);
 
 				statsTimer = setTimeout("loadStatistics(deviceData);", 5000);
@@ -135,7 +135,10 @@
 									  '<div>' + onlinemsg + '</div>' +
 									  '<div class="stats"></div>'+
 									  '</div>');
-				loadStatistics(data);
+				if (data.online_status > 0) {
+					loadStatistics(data);
+				}
+
 				infowindow.open(map, marker);
 		    });
 		});
