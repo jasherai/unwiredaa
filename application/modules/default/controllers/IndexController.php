@@ -18,23 +18,33 @@
 class Default_IndexController extends Unwired_Controller_Action
 {
 
+    protected $_cache = null;
+
+    protected function _getCache()
+    {
+        if (null === $this->_cache) {
+            $cacheMgr = $this->getInvokeArg('bootstrap')->getResource('Cachemanager');
+
+            $this->_cache = $cacheMgr->getCache('default');
+        }
+
+        return $this->_cache;
+    }
+
     public function indexAction()
     {
     	/**
     	 * @todo Make ajax calls to load nodes only in current viewport
     	 */
-        $cacheMgr = $this->getInvokeArg('bootstrap')->getResource('Cachemanager');
 
-        $cache = $cacheMgr->getCache('default');
-
-        $nodes = $cache->load('device_map_data');
+        $nodes = $this->getCache()->load('device_map_data');
 
         if (!$nodes) {
             $mapper = new Nodes_Model_Mapper_Node();
 
             $nodes = $mapper->fetchAll();
 
-            $cache->save($nodes, 'device_map_data', array('node'), 3600);
+            $this->getCache()->save($nodes, 'device_map_data', array('node'), 3600);
         }
 
         $this->view->nodes = $nodes;
@@ -49,10 +59,19 @@ class Default_IndexController extends Unwired_Controller_Action
 
         $stats = array();
 
-        if ($location) {
+        if (!$location) {
+             echo $this->view->json(array());
+             return;
+        }
+
+        $stats = $this->getCache()->load('device_map_stats_' . $location);
+
+        if (empty($stats)) {
             $serviceChilli = new Default_Service_Chilli();
 
             $stats = $serviceChilli->getDeviceStatistics($location);
+
+            $this->getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 20);
         }
 
         echo $this->view->json($stats);
