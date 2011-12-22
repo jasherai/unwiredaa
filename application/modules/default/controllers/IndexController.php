@@ -71,7 +71,7 @@ class Default_IndexController extends Unwired_Controller_Action
 
             $stats = $serviceChilli->getDeviceStatistics($location);
 
-            $this->_getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 20);
+            $this->_getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 5);
         }
 
         echo $this->view->json($stats);
