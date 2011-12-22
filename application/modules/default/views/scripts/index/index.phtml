@@ -48,6 +48,36 @@
 		return match[3] + '/' + match[2] + '/' + match[1] + ' ' + match[4];
 	}
 
+	var lastDevice = null;
+
+	var statsTimer = null;
+
+	function loadStatistics(deviceData)
+	{
+		lastDevice = deviceData;
+
+		$.ajax({
+			url: '<?php echo $this->url(array('module' => 'default',
+			                                  'controller' => 'index',
+			                                  'action' => 'stats'), 'default', true)?>/location/' + deviceData.mac,
+			success: function(data) {
+				if (lastDevice !== deviceData) {
+					return;
+				}
+
+				$('#infowindowcontainer div.stats').html(
+					'<p><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + '</p>' +
+					'<p><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</p>' +
+					'<p><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</p>' +
+					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_up')?>:</strong> ' + data.total_bytes_up + '</p>' +
+					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_down')?>:</strong> ' + data.total_bytes_down + '</p>';
+				);
+
+				statsTimer = setTimeout("loadStatistics(deviceData);", 5000);
+			}
+		});
+	}
+
 	$(document).ready(function(){
 		$('#nodemap').height(450);
 
@@ -94,10 +124,18 @@
 			marker.setMap(map);
 
 		    google.maps.event.addListener(marker, 'click', function(event) {
-				infowindow.setContent('<h5>' + marker.getTitle() +'</h5>'+
+		        if (statsTimer) {
+		        	clearTimeout(statsTimer);
+		        }
+
+				infowindow.setContent('<div id="infowindowcontainer">' +
+									  '<h5>' + marker.getTitle() +'</h5>' +
 									  '<div>MAC: ' + data.mac + '</div>' +
 									  '<div>Address: ' + data.location.address + ', ' + data.location.city +', ' + data.location.country + '</div>' +
-									  '<div>' + onlinemsg + '</div>');
+									  '<div>' + onlinemsg + '</div>' +
+									  '<div class="stats"></div>'+
+									  '</div>');
+				loadStatistics(data);
 				infowindow.open(map, marker);
 		    });
 		});
