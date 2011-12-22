@@ -73,7 +73,7 @@
 					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_down')?>:</strong> ' + data.total_bytes_down + '</p>'
 				);
 
-				statsTimer = setTimeout("loadStatistics(deviceData);", 5000);
+				statsTimer = setTimeout("loadStatistics(lastDevice);", 5000);
 			}
 		});
 	}
