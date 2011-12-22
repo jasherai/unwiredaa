@@ -37,14 +37,14 @@ class Default_IndexController extends Unwired_Controller_Action
     	 * @todo Make ajax calls to load nodes only in current viewport
     	 */
 
-        $nodes = $this->getCache()->load('device_map_data');
+        $nodes = $this->_getCache()->load('device_map_data');
 
         if (!$nodes) {
             $mapper = new Nodes_Model_Mapper_Node();
 
             $nodes = $mapper->fetchAll();
 
-            $this->getCache()->save($nodes, 'device_map_data', array('node'), 3600);
+            $this->_getCache()->save($nodes, 'device_map_data', array('node'), 3600);
         }
 
         $this->view->nodes = $nodes;
@@ -64,14 +64,14 @@ class Default_IndexController extends Unwired_Controller_Action
              return;
         }
 
-        $stats = $this->getCache()->load('device_map_stats_' . $location);
+        $stats = $this->_getCache()->load('device_map_stats_' . $location);
 
         if (empty($stats)) {
             $serviceChilli = new Default_Service_Chilli();
 
             $stats = $serviceChilli->getDeviceStatistics($location);
 
-            $this->getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 20);
+            $this->_getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 20);
         }
 
         echo $this->view->json($stats);
