@@ -131,7 +131,11 @@
 									  '<div>MAC: ' + data.mac + '</div>' +
 									  '<div>Address: ' + data.location.address + ', ' + data.location.city +', ' + data.location.country + '</div>' +
 									  '<div>' + onlinemsg + '</div>' +
-									  '<div class="stats"></div>'+
+									  '<div class="stats">' +
+									  '<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> 0 / 0 / 0</div>' +
+									  '<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> 0</div>' +
+									  '<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> 0</div>' +
+									  '</div>' +
 									  '</div>');
 				if (data.online_status > 0) {
 					loadStatistics(data);
