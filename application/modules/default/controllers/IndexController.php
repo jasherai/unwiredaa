@@ -45,7 +45,7 @@ class Default_IndexController extends Unwired_Controller_Action
         $this->_helper->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        $location = $this->getParam('location', null);
+        $location = $this->getRequest()->getParam('location', null);
 
         $stats = array();
 
