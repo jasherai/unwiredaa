@@ -55,4 +55,17 @@ class Default_Bootstrap extends Unwired_Application_Module_Bootstrap
 
 		return $logger;
 	}
+
+	protected function _initChilliSettings()
+	{
+        $chilliOptions = $this->getOption('chilli');
+
+        if (!$chilliOptions) {
+            $chilliOptions = array();
+        }
+
+        Default_Service_Chilli::setDefaultOptions($chilliOptions);
+
+        return $chilliOptions;
+	}
 }
