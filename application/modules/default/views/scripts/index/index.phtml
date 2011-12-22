@@ -66,14 +66,12 @@
 				}
 
 				$('#infowindowcontainer div.stats').html(
-					'<p><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + '</p>' +
-					'<p><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</p>' +
-					'<p><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</p>' +
-					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_up')?>:</strong> ' + data.total_bytes_up + '</p>' +
-					'<p><strong><?php echo $this->translate('default_index_index_ap_bytes_down')?>:</strong> ' + data.total_bytes_down + '</p>'
+					'<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + '</div>' +
+					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</div>' +
+					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</div>'
 				);
 
-				statsTimer = setTimeout("loadStatistics(lastDevice);", 5000);
+ 				statsTimer = setTimeout("loadStatistics(lastDevice);", 5000);
 			}
 		});
 	}
