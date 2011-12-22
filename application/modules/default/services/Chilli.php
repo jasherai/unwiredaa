@@ -62,6 +62,10 @@ class Default_Service_Chilli
 
         $result = $client->request();
 
-        Zend_Debug::dump($result); die();
+        if ($result->getStatus() != 200) {
+            return array();
+        } else {
+            return json_decode($result->getBody());
+        }
     }
 }
