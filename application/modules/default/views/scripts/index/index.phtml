@@ -66,7 +66,7 @@
 				}
 
 				$('#infowindowcontainer div.stats').html(
-					'<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + '</div>' +
+					'<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + ' / ' + data.internet_users + ' / ' + data.active_internet_users + '</div>' +
 					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</div>' +
 					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</div>'
 				);
@@ -99,7 +99,7 @@
 			var formattedDate = formatDbDate(data.online_status_changed);
 
 			if (data.online_status > 0) {
-				onlinemsg = 'Online users: ' + data.online_users_count;
+				onlinemsg = ''; // 'Online users: ' + data.online_users_count;
 	    		onlinemsg = onlinemsg + '</div><div>Online since: ' + formattedDate;
 	    		mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-green.png")?>";
 	    	} else {
