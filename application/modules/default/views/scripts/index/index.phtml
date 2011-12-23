@@ -65,12 +65,13 @@
 					return;
 				}
 
-				$('#infowindowcontainer div.stats').html(
-					'<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + ' / ' + data.internet_users + ' / ' + data.active_internet_users + '</div>' +
-					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</div>' +
-					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</div>'
-				);
-
+				if (data) {
+    				$('#infowindowcontainer div.stats').html(
+    					'<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.active_users + ' / ' + data.internet_users + ' / ' + data.active_internet_users + '</div>' +
+    					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</div>' +
+    					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</div>'
+    				);
+				}
  				statsTimer = setTimeout("loadStatistics(lastDevice);", 5000);
 			}
 		});
@@ -85,10 +86,12 @@
 			                                  'interface' => 'total'), 'default', true)?>',
 			success: function(data) {
 
-				// $('#devicesonline').text(online_ap_count);
-				$('#usersonline').text(data.active_users);
-				$('#bandwidthup').text(data.total_kbps_up);
-				$('#bandwidthdown').text(data.total_kbps_down);
+				if (data) {
+				    // $('#devicesonline').text(online_ap_count);
+					$('#usersonline').text(data.active_users);
+					$('#bandwidthup').text(data.total_kbps_up);
+					$('#bandwidthdown').text(data.total_kbps_down);
+				}
 
  				statsTimer = setTimeout("loadNetworkStatistics();", 10000);
 			}
