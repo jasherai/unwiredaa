@@ -142,6 +142,10 @@
 				mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-yellow.png")?>";
 			}
 
+			if (data.status == 'disabled') {
+				mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-grey.png")?>";
+			}
+
 			var marker = new google.maps.Marker({
 		        position: new google.maps.LatLng(data.location.latitude, data.location.longitude),
 		        title: data.name,
