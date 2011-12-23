@@ -82,7 +82,7 @@ class Default_IndexController extends Unwired_Controller_Action
             if (empty($stats)) {
                 $stats = $serviceChilli->getInterfaceStatistics($interface);
 
-                $this->_getCache()->save($stats, 'device_map_stats_total', array('node'), 10);
+                $this->_getCache()->save($stats, 'device_map_stats_total', array('node'), 7);
             }
         }
 

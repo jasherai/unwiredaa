@@ -1,4 +1,5 @@
 <?php
+	$this->headScript()->appendFile($this->baseUrl('scripts/jquery.sparkline.min.js'));
 	$this->headScript()->appendFile($this->httpScheme() . '://maps.googleapis.com/maps/api/js?sensor=false');
 
 	$nodes = array();
@@ -52,6 +53,9 @@
 
 	var statsTimer = null;
 
+	var networkUpGraph = [0,0,0,0,0,0,0,0,0,0];
+	var networkDownGraph = [0,0,0,0,0,0,0,0,0,0];
+
 	function loadStatistics(deviceData)
 	{
 		lastDevice = deviceData;
@@ -94,9 +98,18 @@
 					// $('#usersonline').text(data.active_users);
 					$('#bandwidthup').text(data.kbps_tx);
 					$('#bandwidthdown').text(data.kbps_rx);
+
+					networkUpGraph.push(data.kbps_tx);
+					networkUpGraph.splice(0,1);
+					$('#networkgraphup').sparkline(networkUpGraph, { width: networkUpGraph.length*3 })
+
+					networkDownGraph.push(data.kbps_rx);
+					networkDownGraph.splice(0,1);
+
+					$('#networkgraphdown').sparkline(networkDownGraph, { width: networkDownGraph.length*3 })
 				}
 
- 				statsTimer = setTimeout("loadNetworkStatistics();", 10000);
+ 				statsTimer = setTimeout("loadNetworkStatistics();", 7000);
 			}
 		});
 	}
@@ -194,6 +207,6 @@
 <div id="networkstats">
 	<div><strong><?php echo $this->translate('default_index_index_devices_online')?>:</strong> <span id="devicesonline">0</span></div>
 	<div><strong><?php echo $this->translate('default_index_index_users_online')?>:</strong> <span id="usersonline">0</span></div>
-	<div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span></div>
-	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span> <span id="networkgraphup"></span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span> <span id="networkgraphdown"></span></div>
 </div>
