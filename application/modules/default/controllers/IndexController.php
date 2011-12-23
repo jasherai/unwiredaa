@@ -57,23 +57,34 @@ class Default_IndexController extends Unwired_Controller_Action
 
         $location = $this->getRequest()->getParam('location', null);
 
+        $interface = $this->getRequest()->getParam('interface', null);
+
         $stats = array();
 
-        if (!$location) {
+        if (!$location && !$interface) {
              echo $this->view->json(array());
              return;
         }
 
-        $stats = $this->_getCache()->load('device_map_stats_' . $location);
+        $serviceChilli = new Default_Service_Chilli();
 
-        if (empty($stats)) {
-            $serviceChilli = new Default_Service_Chilli();
+        if ($location) {
+            $stats = $this->_getCache()->load('device_map_stats_' . $location);
 
-            $stats = $serviceChilli->getDeviceStatistics($location);
+            if (empty($stats)) {
+                $stats = $serviceChilli->getDeviceStatistics($location);
 
-            $this->_getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 5);
+                $this->_getCache()->save($stats, 'device_map_stats_' . $location, array('node', $location), 5);
+            }
+        } else {
+            $stats = $this->_getCache()->load('device_map_stats_total');
+
+            if (empty($stats)) {
+                $stats = $serviceChilli->getInterfaceStatistics($interface);
+
+                $this->_getCache()->save($stats, 'device_map_stats_total', array('node'), 10);
+            }
         }
-
         echo $this->view->json($stats);
     }
 

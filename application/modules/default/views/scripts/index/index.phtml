@@ -76,6 +76,25 @@
 		});
 	}
 
+	function loadNetworkStatistics()
+	{
+		$.ajax({
+			url: '<?php echo $this->url(array('module' => 'default',
+			                                  'controller' => 'index',
+			                                  'action' => 'stats',
+			                                  'interface' => 'total'), 'default', true)?>',
+			success: function(data) {
+
+				// $('#devicesonline').text(online_ap_count);
+				$('#usersonline').text(data.active_users);
+				$('#bandwidthup').text(data.total_kbps_up);
+				$('#bandwidthdown').text(data.total_kbps_down);
+
+ 				statsTimer = setTimeout("loadNetworkStatistics();", 10000);
+			}
+		});
+	}
+
 	$(document).ready(function(){
 		$('#nodemap').height(450);
 
@@ -92,16 +111,23 @@
 
 		infowindow = new google.maps.InfoWindow();
 
+		var online_ap_count = 0;
+		var online_users = 0;
+
 		$.each(nodes, function(idx, data) {
 			var mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-red.png")?>";
 			var onlinemsg = '';
 
 			var formattedDate = formatDbDate(data.online_status_changed);
 
+
+
 			if (data.online_status > 0) {
 				onlinemsg = ''; // 'Online users: ' + data.online_users_count;
 	    		onlinemsg = onlinemsg + '</div><div>Online since: ' + formattedDate;
 	    		mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-green.png")?>";
+	    		online_ap_count++;
+	    		online_users = online_users + data.online_users_count;
 	    	} else {
 	    		onlinemsg = 'Offline since: ' + formattedDate;
 	    	}
@@ -144,6 +170,9 @@
 				infowindow.open(map, marker);
 		    });
 		});
+
+		$('#devicesonline').text(online_ap_count);
+		$('#usersonline').text(online_users);
 	});
 
 <?php
@@ -151,3 +180,9 @@
 ?>
 
 <div id="nodemap"></div>
+<div id="networkstats">
+	<div><strong><?php echo $this->translate('default_index_index_devices_online')?>:</strong> <span id="devicesonline">0</span></div>
+	<div><strong><?php echo $this->translate('default_index_index_users_online')?>:</strong> <span id="usersonline">0</span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span></div>
+</div>

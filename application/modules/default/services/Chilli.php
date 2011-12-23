@@ -68,4 +68,22 @@ class Default_Service_Chilli
             return json_decode($result->getBody());
         }
     }
+
+    public function getInterfaceStatistics($interface)
+    {
+        $client = new Zend_Http_Client();
+
+        $client->setUri($this->getOption('statsUrl'))
+               ->setParameterGet('interface', $interface)
+               ->setParameterGet('json', 1)
+               ->setParameterGet('interval', 0);
+
+        $result = $client->request();
+
+        if ($result->getStatus() != 200) {
+            return array();
+        } else {
+            return json_decode($result->getBody());
+        }
+    }
 }
