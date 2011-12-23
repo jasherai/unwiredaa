@@ -83,7 +83,11 @@ class Default_Service_Chilli
         if ($result->getStatus() != 200) {
             return array();
         } else {
-            return json_decode($result->getBody());
+            $body = $result->getBody();
+            if (!in_array($body[0], array('{', '['))) {
+                $body = '{' . substr($body, strpos($body, '"')) . '}';
+            }
+            return json_decode($body);
         }
     }
 }
