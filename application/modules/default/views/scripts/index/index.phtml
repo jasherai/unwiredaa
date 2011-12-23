@@ -88,9 +88,9 @@
 
 				if (data) {
 				    // $('#devicesonline').text(online_ap_count);
-					$('#usersonline').text(data.active_users);
-					$('#bandwidthup').text(data.total_kbps_up);
-					$('#bandwidthdown').text(data.total_kbps_down);
+					// $('#usersonline').text(data.active_users);
+					$('#bandwidthup').text(data.kbps_tx);
+					$('#bandwidthdown').text(data.kbps_rx);
 				}
 
  				statsTimer = setTimeout("loadNetworkStatistics();", 10000);

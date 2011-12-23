@@ -85,6 +85,7 @@ class Default_IndexController extends Unwired_Controller_Action
                 $this->_getCache()->save($stats, 'device_map_stats_total', array('node'), 10);
             }
         }
+
         echo $this->view->json($stats);
     }
 
