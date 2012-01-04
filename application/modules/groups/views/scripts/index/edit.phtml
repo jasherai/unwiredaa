@@ -10,6 +10,7 @@
 	$this->headLink()->appendStylesheet($this->baseUrl('scripts/jstree/themes/default/style.css'));
 	$this->headScript()->captureStart();
 ?>
+var adminGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
 $(function () {
 	$("input[name=parent_id]").hide().after($('.grouptree'));
 

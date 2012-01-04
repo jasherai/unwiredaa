@@ -5,10 +5,10 @@
 * Author & Copyright (c) 2011 Unwired Networks GmbH
 * alexander.szlezak@unwired.at
 *
-* Licensed under the terms of the Affero Gnu Public License version 3 
-* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory 
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
 * license available at http://www.unwired.at/license.html
-*/  
+*/
 
 class Groups_Service_Acl implements Zend_Acl_Assert_Interface
 {
@@ -38,7 +38,15 @@ class Groups_Service_Acl implements Zend_Acl_Assert_Interface
 		}
 
 
-		$groupRole = 'groups_group_' . $resource->getParentId();
+		/**
+		 * On edit we need the privilige of the parent group
+		 */
+		if ($privilege == 'edit' || $privilege == 'delete') {
+		    $groupRole = 'groups_group_' . $resource->getParentId();
+		} else {
+		    $groupRole = 'groups_group_' . $resource->getGroupId();
+		}
+
 		if (!$acl->hasRole($groupRole)) {
 			return false;
 		}

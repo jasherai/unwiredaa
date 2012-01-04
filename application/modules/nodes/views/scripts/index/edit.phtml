@@ -12,8 +12,9 @@
 	$this->headScript()->appendFile($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.pack.js'));
 	$this->headLink()->appendStylesheet($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.css'));
 	$this->headScript()->captureStart();
+    $adminGroups = $this->currentUser->getGroupsAssigned();
 
-	$openGroup = ($this->form->group_id->getValue()) ? $this->form->group_id->getValue() : 1;
+	$openGroup = ($this->form->group_id->getValue()) ? $this->form->group_id->getValue() : key($adminGroups);
 ?>
 
 var map;

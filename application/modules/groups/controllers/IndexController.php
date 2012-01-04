@@ -51,6 +51,21 @@ class Groups_IndexController extends Unwired_Rest_Controller
 
 		$this->view->rootGroup = $rootGroup;
 
+		if ($this->getRequest()->isPost() && $entity) {
+            $entity->setParentId($this->getRequest()->getParam('parent_id', null));
+
+            $oldParent = $entity->getParentId();
+            $oldId = $entity->getGroupId();
+            $entity->setGroupId(1);
+
+            if (!$this->getAcl()->isAllowed($this->_currentUser, $entity, 'edit')) {
+                $this->getRequest()->setParam('parent_id', null);
+            }
+
+            $entity->setGroupId($oldId)
+                   ->setParentId($oldParent);
+		}
+
 		parent::_add($mapper, $entity, $form);
 	}
 

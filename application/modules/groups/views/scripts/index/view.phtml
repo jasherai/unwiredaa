@@ -51,4 +51,22 @@
 	<?php
 		endif;
 	?>
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+	<?php if ($acl->isAllowed($this->currentUser, $this->group, 'add')) :?>
+		$('div.buttons:last').html('<a id="addlink" class="button small green" href="<?php
+		    echo $this->url(array('action' => 'add',
+			  					  'id' => null,
+		    					  'parent' => $this->group->getGroupId()),
+				   null,
+				   false);
+            ?>"><span><?php echo $this->translate('groups_group_index_button_add');?></span></a>');
+	<?php else: ?>
+	// hide the button
+	$('div.buttons:last').html('');
+    <?php endif; ?>
+    });
+	</script>
+
 </div>
