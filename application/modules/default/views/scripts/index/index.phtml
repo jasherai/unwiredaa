@@ -101,12 +101,12 @@
 
 					networkUpGraph.push(data.kbps_tx);
 					networkUpGraph.splice(0,1);
-					$('#networkgraphup').sparkline(networkUpGraph, { width: networkUpGraph.length*5 })
+					$('#networkgraphup').sparkline(networkUpGraph, { width: 510 })
 
 					networkDownGraph.push(data.kbps_rx);
 					networkDownGraph.splice(0,1);
 
-					$('#networkgraphdown').sparkline(networkDownGraph, { width: networkDownGraph.length*5 })
+					$('#networkgraphdown').sparkline(networkDownGraph, { width: 510 })
 				}
 
  				statsTimer = setTimeout("loadNetworkStatistics();", 3000);
@@ -213,7 +213,7 @@
 <div id="networkstats">
 	<!-- <div><strong><?php echo $this->translate('default_index_index_devices_online')?>:</strong> <span id="devicesonline">0</span></div>
 	<div><strong><?php echo $this->translate('default_index_index_users_online')?>:</strong> <span id="usersonline">0</span></div> -->
-	<div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span> <span id="networkgraphup" class="span-11 last" style="float:right;"></span></div>
-	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span> <span id="networkgraphdown" class="span-11 last" style="float:right;"></span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span> <span id="networkgraphup" class="span-13 last" style="float:right; text-align: right;"></span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span> <span id="networkgraphdown" class="span-13 last" style="float:right; text-align: right;"></span></div>
 </div>
 <?php endif; ?>
