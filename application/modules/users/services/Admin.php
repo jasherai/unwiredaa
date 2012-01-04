@@ -49,6 +49,10 @@ class Users_Service_Admin implements Zend_Acl_Assert_Interface
 
 	public function logout()
 	{
+	    if (!Zend_Auth::getInstance()->hasIdentity()) {
+	        return true;
+	    }
+
 		$user = Zend_Auth::getInstance()->getIdentity();
 
 		Zend_Auth::getInstance()->clearIdentity();

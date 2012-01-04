@@ -53,8 +53,8 @@
 
 	var statsTimer = null;
 
-	var networkUpGraph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-	var networkDownGraph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var networkUpGraph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var networkDownGraph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 	function loadStatistics(deviceData)
 	{
@@ -78,7 +78,7 @@
 				}
 
 				if ($('#infowindowcontainer').is(':visible')) {
- 					statsTimer = setTimeout("loadStatistics(lastDevice);", 5000);
+ 					statsTimer = setTimeout("loadStatistics(lastDevice);", 2000);
 				}
 			}
 		});
@@ -101,15 +101,15 @@
 
 					networkUpGraph.push(data.kbps_tx);
 					networkUpGraph.splice(0,1);
-					$('#networkgraphup').sparkline(networkUpGraph, { width: networkUpGraph.length*3 })
+					$('#networkgraphup').sparkline(networkUpGraph, { width: networkUpGraph.length*5 })
 
 					networkDownGraph.push(data.kbps_rx);
 					networkDownGraph.splice(0,1);
 
-					$('#networkgraphdown').sparkline(networkDownGraph, { width: networkDownGraph.length*3 })
+					$('#networkgraphdown').sparkline(networkDownGraph, { width: networkDownGraph.length*5 })
 				}
 
- 				statsTimer = setTimeout("loadNetworkStatistics();", 7000);
+ 				statsTimer = setTimeout("loadNetworkStatistics();", 2000);
 			}
 		});
 	}
@@ -180,6 +180,7 @@
 									  '<div>MAC: ' + data.mac + '</div>' +
 									  '<div>Address: ' + data.location.address + ', ' + data.location.city +', ' + data.location.country + '</div>' +
 									  '<div>' + onlinemsg + '</div>' +
+				<?php if (isset($this->currentUser)) :?>
 									  '<div class="stats">' +
 									  '<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> 0 / 0 / 0</div>' +
 									  '<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> 0</div>' +
@@ -189,14 +190,18 @@
 				if (data.online_status > 0) {
 					loadStatistics(data);
 				}
-
+				<?php else: ?>
+									  '</div>');
+				<?php endif; ?>
 				infowindow.open(map, marker);
 		    });
 		});
 
 		$('#devicesonline').text(online_ap_count);
 		$('#usersonline').text(online_users);
+		<?php if (isset($this->currentUser)) :?>
 		loadNetworkStatistics();
+		<?php endif; ?>
 	});
 
 <?php
