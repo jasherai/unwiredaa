@@ -4,9 +4,9 @@
 <h1><?php echo $this->translate('report_group_heading'); ?> <?php echo $this->parent->getTitle(); ?></h1>
 
 <?php
-echo $this->paginationControl ( $this->paginator, 'Sliding', 'partial/pagination.phtml' );
+echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
 
-$acl = Zend_Registry::get ( 'acl' );
+$acl = Zend_Registry::get('acl');
 
 ?>
 <form class="span-19 last" method="get"
@@ -22,15 +22,19 @@ $acl = Zend_Registry::get ( 'acl' );
 				<th><?php echo $this->translate('report_index_from');?></th>
 				<th><?php echo $this->translate('report_index_to');?></th>
 				<th><?php echo $this->translate('report_index_devices');?></th>
-				<th>
-					<div class="buttons span-18">
-
-						<a id="addlink" class="button small green"
-							href="<?php
-
-							echo $this->url ( array ('action' => 'add' ), null, false );
-							?>"><span><?php echo $this->translate('report_group_add');?></span></a>
-					</div>
+				<th class="tools">
+                    <?php
+        			    if ($acl->isAllowed($this->currentUser, 'reports_group', 'add')) :
+        			?>
+						<a class="add" href="<?php
+            				echo $this->url(array('module' => 'report',
+            									  'controller' => 'group',
+            									  'action' => 'add',
+            				                      'id' => $this->parent->getCodeTemplateId()), null, true);
+            				?>"><img src="<?php
+        					echo $this->baseUrl('themes/default/images/icons/24x24/add.png');
+        				    ?>" alt="<?php echo $this->translate('report_group_add'); ?>" /> <?php echo $this->translate('report_group_add'); ?></a>
+					<?php endif; ?>
 
 				</th>
 
@@ -49,27 +53,33 @@ $acl = Zend_Registry::get ( 'acl' );
 		</thead>
 		<tbody>
 		<?php
-		foreach ( $this->paginator as $user ) :
-			?>
+		foreach ($this->paginator as $reportGroup) :
+		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-				<td class="column_id"><?php echo $user->getReportGroupId(); ?></td>
-				<td><?php echo $user->getTitle(); ?></td>
-				<td><?php echo $user->getDateFrom(); ?></td>
-				<td><?php echo $user->getDateTo(); ?></td>
-				<td><?php echo nl2br($user->getGroupsAssignedFormatted()); ?></td>
+				<td class="column_id"><?php echo $reportGroup->getReportGroupId(); ?></td>
+				<td><?php echo $reportGroup->getTitle(); ?></td>
+				<td><?php echo $reportGroup->getDateFrom(); ?></td>
+				<td><?php echo $reportGroup->getDateTo(); ?></td>
+				<td><?php echo nl2br($reportGroup->getGroupsAssignedFormatted()); ?></td>
 				<td class="tools">
 				  <?php
-			$actions = array (array('action' => 'reports', 'permission' => 'view'), array('action' => 'generate', 'permission' => 'view'), 'delete' );
+			$actions = array(
+			                array('action' => 'reports', 'permission' => 'view'),
+			                array('action' => 'generate', 'permission' => 'add', 'resource' => 'reports_items'),
+			                'delete'
+			           );
 
-			foreach ( $actions as $action ) :
+			foreach ($actions as $action) :
 			    if (is_array($action)) {
 			        $permission = $action['permission'];
+			        $resource = isset($action['resource']) ? $action['resource'] : $reportGroup->getResourceId();
 			        $action = $action['action'];
 			    } else {
 			        $permission = $action;
+			        $resource = $reportGroup->getResourceId();
 			    }
 
-				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), $permission )) {
+				if (!$acl->isAllowed($this->currentUser, $resource, $permission)) {
 					continue;
 				}
 
@@ -77,9 +87,13 @@ $acl = Zend_Registry::get ( 'acl' );
 					<a
 					href="<?php
 
-				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => $action, 'id' => $user->getReportGroupId() ), null, true );
-				?>"
-					class="icon <?php echo $action?>"><?php
+				echo $this->url(array('module' => 'report',
+				                      'controller' => 'group',
+				                      'action' => $action,
+				                      'id' => $reportGroup->getReportGroupId()),
+				                null,
+				                true );
+				?>" class="icon <?php echo $action?>"><?php
 
 				echo $this->translate ( 'report_group_button_' . $action );
 				?></a>

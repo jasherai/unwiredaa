@@ -24,16 +24,17 @@ echo $this->paginationControl ( $this->paginator, 'Sliding', 'partial/pagination
 $acl = Zend_Registry::get ( 'acl' );
 
 ?>
-
+<?php if ($acl->isAllowed($this->currentUser, 'reports_items', 'add')) :?>
 <div class="buttons span-18">
 
 	<a id="addlink" class="button small green"
 		href="<?php
 
-		echo $this->url ( array ('action' => 'generate' ), null, false );
+		echo $this->url(array('action' => 'generate' ), null, false);
 		?>"><span><?php echo $this->translate('report_group_button_generate');?></span></a>
 </div>
 <br />
+<?php endif; ?>
 <form class="span-19 last" method="get"
 	action="<?php
 
@@ -50,23 +51,23 @@ $acl = Zend_Registry::get ( 'acl' );
 		</thead>
 		<tbody>
 		<?php
-		foreach ( $this->paginator as $user ) :
+		foreach ( $this->paginator as $reportItems ) :
 			?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
-				<td class="column_id"><?php echo $user->getItemId(); ?></td>
-				<td><?php echo $user->getDateAdded(); ?></td>
+				<td class="column_id"><?php echo $reportItems->getItemId(); ?></td>
+				<td><?php echo $reportItems->getDateAdded(); ?></td>
 				<td class="tools">
 
 				  <?php
 			// $actions = array ('view', 'deleteresult');
 
 
-				if ($acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'view' )) :
+				if ($acl->isAllowed ( $this->currentUser, $reportItems->getResourceId (), 'view' )) :
 				?>
 					<a
 					href="<?php
 
-				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'view', 'id' => $user->getItemId () ), null, true );
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'view', 'id' => $reportItems->getItemId () ), null, true );
 				?>"
 					class="icon view"><?php
 
@@ -79,7 +80,7 @@ $acl = Zend_Registry::get ( 'acl' );
 				    echo $this->url(array('module' => 'report',
 				    					  'controller' => 'group',
 				    					  'action' => 'view',
-				    					  'id' => $user->getItemId(),
+				    					  'id' => $reportItems->getItemId(),
 				                          'format' => 'csv' ), null, true );
 				?>"
 					class="icon csv"><?php
@@ -92,7 +93,7 @@ $acl = Zend_Registry::get ( 'acl' );
 				    echo $this->url(array('module' => 'report',
 				    					  'controller' => 'group',
 				    					  'action' => 'view',
-				    					  'id' => $user->getItemId(),
+				    					  'id' => $reportItems->getItemId(),
 				                          'format' => 'pdf' ), null, true );
 				?>"
 					class="icon pdf"><?php
@@ -104,7 +105,7 @@ $acl = Zend_Registry::get ( 'acl' );
 				?>
 
 				<?php
-				if (! $acl->isAllowed ( $this->currentUser, $user->getResourceId (), 'delete' )) {
+				if (! $acl->isAllowed ( $this->currentUser, $reportItems->getResourceId (), 'delete' )) {
 					continue;
 				}
 
@@ -112,7 +113,7 @@ $acl = Zend_Registry::get ( 'acl' );
 					<a
 					href="<?php
 
-				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'deleteresult', 'id' => $user->getItemId () ), null, true );
+				echo $this->url ( array ('module' => 'report', 'controller' => 'group', 'action' => 'deleteresult', 'id' => $reportItems->getItemId () ), null, true );
 				?>"
 					class="icon delete"><?php
 
@@ -130,11 +131,13 @@ $acl = Zend_Registry::get ( 'acl' );
 
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>
 
+<?php if ($acl->isAllowed($this->currentUser, 'reports_items', 'add')) :?>
 <div class="buttons span-18">
 
 	<a id="addlink" class="button small green"
 		href="<?php
 
-		echo $this->url ( array ('action' => 'generate' ), null, false );
+		echo $this->url(array('action' => 'generate' ), null, false);
 		?>"><span><?php echo $this->translate('report_group_button_generate');?></span></a>
 </div>
+<?php endif; ?>
