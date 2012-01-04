@@ -78,7 +78,7 @@
 				}
 
 				if ($('#infowindowcontainer').is(':visible')) {
- 					statsTimer = setTimeout("loadStatistics(lastDevice);", 2000);
+ 					statsTimer = setTimeout("loadStatistics(lastDevice);", 3000);
 				}
 			}
 		});
@@ -109,7 +109,7 @@
 					$('#networkgraphdown').sparkline(networkDownGraph, { width: networkDownGraph.length*5 })
 				}
 
- 				statsTimer = setTimeout("loadNetworkStatistics();", 2000);
+ 				statsTimer = setTimeout("loadNetworkStatistics();", 3000);
 			}
 		});
 	}
