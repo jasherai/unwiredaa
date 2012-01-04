@@ -73,9 +73,8 @@ $(document).ready(function(){
     		
 			if ($(data.args[0]).parent().find('a.jstree-clicked').length > 0) {
 				alert('There are child groups selected! To be able to select parent group you need to deselect its children first.');
+				return;
 			}
-    		
-			return;
     	}
     	
     	if (typeof adminGroups == 'undefined') {
