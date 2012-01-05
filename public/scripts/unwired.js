@@ -80,8 +80,8 @@ $(document).ready(function(){
     	}
     	
     	if (typeof adminGroups == 'undefined') {
-    		event.stopImmediatePropagation();
-	  		return false;
+    		// When tree is present only for selection. No admin groups required!
+    		return;
     	}
 	
     	/**
