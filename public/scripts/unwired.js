@@ -55,7 +55,7 @@ $(document).ready(function(){
     	 * If selecting children is disabled check and show alert
     	 */
     	if ($(this).jstree("get_settings").ui.disable_selecting_children == true
-    		&& typeof data.args[0] == 'object' && !$(data.args[0]).hasClass('jstree-clicked')) {
+    		/*&& typeof data.args[0] == 'object'*/ && !$(data.args[0]).hasClass('jstree-clicked')) {
     		
     		var found = false;
     		
@@ -68,19 +68,22 @@ $(document).ready(function(){
     		});
 		
     		if (found) {
-    			return;
+    			event.stopImmediatePropagation();
+    	  		return false;
     		}
     		
 			if ($(data.args[0]).parent().find('a.jstree-clicked').length > 0) {
 				alert('There are child groups selected! To be able to select parent group you need to deselect its children first.');
-				return;
+				event.stopImmediatePropagation();
+		  		return false;
 			}
     	}
     	
     	if (typeof adminGroups == 'undefined') {
-    		return;
+    		event.stopImmediatePropagation();
+	  		return false;
     	}
-    	
+	
     	/**
     	 * Check if current admin user has group privileges
     	 */
