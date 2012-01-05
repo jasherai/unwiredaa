@@ -14,9 +14,10 @@
 	<thead>
 		<tr>
 			<th><?php echo $this->translate('default_log_index_id');?></th>
-			<th class="span-5"><?php echo $this->translate('default_log_index_user');?></th>
-			<th><?php echo $this->translate('default_log_index_event');?></th>
-			<th class="span-4"><?php echo $this->translate('default_log_index_entity');?></th>
+			<th class="span-5 last"><?php echo $this->translate('default_log_index_user');?></th>
+			<th class="span-3 last"><?php echo $this->translate('default_log_index_event');?></th>
+			<th class="span-3 last"><?php echo $this->translate('default_log_index_entity');?></th>
+			<th class="span-2 last"><?php echo $this->translate('default_log_index_entity_id');?></th>
 			<th><?php echo $this->translate('default_log_index_remote');?></th>
 			<th><?php echo $this->translate('default_log_index_timestamp');?></th>
 		</tr>
@@ -24,7 +25,7 @@
 			<th></th>
 			<th><input type="text" name="email" value="<?php echo $this->filter['email']; ?>" /></th>
 			<th>
-			<select name="event_id">
+			<select class="span-3 last" name="event_id">
 					<option value=""><?php echo $this->translate('default_log_index_event_all'); ?></option>
 			<?php
 				$events = $this->logDistinctPairs('event');
@@ -38,7 +39,7 @@
 			?>
 				</select>
 			</th>
-			<th><select name="entity">
+			<th><select class="span-3 last" name="entity">
 					<option value=""><?php echo $this->translate('default_log_index_entity_all'); ?></option>
 			<?php
 				$entities = $this->logDistinctPairs('entity');
@@ -51,6 +52,9 @@
 				endforeach;
 			?>
 				</select>
+			</th>
+			<th>
+				<input type="text" name="entity_id" value="<?php echo $this->filter['entity_id']; ?>" />
 			</th>
 			<th><input type="text" name="remote_host" value="<?php echo $this->filter['remote_host']; ?>" /></th>
 			<th class="tools">
@@ -80,10 +84,14 @@
 			<td><?php
 				if ($log->getEntityId()):
 					try {
+					    $entity = null;
 						$class = $log->getEntityName();
-						$entity = new $class;
 
-						echo ($entity instanceof Zend_Acl_Resource_Interface)
+						if (class_exists($class)) {
+						    $entity = new $class;
+						}
+
+						echo ($entity && $entity instanceof Zend_Acl_Resource_Interface)
 							 ? $this->translate('resource_' . $entity->getResourceId())
 							 : $log->getEntityName();
 
@@ -99,15 +107,18 @@
 						if (method_exists($entity, 'getName')) {
 
 							echo $entity->getName();
-						} else {
+						} /*else {
 							echo $log->getEntityId();
-						}
+						}*/
 					} catch (Exception $e) {
 						// nothing
 					}
 
 				endif;
 			?></td>
+			<td>
+				<?php echo $log->getEntityId(); ?>
+			</td>
 			<td><?php echo $log->getRemoteHost(); ?></td>
 			<td><?php echo $log->getStamp(); ?></td>
 		</tr>
