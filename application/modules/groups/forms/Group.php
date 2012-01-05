@@ -91,11 +91,23 @@ class Groups_Form_Group extends Unwired_Form
 	        $exclude = 'group_id != ' . $entity->getGroupId() . ' AND ';
 	    }
 
-	    $exclude .= 'parent_id = ' . $data['parent_id'];
+	    if ($data['parent_id']) {
+	        $exclude .= 'parent_id = ' . $data['parent_id'];
+	    } else {
+	        $data['parent_id'] = 0;
+	        $exclude .= 'parent_id IS NULL';
+	    }
 
 	    $this->getElement('name')->getValidator('Db_NoRecordExists')
 	                                  ->setExclude($exclude);
 
-	    return parent::isValid($data);
+	    $result = parent::isValid($data);
+
+	    if ($data['parent_id'] == 0) {
+	        $data['parent_id'] = null;
+	        $this->getElement('parent_id')->setValue(null);
+	    }
+
+	    return $result;
 	}
 }

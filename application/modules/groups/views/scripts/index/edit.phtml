@@ -13,7 +13,7 @@
 var adminGroups = <?php echo Zend_Json::encode($this->currentUser->getGroupsAssigned());?>;
 $(function () {
 	$("input[name=parent_id]").hide().after($('.grouptree'));
-
+    <?php if ($this->entity->getParentId()) : ?>
     $(".grouptree")
         .jstree({
             "plugins" : ["themes","html_data","ui"],
@@ -24,7 +24,10 @@ $(function () {
 			var groupId = data.rslt.obj.attr("id").replace(/[^\d]+/gi,'');
 
 			$("input[name=parent_id]").val(groupId);
-	     })
+	     });
+	 <?php else: ?>
+	 $("input[name=parent_id]").parent().hide();
+	 <?php endif;?>
 });
 <?php
 	$this->headScript()->captureEnd();
