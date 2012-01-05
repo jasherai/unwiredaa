@@ -39,7 +39,7 @@ class Captive_ContentController extends Unwired_Controller_Crud
 
 	public function splashpageAction()
 	{
-	    if (!$this->getAcl()->isAllowed($this->_currentUser, 'captive_splashpage', 'add')) {
+	    if (!$this->getAcl()->isAllowed($this->_currentUser, 'captive_splashpage', 'edit')) {
 			$this->view->uiMessage('access_not_allowed_view', 'error');
 			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 		}
@@ -142,7 +142,7 @@ class Captive_ContentController extends Unwired_Controller_Crud
 
     public function templateAction()
     {
-    	if (!$this->getAcl()->isAllowed($this->_currentUser, 'captive_template', 'add')) {
+    	if (!$this->getAcl()->isAllowed($this->_currentUser, 'captive_template', 'edit')) {
 			$this->view->uiMessage('access_not_allowed_view', 'error');
 			$this->_helper->redirector->gotoRouteAndExit(array(), 'default', true);
 		}

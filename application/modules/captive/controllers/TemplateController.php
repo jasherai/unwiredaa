@@ -6,7 +6,11 @@ class Captive_TemplateController extends Unwired_Controller_Crud
 
     public function indexAction()
     {
-        $this->_index();
+        $groupService = new Groups_Service_Group();
+
+        $templateMapper = $groupService->prepareMapperListingByAdmin($this->_getDefaultMapper());
+
+        $this->_index($templateMapper);
     }
 
     protected function _add(Unwired_Model_Mapper $mapper = null,

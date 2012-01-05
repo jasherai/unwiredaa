@@ -6,7 +6,11 @@ class Captive_IndexController extends Unwired_Controller_Crud
 
     public function indexAction()
     {
-        $this->_index();
+        $groupService = new Groups_Service_Group();
+
+        $splashMapper = $groupService->prepareMapperListingByAdmin($this->_getDefaultMapper());
+
+        $this->_index($splashMapper);
     }
 
     protected function _add(Unwired_Model_Mapper $mapper = null,
