@@ -48,8 +48,35 @@ class Nodes_Form_Node extends Unwired_Form
 																			'enabled' => 'nodes_index_edit_form_status_enabled',
 																			'planning' => 'nodes_index_edit_form_status_planning')));
 
+		$this->addElement('checkbox', 'billable', array(
+													'label' => 'nodes_index_edit_form_billable',
+													'required' => true,
+													'order' => 4,
+													'decorators' => array(
+															'element' => array('decorator' => 'ViewHelper'),
+												        	'label' => array('decorator' => 'Label',
+												            				 'options' => array('optionalSuffix' => ':',
+												                								'requiredSuffix' => ' * :',
+																								'placement' => 'prepend')
+																			),
+															'errors' => 'errors',
+															'htmltag' => array('decorator' => 'HtmlTag',
+												            				   'options' => array ('tag' => 'div',
+																								   'class' => 'formelement span-7'))
+															)
+														));
+
+	    $acl = Zend_Registry::get('acl');
+		$admin = Zend_Auth::getInstance()->getIdentity();
+
+		if (!$acl->isAllowed($admin, new Nodes_Model_Node(), 'special')) {
+		    // @todo UNWIRED-53: Make resources introduce their specific permissions
+			$this->getElement('billable')->setAttrib('disabled', true)
+									     ->setRequired(false);
+		}
+
 		$this->addElement('hidden', 'group_id', array('label' => 'nodes_index_edit_form_group',
-													  'order' => 4,
+													  'order' => 5,
 											  	 	  'required' => true,
 													  'validators' => array('Int')));
 
@@ -57,12 +84,12 @@ class Nodes_Form_Node extends Unwired_Form
 		$locationForm = new Nodes_Form_NodeLocation();
 		$locationForm->removeDecorator('Form');
 		$locationForm->setIsArray(true);
-		$locationForm->setOrder(5);
+		$locationForm->setOrder(6);
 
 		$settingsForm = new Nodes_Form_NodeSettings();
 		$settingsForm->removeDecorator('Form');
 		$settingsForm->setIsArray(true);
-		$settingsForm->setOrder(6);
+		$settingsForm->setOrder(7);
 
 		$this->addSubForms(array('settings' => $settingsForm,
 								 'location' => $locationForm));
@@ -70,6 +97,7 @@ class Nodes_Form_Node extends Unwired_Form
 		$this->addDisplayGroup(array('name',
 									 'mac',
 									 'status',
+		                             'billable',
 									 'group_id'),
 				 			   'generic');
 
@@ -81,7 +109,7 @@ class Nodes_Form_Node extends Unwired_Form
 
 
 		$settingsForm->addElement('submit', 'form_element_submit', array('label' => 'nodes_index_edit_form_button_save',
-	 														 	 'order' => 7,
+	 														 	 'order' => 8,
 																 'class'	=> 'button',
 															 	 'decorators' => array('ViewHelper',
 																				 		array(array('span' => 'HtmlTag'),
@@ -89,7 +117,7 @@ class Nodes_Form_Node extends Unwired_Form
 																		   				 		 	  'class' => 'button green')),
 																						)));
 		$settingsForm->addElement('href', 'form_element_cancel', array('label' => 'nodes_index_edit_form_button_cancel',
-	 														 	 'order' => 8,
+	 														 	 'order' => 9,
 																 'href' => (isset($this->getView()->refererUrl)) ?
 																					$this->getView()->refererUrl : null,
 																 'data' => array(
@@ -128,10 +156,14 @@ class Nodes_Form_Node extends Unwired_Form
 
 	public function isValid($data)
 	{
-
 		if ($data['status'] != 'planning') {
 			$this->getElement('mac')->setRequired(true);
 		}
+
+	    if (!$this->getElement('billable')->isRequired()) {
+			$data['billable'] = $this->getElement('billable')->getValue();
+		}
+
 		return parent::isValid($data);
 	}
 }

@@ -40,6 +40,8 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 
 	protected $_onlineUsersCount = 0;
 
+	protected $_billable = 1;
+
 	protected $_deleted = 0;
 
 	/**
@@ -203,6 +205,18 @@ class Nodes_Model_Node extends Unwired_Model_Generic implements Zend_Acl_Resourc
 	 */
 	public function setUpdateConfig($toUpdate) {
 		$this->_updateConfig = (int) (bool) $toUpdate;
+
+		return $this;
+	}
+
+    public function isBillable()
+	{
+		return (int) $this->_billable;
+	}
+
+	public function setBillable($billable = true)
+	{
+		$this->_billable = (int) (bool) $billable;
 
 		return $this;
 	}
