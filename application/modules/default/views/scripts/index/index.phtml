@@ -52,6 +52,7 @@
 	var lastDevice = null;
 
 	var statsTimer = null;
+	var networkTimer = null;
 
 	var networkUpGraph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var networkDownGraph = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -109,7 +110,7 @@
 					$('#networkgraphdown').sparkline(networkDownGraph, { width: 510 })
 				}
 
- 				statsTimer = setTimeout("loadNetworkStatistics();", 3000);
+ 				networkTimer = setTimeout("loadNetworkStatistics();", 3000);
 			}
 		});
 	}
