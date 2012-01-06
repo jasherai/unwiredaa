@@ -131,9 +131,6 @@
 
 		infowindow = new google.maps.InfoWindow();
 
-		var online_ap_count = 0;
-		var online_users = 0;
-
 		$.each(nodes, function(idx, data) {
 			var mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-red.png")?>";
 			var onlinemsg = '';
@@ -146,8 +143,6 @@
 				onlinemsg = ''; // 'Online users: ' + data.online_users_count;
 	    		onlinemsg = onlinemsg + '</div><div>Online since: ' + formattedDate;
 	    		mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-green.png")?>";
-	    		online_ap_count++;
-	    		online_users = online_users + data.online_users_count;
 	    	} else {
 	    		onlinemsg = 'Offline since: ' + formattedDate;
 	    	}
@@ -198,8 +193,6 @@
 		    });
 		});
 
-		$('#devicesonline').text(online_ap_count);
-		$('#usersonline').text(online_users);
 		<?php if (isset($this->currentUser)) :?>
 		loadNetworkStatistics();
 		<?php endif; ?>
@@ -212,9 +205,30 @@
 <div id="nodemap"></div>
 <?php if (isset($this->currentUser)) :?>
 <div id="networkstats">
-	<div><strong><?php echo $this->translate('default_index_index_devices_online')?>:</strong> <span id="devicesonline">0</span></div>
-	<div><strong><?php echo $this->translate('default_index_index_users_online')?>:</strong> <span id="usersonline">0</span></div>
-	<div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span> <span id="networkgraphup" class="span-13 last" style="float:right; text-align: right;"></span></div>
-	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span> <span id="networkgraphdown" class="span-13 last" style="float:right; text-align: right;"></span></div>
+	<div>
+		<strong><?php echo $this->translate('default_index_index_devices')?>:</strong>
+		<ul>
+			<li><strong><?php echo $this->translate('default_index_index_devices_total')?></strong>: <span id="devicestotal"><?php echo $this->networkStats->getDevicesTotal(); ?></span></li>
+			<li><strong><?php echo $this->translate('default_index_index_devices_online')?></strong>: <span id="devicesonline"><?php echo $this->networkStats->getDevicesOnline(); ?></span></li>
+			<li><strong><?php echo $this->translate('default_index_index_devices_offline')?></strong>: <span id="devicesoffline"><?php echo $this->networkStats->getDevicesOffline(); ?></span></li>
+		</ul>
+	</div>
+	<div>
+		<strong><?php echo $this->translate('default_index_index_users')?>:</strong>
+		<ul>
+			<li><strong><?php echo $this->translate('default_index_index_users_total')?></strong>: <span id="userstotal"><?php echo $this->networkStats->getUsersTotal(); ?></span></li>
+			<li><strong><?php echo $this->translate('default_index_index_users_online')?></strong>: <span id="usersonline"><?php echo $this->networkStats->getUsersOnline(); ?></span></li>
+			<li><strong><?php echo $this->translate('default_index_index_users_garden')?></strong>: <span id="usersgarden"><?php echo $this->networkStats->getUsersGarden(); ?></span></li>
+		</ul>
+	</div>
+	<div>
+		<strong><?php echo $this->translate('default_index_index_bandwidth')?>:</strong>
+		<ul>
+			<li><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span> <span id="networkgraphdown" class="span-13 last" style="float:right; text-align: right;"></span></li>
+			<li><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span> <span id="networkgraphup" class="span-13 last" style="float:right; text-align: right;"></span></li>
+		</ul>
+	</div>
+	<!-- <div><strong><?php echo $this->translate('default_index_index_bandwidth_up')?>:</strong> <span id="bandwidthup">0</span> <span id="networkgraphup" class="span-13 last" style="float:right; text-align: right;"></span></div>
+	<div><strong><?php echo $this->translate('default_index_index_bandwidth_down')?>:</strong> <span id="bandwidthdown">0</span> <span id="networkgraphdown" class="span-13 last" style="float:right; text-align: right;"></span></div> -->
 </div>
 <?php endif; ?>

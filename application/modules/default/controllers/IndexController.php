@@ -50,6 +50,11 @@ class Default_IndexController extends Unwired_Controller_Action
         $this->view->currentUser = Zend_Auth::getInstance()->getIdentity();
 
         $this->view->nodes = $nodes;
+
+        if (Zend_Auth::getInstance()->hasIdentity()) {
+            $netstatsService = new Default_Service_NetworkStats();
+            $this->view->networkStats = $netstatsService->getStatistics();
+        }
     }
 
     public function statsAction()
