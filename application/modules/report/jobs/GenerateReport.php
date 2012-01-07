@@ -179,6 +179,7 @@ class Report_Job_GenerateReport {
 
         try {
             $view->report = $result;
+            $view->reportGroup = $report;
 
             $csv = $view->render('group/view.csv.phtml');
 
@@ -197,7 +198,7 @@ class Report_Job_GenerateReport {
             $mailer->addAttachment($at);
 
             $mailer->addTo($recepients)
-                   ->setSubject('Automatic report ' . $report->getTitle() . ' ' . $result->getDateAdded());
+                   ->setSubject($view->systemName . ' Report: ' . $report->getTitle() . ' ' . $result->getDateAdded());
 
             $mailBody = $view->render('group/report-email.phtml');
             $mailer->setBodyText($mailBody, 'utf-8');
