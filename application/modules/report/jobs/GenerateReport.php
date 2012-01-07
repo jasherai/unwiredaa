@@ -197,13 +197,16 @@ class Report_Job_GenerateReport {
 
             $mailer->addAttachment($at);
 
-            $mailer->addTo($recepients)
-                   ->setSubject($view->systemName . ' Report: ' . $report->getTitle() . ' ' . $result->getDateAdded());
+            $mailer->setSubject($view->systemName . ' Report: ' . $report->getTitle() . ' ' . $result->getDateAdded());
 
             $mailBody = $view->render('group/report-email.phtml');
             $mailer->setBodyText($mailBody, 'utf-8');
 
-            $mailer->send();
+            foreach ($recepients as $to) {
+                $mailer->clearRecipients()
+                       ->addTo($to)
+                       ->send();
+            }
         } catch (Exception $e) {
             return false;
         }
