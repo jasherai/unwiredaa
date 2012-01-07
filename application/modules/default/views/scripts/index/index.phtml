@@ -205,21 +205,24 @@
 <div id="nodemap"></div>
 <?php if (isset($this->currentUser)) :?>
 <div id="networkstats">
-	<div>
-		<strong><?php echo $this->translate('default_index_index_devices')?>:</strong>
-		<ul>
-			<li><strong><?php echo $this->translate('default_index_index_devices_total')?></strong>: <span id="devicestotal"><?php echo $this->networkStats->getDevicesTotal(); ?></span></li>
-			<li><strong><?php echo $this->translate('default_index_index_devices_online')?></strong>: <span id="devicesonline"><?php echo $this->networkStats->getDevicesOnline(); ?></span></li>
-			<li><strong><?php echo $this->translate('default_index_index_devices_offline')?></strong>: <span id="devicesoffline"><?php echo $this->networkStats->getDevicesOffline(); ?></span></li>
-		</ul>
-	</div>
-	<div>
-		<strong><?php echo $this->translate('default_index_index_users')?>:</strong>
-		<ul>
-			<li><strong><?php echo $this->translate('default_index_index_users_total')?></strong>: <span id="userstotal"><?php echo $this->networkStats->getUsersTotal(); ?></span></li>
-			<li><strong><?php echo $this->translate('default_index_index_users_online')?></strong>: <span id="usersonline"><?php echo $this->networkStats->getUsersOnline(); ?></span></li>
-			<li><strong><?php echo $this->translate('default_index_index_users_garden')?></strong>: <span id="usersgarden"><?php echo $this->networkStats->getUsersGarden(); ?></span></li>
-		</ul>
+	<div><strong><?php echo $this->translate('default_index_index_statistics')?>:</strong>
+	<ul>
+		<li><strong><?php echo $this->translate('default_index_index_devices')?>:</strong>
+    		<ul>
+    			<li><strong><?php echo $this->translate('default_index_index_devices_total')?></strong>: <span id="devicestotal"><?php echo $this->networkStats->getDevicesTotal(); ?></span></li>
+    			<li><strong><?php echo $this->translate('default_index_index_devices_online')?></strong>: <span id="devicesonline"><?php echo $this->networkStats->getDevicesOnline(); ?></span></li>
+    			<li><strong><?php echo $this->translate('default_index_index_devices_offline')?></strong>: <span id="devicesoffline"><?php echo $this->networkStats->getDevicesOffline(); ?></span></li>
+    		</ul>
+		</li>
+    	<li>
+    		<strong><?php echo $this->translate('default_index_index_users')?>:</strong>
+    		<ul>
+    			<li><strong><?php echo $this->translate('default_index_index_users_total')?></strong>: <span id="userstotal"><?php echo $this->networkStats->getUsersTotal(); ?></span></li>
+    			<li><strong><?php echo $this->translate('default_index_index_users_online')?></strong>: <span id="usersonline"><?php echo $this->networkStats->getUsersOnline(); ?></span></li>
+    			<li><strong><?php echo $this->translate('default_index_index_users_garden')?></strong>: <span id="usersgarden"><?php echo $this->networkStats->getUsersGarden(); ?></span></li>
+    		</ul>
+    	</li>
+	</ul>
 	</div>
 	<div>
 		<strong><?php echo $this->translate('default_index_index_bandwidth')?>:</strong>
