@@ -25,7 +25,7 @@ class Report_Form_Group extends Unwired_Form {
 
 		$this->addElement ( 'text', 'date_to', array ('label' => 'report_group_date_to', 'required' => true, 'class' => 'span-5', 'validators' => array ('len' => array ('validator' => 'Date' ) ) ) );
 
-		/*
+
 		$this->addElement('select', 'report_type', array('label' => 'report_group_report_type',
 				'required' => true,
 				'class' => 'span-5',
@@ -45,7 +45,6 @@ class Report_Form_Group extends Unwired_Form {
 						'4' => 'year',
 				)
 		));
-		*/
 		$this->addElement ( 'text', 'email', array ('label' => 'report_group_email', 'required' => false, 'class' => 'span-5', 'validators' => array ('len' => array ('validator' => 'StringLength', 'options' => array ('min' => 2 ) ) ) ) );
 
 		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'report_edit_form_group',
@@ -64,8 +63,8 @@ class Report_Form_Group extends Unwired_Form {
 		$this->addElement ( 'submit', 'form_element_submit', array ('label' => 'report_group_edit_form_save', 'tabindex' => 20, 'class' => 'button', 'decorators' => array ('ViewHelper', array (array ('span' => 'HtmlTag' ), array ('tag' => 'span', 'class' => 'button green' ) ) ) ) );
 		$this->addElement ( 'href', 'form_element_cancel', array ('label' => 'report_group_edit_form_cancel', 'tabindex' => 20, 'href' => (isset ( $this->getView ()->refererUrl )) ? $this->getView ()->refererUrl : null, 'data' => array ('params' => array ('module' => 'report', 'controller' => 'group', 'action' => 'index' ), 'route' => 'default', 'reset' => true ), 'decorators' => array ('ViewHelper', array (array ('span' => 'HtmlTag' ), array ('tag' => 'span', 'class' => 'button blue' ) ) ) ) );
 
-		//$this->addDisplayGroup ( array ('title', 'description', 'date_from', 'date_to', 'report_type', 'report_interval' ), 'personal' );
-		$this->addDisplayGroup ( array ('title', 'description', 'date_from', 'date_to' ), 'personal' );
+		$this->addDisplayGroup ( array ('title', 'description', 'date_from', 'date_to', 'report_type', 'report_interval' ), 'personal' );
+		//$this->addDisplayGroup ( array ('title', 'description', 'date_from', 'date_to' ), 'personal' );
 
 		$this->addDisplayGroup(array('email',
 				'groups_assigned',

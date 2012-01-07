@@ -17,13 +17,55 @@
 
 class Report_Job_GenerateReport {
 
+    protected $_view = null;
+
+    public function getView()
+    {
+        if (null === $this->_view) {
+            $this->setView(Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')->view);
+        }
+
+        return $this->_view;
+    }
+
+    public function setView(Zend_View_Interface $view)
+    {
+        $this->_view = $view;
+
+        $this->_view->addBasePath(APPLICATION_PATH . '/modules/report/views', 'Report_View')
+                   /* ->setScriptPath(APPLICATION_PATH . '/report/views/scripts')*/;
+        return $this;
+    }
+
     public function run()
     {
         $reports = $this->getPendingReports();
 
+        $success = 0;
+        $emailTotal = 0;
+        $emailSuccess = 0;
+
         foreach ($reports as $report) {
-            $this->generateReport($report);
+            $result = $this->generateReport($report);
+            if (!$result) {
+                continue;
+            }
+
+            $success++;
+
+            if (!$report->getRecepients()) {
+                continue;
+            }
+
+            $emailTotal++;
+
+            if ($this->_emailReport($report, $result)) {
+                $emailSuccess++;
+            }
         }
+
+        echo "Total: " . count($reports) . "; Generated: {$success}; Failed: " . (count($reports) - $success) . "\n";
+        echo "Total emails: {$emailTotal}; Sent: {$emailSuccess}; Failed: " . ($emailTotal - $emailSuccess) . "\n";
     }
 
     public function getPendingReports()
@@ -34,8 +76,11 @@ class Report_Job_GenerateReport {
 
         $pendingReports = array();
 
+        /**
+         * Loop over pending periodical reports
+         */
         foreach ($periodicalReports as $report) {
-            $report = new Report_Model_Group();
+            //$report = new Report_Model_Group();
             $interval = $report->getReportInterval();
 
             $now = new Zend_Date();
@@ -43,7 +88,7 @@ class Report_Job_GenerateReport {
             $toDate = new Zend_Date($report->getDateTo());
             $fromDate = new Zend_Date($report->getDateFrom());
 
-            $period = $period->sub($fromDate);
+            $period = $toDate->sub($fromDate);
 
             switch ($interval) {
                 case 4:
@@ -78,8 +123,16 @@ class Report_Job_GenerateReport {
 
             $toDate->add($period);
 
+            /**
+             * $fromDate and $toDate hold the shifted time frame for report
+             * It will be used in future. For now reports are generated with
+             * the original time frame
+             */
 
+            $pendingReports[] = $report;
         }
+
+        return $pendingReports;
     }
 
     public function generateReport(Report_Model_Group $report)
@@ -88,23 +141,72 @@ class Report_Job_GenerateReport {
             $codeTemplateMapper = new Report_Model_Mapper_CodeTemplate();
     		$codeTemplate = $codeTemplateMapper->find($report->getCodetemplateId());
 
+    		if (!$codeTemplate || !class_exists($codeTemplate->getClassName())) {
+    		    return false;
+    		}
+
     		$className = $codeTemplate->getClassName();
+
     		$reportGenerator = new $className;
 
-    		$result = $reportGenerator->getReport(array_keys($report->getGroupsAssigned()), $report->getDateFrom(), $report->getDateTo());
+    		$result = $reportGenerator->getData(array_keys($report->getGroupsAssigned()), $report->getDateFrom(), $report->getDateTo());
 
     		$resultMapper = new Report_Model_Mapper_Result();
     		$entity = $resultMapper->getEmptyModel();
 
     		$entity->setDateAdded(date('Y-m-d H:i:s'));
-    		$entity->setData($result['data']);
-    		$entity->setHtmldata($result['html']);
+    		$entity->setData($result);
     		$entity->setReportGroupId($report->getReportGroupId());
-    		$resultMapper->save($entity);
 
-    		return true;
+    		$resultMapper->setEventsDisabled()
+    		             ->save($entity);
+
+    		return $entity;
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    protected function _emailReport(Report_Model_Group $report, Report_Model_Items $result)
+    {
+        $recepients = $report->getRecepients();
+
+        if (!is_array($recepients)) {
+            $recepients = explode(',', $recepients);
+        }
+
+        $view = $this->getView();
+
+        try {
+            $view->report = $result;
+
+            $csv = $view->render('group/view.csv.phtml');
+
+            if (!$csv) {
+                return false;
+            }
+
+            $mailer = new Zend_Mail();
+
+            $at = new Zend_Mime_Part($csv);
+            $at->type        = 'text/csv';
+            $at->disposition = Zend_Mime::DISPOSITION_INLINE;
+            $at->encoding    = Zend_Mime::ENCODING_BASE64;
+            $at->filename    = str_replace(' ', '_', 'Report_' . $report->getTitle() . '_' . $result->getDateAdded() . '.csv');
+
+            $mailer->addAttachment($at);
+
+            $mailer->addTo($recepients)
+                   ->setSubject('Automatic report ' . $report->getTitle() . ' ' . $result->getDateAdded());
+
+            $mailBody = $view->render('group/report-email.phtml');
+            $mailer->setBodyText($mailBody, 'utf-8');
+
+            $mailer->send();
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 }

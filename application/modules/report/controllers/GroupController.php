@@ -112,14 +112,13 @@ class Report_GroupController extends Unwired_Controller_Crud {
 	}
 
 	public function reportsAction() {
-		$groupService = new Report_Service_Group ();
 		$reportMapper = new Report_Model_Mapper_Group ();
 		$resultMapper = new Report_Model_Mapper_Result();
 
 		$ctMapper = new Report_Model_Mapper_CodeTemplate();
 
 
-		$resultMapper->findby(array('report_group_id' => $this->getRequest()->getParam('id')), 0, 'date_added DESC');
+		$resultMapper->findBy(array('report_group_id' => $this->getRequest()->getParam('id')), 0, 'date_added DESC');
 
 		$this->_defaultMapper = $resultMapper;
 

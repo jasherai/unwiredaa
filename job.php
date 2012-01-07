@@ -64,13 +64,14 @@ try {
     $class = ucfirst($filter->filter($jobClassParts[0])) . '_Job_' . ucfirst($filter->filter($jobClassParts[1]));
 
     if (!class_exists($class, true)) {
-        die($class);
         echo 'Cannot find job ' . $job;
         exit;
     }
     $jobInstance = new $class;
 
+    echo "{$job} started at " . date("Y-m-d H:i:s") . "\n";
     $jobInstance->run();
+    echo "{$job} finished at " . date("Y-m-d H:i:s") . "\n";
 
 } catch (Exception $e) {
         echo 'Error: ' . $e->getMessage();
