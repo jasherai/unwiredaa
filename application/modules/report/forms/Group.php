@@ -47,6 +47,16 @@ class Report_Form_Group extends Unwired_Form {
 		));
 		$this->addElement ( 'text', 'email', array ('label' => 'report_group_email', 'required' => false, 'class' => 'span-5', 'validators' => array ('len' => array ('validator' => 'StringLength', 'options' => array ('min' => 2 ) ) ) ) );
 
+		$decorators = $this->getElement('email')->getDecorators();
+
+		$firstDecorators = array_slice($decorators, 0, 2, true);
+		$firstDecorators[] = 'Description';
+
+		$decorators = array_merge($firstDecorators, $decorators);
+
+		$this->getElement('email')->setDecorators($decorators)
+		                          ->setDescription('report_group_email_description');
+
 		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'report_edit_form_group',
 											  	 			  'required' => true,
 															  'separator' => '',
