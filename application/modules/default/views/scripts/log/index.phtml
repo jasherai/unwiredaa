@@ -121,7 +121,7 @@
 										unset($entityData[$key]);
 									}
 								}
-								$entity->fromArray(unserialize($eventData));
+								$entity->fromArray($entityData);
 							}
 						} else {
 							$entity = null;
