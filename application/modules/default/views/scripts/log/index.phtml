@@ -86,11 +86,24 @@
 				if ($log->getEntityId()):
 					try {
 					    $entity = null;
+					    $currentEntity = null;
+					    
 						$class = $log->getEntityName();
 
 						if (class_exists($class)) {
 						    $entity = new $class;
+						    
+						    $mapperClass = str_replace('_Model_', '_Model_Mapper_', $class);
+						    
+						    if (class_exists($mapperClass)) {
+						    	$mapper = new $mapperClass;
+						    	
+						    	$currentEntity = $mapper->find($log->getEntityId());
+						    	
+						    	$mapper = null;
+						    }
 						}
+						
 						
 						if ($entity) :
 							$classParts = explode('_', $class);
@@ -130,9 +143,9 @@
 						if (method_exists($entity, 'getName')) {
 
 							echo ' : ' . $entity->getName();
-						} /*else {
-							echo $log->getEntityId();
-						}*/
+						} elseif (method_exists($currentEntity, 'getName')) {
+							echo ' : ' . $currentEntity->getName();
+						}
 						
 					} catch (Exception $e) {
 						// nothing
