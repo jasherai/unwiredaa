@@ -11,6 +11,11 @@
 
 	$groupsAssigned = $this->entity->getGroupsAssigned();
 	
+	if (empty($groupsAssigned)) {
+		$groupsAssigned = $this->currentUser->getGroupsAssigned();
+		$groupsAssigned = array_slice($groupsAssigned, 0, 1, true);
+	}
+	
 	$this->headScript()->captureStart();
 
 ?>

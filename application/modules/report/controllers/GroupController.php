@@ -221,6 +221,8 @@ class Report_GroupController extends Unwired_Controller_Crud {
 
 	    $report->fromArray($form->getValues());
 
+	    $report->setTitle('Instant report');
+	    
 	    $groupsAssigned = $report->getGroupsAssigned();
 
 	    if (!$this->getRequest()->isPost()) {

@@ -20,6 +20,7 @@ class Report_Form_Instant extends Report_Form_Group {
 	{
 		parent::init();
 
+		$this->removeElement('title');
 		$this->removeElement('description');
 		$this->removeElement('email');
 		$this->removeElement('report_type');
