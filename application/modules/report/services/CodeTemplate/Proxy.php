@@ -24,21 +24,23 @@ class Report_Service_CodeTemplate_Proxy extends Report_Service_CodeTemplate_Abst
 		while ($row=$stmt->fetch())
 		{
 			$rows=array();
-			$total=array(
-				array(/*total data row*/
-					'data'=>array('Total',$row[1])
-					,'translatable'=>false /*is this even correct place to specify translatable*/
-					,'class'=>array('left bold total','right bold total') /*!!?? total class is likely to be unexisting*/
-				) /*end of second data row*/
-			);
+                        $total=array(
+                                array(/*total data row*/
+                                        'data'=>array(
+                                                array('data'=>'Total','translatable'=>false)
+                                                ,array('data'=>$row[1],'translatable'=>false)
+                                        )
+                                        ,'class'=>array('left bold total','right bold total') /*!!?? total class is likely to be unexisting*/
+                                ) /*end of total data row*/
+                        );
 			/*query top 10 domains*/
 			$tstmt=$db->query("SELECT substring_index(domain,'.','-2') AS tld, count(*) AS cnt FROM proxy_log WHERE category='$row[0]' and stamp BETWEEN '$dateFrom' AND '$dateTo' GROUP BY tld ORDER BY cnt DESC limit 10;");
 			while ($trow=$tstmt->fetch()){
-				$rows[]=array(/*total data row*/
+				$rows[]=array(/*data row*/
 						'data'=>array($trow[0],$trow[1])
 						,'translatable'=>false
 						,'class'=>array('left','right')
-					); /*end of second data row*/
+					); /*end of data row*/
 			}
 			/*build table and add total line add beginning and end*/
 			$tables[]=array(/*table definition*/

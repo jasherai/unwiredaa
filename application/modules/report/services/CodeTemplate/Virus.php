@@ -18,7 +18,7 @@ class Report_Service_CodeTemplate_Virus extends Report_Service_CodeTemplate_Abst
 
 		$tables=array();
 
-		/*query totals and name of categories*/
+		/*query totals*/
 		$stmt=$db->query("SELECT 'virus', count(*) AS cnt FROM proxy_log WHERE stamp BETWEEN '$dateFrom' AND '$dateTo' AND category like '%virus%' ORDER BY cnt DESC;");
 
 		while ($row=$stmt->fetch())
@@ -26,19 +26,23 @@ class Report_Service_CodeTemplate_Virus extends Report_Service_CodeTemplate_Abst
 			$rows=array();
 			$total=array(
 				array(/*total data row*/
-					'data'=>array('Total',$row[1])
-					,'translatable'=>false /*is this even correct place to specify translatable*/
+					'data'=>array(
+						array('data'=>'Total','translatable'=>false)
+						,array('data'=>$row[1],'translatable'=>false)
+					)
 					,'class'=>array('left bold total','right bold total') /*!!?? total class is likely to be unexisting*/
-				) /*end of second data row*/
+				) /*end of total data row*/
 			);
-			/*query top 10 domains*/
+			/*query top 50 virus threats*/
 			$tstmt=$db->query("SELECT virusname, count(*) AS cnt FROM proxy_log WHERE category like '%virus%' and stamp BETWEEN '$dateFrom' AND '$dateTo' GROUP BY virusname ORDER BY cnt DESC limit 50;");
 			while ($trow=$tstmt->fetch()){
-				$rows[]=array(/*total data row*/
-						'data'=>array($trow[0],$trow[1])
-						,'translatable'=>false
+				$rows[]=array(/*data row*/
+						'data'=>array(
+							array('data'=>$trow[0],'translatable'=>false)
+							,array('data'=>$trow[1],'translatable'=>false)
+						)
 						,'class'=>array('left','right')
-					); /*end of second data row*/
+					); /*end of data row*/
 			}
 			/*build table and add total line add beginning and end*/
 			$tables[]=array(/*table definition*/
