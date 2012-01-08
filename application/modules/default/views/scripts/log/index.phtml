@@ -116,6 +116,11 @@
 						if (!empty($eventData)) {
 							$entityData = @unserialize($eventData);
 							if (is_array($entityData)) {
+								foreach ($eventData as $key => $value) {
+									if (null === $value) {
+										unset($eventData[$key]);
+									}
+								}
 								$entity->fromArray(unserialize($eventData));
 							}
 						} else {
