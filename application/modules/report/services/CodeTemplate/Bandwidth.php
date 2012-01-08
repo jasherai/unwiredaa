@@ -77,13 +77,13 @@ FROM (SELECT i1.session_id, i1.time
 , if((@temp_last_node_id:=@last_node_id)=@last_node_id,if((@last_node_id:=node_id)=node_id,if(type='Roaming',@temp_last_node_id,node_id),-1),-2) as delta_node_id
 FROM (
 (SELECT session_id, roaming_count, bytes_up, bytes_down, time, type, node_id from acct_internet_interim 
-WHERE type IN ('Start','Roaming') 
-AND time BETWEEN '$dateFrom' AND '$dateTo'
+WHERE type IN ('Start','Roaming') AND NOT ISNULL(node_id)
+AND time BETWEEN DATE_SUB('$dateFrom',INTERVAL 10 MINUTE) AND '$dateTo'
 ORDER BY session_id, roaming_count, time)
 UNION
 (SELECT session_id, roaming_count, MAX(bytes_up), MAX(bytes_down), MAX(time) as time, type, node_id from acct_internet_interim 
-WHERE type in ('Interim','Stop')
-AND time > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+WHERE type in ('Interim','Stop') AND NOT ISNULL(node_id)
+AND time BETWEEN DATE_SUB('$dateFrom',INTERVAL 10 MINUTE) AND '$dateTo'
 GROUP BY session_id, roaming_count, LEFT(time,@tlen)
 ORDER BY session_id, roaming_count, time)
 ORDER BY session_id, roaming_count, time
@@ -91,6 +91,7 @@ ORDER BY session_id, roaming_count, time
 ) as i2 INNER JOIN node n on i2.delta_node_id = n.node_id INNER JOIN `group` g ON g.group_id = n.group_id
 WHERE delta_node_id >= 0 AND (delta_bytes_up>0 OR delta_bytes_down>0)
 GROUP BY group_id, node_id, epoch
+HAVING epoch > '$dateFrom'
 ORDER BY group_id, node_id, epoch;
 ");
 		/*initialize*/
@@ -106,13 +107,16 @@ ORDER BY group_id, node_id, epoch;
 			}
 			$rows[]=array(/*data row*/
 					'data'=>array($trow[6],$trow[5],$trow[0].'0-'.substr($trow[0],14,1).'9'
-					,/*$trow[3].'Bytes '.*/round($trow[3]*8/1024/600).'kbps'
-					,/*$trow[4].'Bytes '.*/round($trow[4]*8/1024/600).'kbps'
-					,/*($trow[3]+$trow[4]).'Bytes '.*/round(($trow[3]+$trow[4])*8/1024/600).'kbps')
+					,/*$trow[3].'Bytes '.*/round($trow[3]*8/1024/600,2).' kbps'
+					,/*$trow[4].'Bytes '.*/round($trow[4]*8/1024/600,2).' kbps'
+					,/*($trow[3]+$trow[4]).'Bytes '.*/round(($trow[3]+$trow[4])*8/1024/600,2).' kbps')
 					,'translatable'=>false
 					,'class'=>array('bold','bold','bold','right','right','right')
 				); /*end of data row*/
 		}
+/*echo "<pre>";
+print_r($rows);
+die("/pre");*/
 		$tables[]=$this->new_table($rows);
 
 		return array('tables'=>$tables);
