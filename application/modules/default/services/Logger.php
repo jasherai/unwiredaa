@@ -54,7 +54,7 @@ class Default_Service_Logger implements Unwired_Event_Handler_Interface
 		try {
 			$mapperLog->save($logEntry);
 		} catch (Unwired_Exception $e) {
-			die($e->getPrevious()->getMessage());
+			//die($e->getPrevious()->getMessage());
 			// nothing
 		} catch (Exception $e) {
 			$e = new Unwired_Exception('Unable to log event', 500, $e);

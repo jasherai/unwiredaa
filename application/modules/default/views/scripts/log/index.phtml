@@ -65,6 +65,7 @@
 	</thead>
 	<tbody>
 		<?php
+			$filter = new Zend_Filter_Word_CamelCaseToUnderscore();
 			foreach ($this->paginator as $log) :
 		?>
 		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
@@ -90,12 +91,23 @@
 						if (class_exists($class)) {
 						    $entity = new $class;
 						}
+						
+						if ($entity) :
+							$classParts = explode('_', $class);
+							?>
+							<a href="<?php echo $this->url(array('module' => strtolower($filter->filter($classParts[0])),
+																'controller' => strtolower($filter->filter($classParts[2])),
+																'action' => 'edit',
+																'id' => $log->getEntityId()),
+														  'default',
+														  true); ?>"><?php 
+						endif;
 
 						echo ($entity && $entity instanceof Zend_Acl_Resource_Interface)
 							 ? $this->translate('resource_' . $entity->getResourceId())
 							 : $this->translate($log->getEntityName());
 
-						echo ' : ';
+						// echo ' : ';
 
 						$eventData = $log->getEventData();
 						if (!empty($eventData)) {
@@ -109,13 +121,18 @@
 
 						if (method_exists($entity, 'getName')) {
 
-							echo $entity->getName();
+							echo ' : ' . $entity->getName();
 						} /*else {
 							echo $log->getEntityId();
 						}*/
+						
 					} catch (Exception $e) {
 						// nothing
 					}
+					
+					if ($entity) :
+						?></a><?php 
+					endif;
 
 				endif;
 			?></td>
