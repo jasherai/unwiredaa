@@ -91,7 +91,7 @@ $acl = Zend_Registry::get ( 'acl' );
 						<?php if (isset($v->width)): ?>width="<?php echo $v->width?>"<?php endif; ?>
 						<?php if (isset($v->rowspan)): ?>rowspan="<?php echo $v->rowspan?>"<?php endif; ?>
 						<?php if (isset($v->colspan)): ?>colspan="<?php echo $v->colspan?>"<?php endif; ?>
-					><?php echo $this->translate($v->name); ?></th>
+					><?=(isset($v->translatable) && $v->translatable)?$this->translate($vv->data):$v->name?></th>
 				<?php else: ?>
 					<th><?php echo $this->translate($v); ?></th>
 				<?php endif; ?>
