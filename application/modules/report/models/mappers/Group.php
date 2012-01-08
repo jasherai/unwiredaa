@@ -47,7 +47,7 @@ class Report_Model_Mapper_Group extends Unwired_Model_Mapper
 			foreach ($model->getRecepients() as $groupId => $email) {
 				$nodes->insert(array(
 						'report_group_id' => $model->getReportGroupId(),
-						'email' => $email
+						'email' => trim($email)
 				));
 			}
 			$nodes = null;
