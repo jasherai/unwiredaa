@@ -210,7 +210,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 		if ($this->_dateFrom != '') {
 			return date('Y-m-d', strtotime($this->_dateFrom));
 		} else {
-			return date('Y-m-d');
+			return date('Y-m-01');
 		}
 	}
 
@@ -230,7 +230,13 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 		if ($this->_dateTo != '') {
 			return date('Y-m-d', strtotime($this->_dateTo));
 		} else {
-			return date('Y-m-d');
+		    $dateTo = new Zend_Date();
+
+            $dateTo->setDay(1)
+                   ->addMonth(1)
+                   ->subDay(1);
+
+			return $dateTo->toString('yyyy-MM-dd');
 		}
 	}
 

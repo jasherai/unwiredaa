@@ -25,6 +25,15 @@ class Report_Form_Group extends Unwired_Form {
 
 		$this->addElement ( 'text', 'date_to', array ('label' => 'report_group_date_to', 'required' => true, 'class' => 'span-5', 'validators' => array ('len' => array ('validator' => 'Date' ) ) ) );
 
+		$dateTo = new Zend_Date();
+
+        $dateTo->setDay(1)
+               ->addMonth(1)
+               ->subDay(1);
+
+        $this->getElement('date_from')->setValue(date('Y-m-01'));
+
+        $this->getElement('date_to')->setValue($dateTo->toString('yyyy-MM-dd'));
 
 		$this->addElement('select', 'report_type', array('label' => 'report_group_report_type',
 				'required' => true,
@@ -45,7 +54,7 @@ class Report_Form_Group extends Unwired_Form {
 						'4' => 'year',
 				)
 		));
-		$this->addElement ( 'text', 'email', array ('label' => 'report_group_email', 'required' => false, 'class' => 'span-5', 'validators' => array ('len' => array ('validator' => 'StringLength', 'options' => array ('min' => 2 ) ) ) ) );
+		$this->addElement ( 'textarea', 'email', array ('label' => 'report_group_email', 'required' => false, 'class' => 'span-5', 'rows' => 5, 'style' => 'height: auto !important;', 'validators' => array ('len' => array ('validator' => 'StringLength', 'options' => array ('min' => 2 ) ) ) ) );
 
 		$decorators = $this->getElement('email')->getDecorators();
 
