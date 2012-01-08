@@ -94,6 +94,9 @@
 						
 						if ($entity) :
 							$classParts = explode('_', $class);
+							if ($classParts[0] == $classParts[2]) {
+								$classParts[2] = 'index';
+							}
 							?>
 							<a href="<?php echo $this->url(array('module' => strtolower($filter->filter($classParts[0])),
 																'controller' => strtolower($filter->filter($classParts[2])),
