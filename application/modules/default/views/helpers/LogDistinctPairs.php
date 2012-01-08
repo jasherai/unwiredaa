@@ -28,6 +28,12 @@ class Zend_View_Helper_LogDistinctPairs extends Zend_View_Helper_Abstract
 		    break;
 		}
 
+		foreach ($ids as $key => $value) {
+			$ids[$key] = $this->view->translate($value);
+		}
+		
+		asort($ids);
+		
 		return $ids;
 	}
 }
