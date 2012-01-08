@@ -55,7 +55,7 @@ class Report_Model_Group extends Unwired_Model_Generic  implements Zend_Acl_Role
 		if (is_array($_recepients)) {
 			$this->_recepients = $_recepients;
 		} elseif (is_string($_recepients)) {
-			$this->_recepients = explode(', ', $_recepients);
+			$this->_recepients = explode(',', $_recepients);
 		}
 	}
 
