@@ -94,7 +94,7 @@
 						
 						if ($entity) :
 							$classParts = explode('_', $class);
-							if ($classParts[0] == $classParts[2]) {
+							if ($classParts[0] == $classParts[2] || $classParts[0] == $classParts[2] . 's') {
 								$classParts[2] = 'index';
 							}
 							?>
