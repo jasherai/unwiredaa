@@ -93,7 +93,7 @@
 
 						echo ($entity && $entity instanceof Zend_Acl_Resource_Interface)
 							 ? $this->translate('resource_' . $entity->getResourceId())
-							 : $log->getEntityName();
+							 : $this->translate($log->getEntityName());
 
 						echo ' : ';
 
