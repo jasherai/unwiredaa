@@ -99,7 +99,10 @@
 
 						$eventData = $log->getEventData();
 						if (!empty($eventData)) {
-							$entity->fromArray(unserialize($eventData));
+							$entityData = @unserialize($eventData);
+							if (is_array($entityData)) {
+								$entity->fromArray(unserialize($eventData));
+							}
 						} else {
 							$entity = null;
 						}
