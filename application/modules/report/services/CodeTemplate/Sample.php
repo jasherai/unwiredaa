@@ -39,14 +39,28 @@ class Report_Service_CodeTemplate_Sample extends Report_Service_CodeTemplate_Abs
 					,'type'=>'LineChart' //default: PieChart (wants rows with only 2 columns, first is label)
 					,'headers'=>array( //column labels (even if there values is not used anywhere, they are required!)
 						'labels'
-						,'line 1'
-						,'line 2'
+						,'Karbach'
 					)
 					,'rows'=>array(/*with as many columsn as defined in headers*/
-						array('l1',3,9) //second column must be numerical
-						,array('l2',6,6)
-						,array('l3',3,5)
-						,array('l4',7,3)
+						array('2012-01-08 11:',3456712) //second column must be numerical
+						,array('2012-01-08 12:',1234567)
+					)
+				)
+				,'test_id3'=>array(/*chart defintion*/
+					'name'=>'testLine'
+					,'width'=>400 //default: 350
+					,'height'=>200 //default: 300
+					,'stacked'=>true //optional feature isStacking (for AreaCharts)
+					,'type'=>'SteppedAreaChart' //default: PieChart (wants rows with only 2 columns, first is label)
+					,'headers'=>array( //column labels (even if there values is not used anywhere, they are required!)
+						'labels'
+						,'planai'
+						,'zauchensee'
+					)
+					,'rows'=>array(/*with as many columsn as defined in headers*/
+						array('2012-01-08 11:',3456712,1231232) //second column must be numerical
+						,array('2012-01-08 12:',1234567,2342345)
+						,array('2012-01-08 12:',1234567,3211231)
 					)
 				)
 			)
