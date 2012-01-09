@@ -12,26 +12,38 @@
 
 class Report_Service_CodeTemplate_Bandwidth extends Report_Service_CodeTemplate_Abstract {
 
-	private function new_table($rows)
+	private function new_table($rows,$last_group_name,$maxUp,$maxDown,$maxTotal)
 	{
 		/*build table and add total line add beginning and end*/
 		return array(/*table definition*/
 			'colDefs'=>array(/*array of coldefs*/
-				array(/*second coldef*/
+				array(/*first coldef*/
 					array( /*advanced column def as array*/
-						'name'=>'Group'
+						'name'=>$last_group_name
+						,'translatable'=>false
+						,'class'=>'bold'
+					)
+					,array( /*advanced column def as array*/
+						'name'=>'<div align=right>max: '.round(($maxUp)*8/1024/600).' kbps<div>'
 						,'translatable'=>false
 						,'class'=>'right'
 					)
 					,array( /*advanced column def as array*/
-						'name'=>'Node'
+						'name'=>'<div align=right>max: '.round(($maxDown)*8/1024/600).' kbps<div>'
 						,'translatable'=>false
 						,'class'=>'right'
 					)
 					,array( /*advanced column def as array*/
+						'name'=>'<div align=right>max: '.round(($maxTotal)*8/1024/600).' kbps<div>'
+						,'translatable'=>false
+						,'class'=>'right'
+					)
+				)
+				,array(/*second coldef*/
+					array( /*advanced column def as array*/
 						'name'=>'Time'
 						,'translatable'=>false
-						,'width'=>'20%'
+						,'width'=>'30%'
 						,'class'=>'right'
 					)
 					,array( /*advanced column def as array*/
@@ -59,9 +71,6 @@ class Report_Service_CodeTemplate_Bandwidth extends Report_Service_CodeTemplate_
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		$db->setFetchMode(Zend_Db::FETCH_NUM);
 
-		$tables=array();
-		$rows=array();
-		/*query node-groups*/
 		$tstmt=$db->query("SET @tlen = 15;");
                 $tstmt=$db->query("SET @temp_last_bytes_up = 0;");
                 $tstmt=$db->query("SET @last_bytes_up = 0;");
@@ -69,8 +78,7 @@ class Report_Service_CodeTemplate_Bandwidth extends Report_Service_CodeTemplate_
                 $tstmt=$db->query("SET @last_bytes_down = 0;");
                 $tstmt=$db->query("SET @temp_last_node_id = 0;");
                 $tstmt=$db->query("SET @last_node_id = 0;");
-		$tstmt=$db->query("SELECT LEFT(time,@tlen) as epoch, n.node_id, n.group_id, SUM(delta_bytes_up) as interval_bytes_up, SUM(delta_bytes_down) as interval_bytes_down 
-, n.name, g.name
+		$tstmt=$db->query("SELECT LEFT(time,@tlen) as epoch, n.group_id, SUM(delta_bytes_up) as interval_bytes_up, SUM(delta_bytes_down) as interval_bytes_down, g.name
 FROM (SELECT i1.session_id, i1.time
 , if((@temp_last_bytes_up:=@last_bytes_up)=@last_bytes_up,if((@last_bytes_up:=bytes_up)=bytes_up,if(type='Start',0,bytes_up-@temp_last_bytes_up),-1),-2) as delta_bytes_up 
 , if((@temp_last_bytes_down:=@last_bytes_down)=@last_bytes_down,if((@last_bytes_down:=bytes_down)=bytes_down,if(type='Start',0,bytes_down-@temp_last_bytes_down),-1),-2) as delta_bytes_down 
@@ -90,35 +98,63 @@ ORDER BY session_id, roaming_count, time
 ) as i1
 ) as i2 INNER JOIN node n on i2.delta_node_id = n.node_id INNER JOIN `group` g ON g.group_id = n.group_id
 WHERE delta_node_id >= 0 AND (delta_bytes_up>0 OR delta_bytes_down>0)
-GROUP BY group_id, node_id, epoch
-HAVING epoch > '$dateFrom'
-ORDER BY group_id, node_id, epoch;
+GROUP BY group_id, epoch
+HAVING epoch >= '$dateFrom'
+ORDER BY group_id, epoch;
 ");
 		/*initialize*/
-		$last_group_id=false;
+		$tables=array();
+		$g_header=array('labels');$g_data=array();
+		$rows=array();$totalUp=$totalDown=$totalTotal=0;
+		$last_group_id=false;$last_group_name="";
 		while ($trow=$tstmt->fetch()){
 /*start new table if group changed*/
-			if ($trow[2]!=$last_group_id) {
+			if ($trow[1]!=$last_group_id) {
 				if ($last_group_id) { /*no need to start new table if we have no old one*/
-					$tables[]=$this->new_table($rows);
-					$rows=array();
+					$tables[]=$this->new_table($rows,$last_group_name,$totalUp,$totalDown,$totalTotal);
+					$rows=array();$totalUp=$totalDown=$totalTotal=0;
 				}
-				$last_group_id=$trow[2];
+				$last_group_id=$trow[1];
+				$last_group_name=$trow[4];
+				$g_header[]=$trow[4];
 			}
 			$rows[]=array(/*data row*/
-					'data'=>array($trow[6],$trow[5],$trow[0].'0-'.substr($trow[0],14,1).'9'
-					,/*$trow[3].'Bytes '.*/round($trow[3]*8/1024/600,2).' kbps'
-					,/*$trow[4].'Bytes '.*/round($trow[4]*8/1024/600,2).' kbps'
-					,/*($trow[3]+$trow[4]).'Bytes '.*/round(($trow[3]+$trow[4])*8/1024/600,2).' kbps')
+					'data'=>array($trow[0].'0:00 - '.substr($trow[0],11,4).'9:59'
+					,/*$trow[3].'Bytes '.*/round($trow[2]*8/1024/600,2).' kbps'
+					,/*$trow[4].'Bytes '.*/round($trow[3]*8/1024/600,2).' kbps'
+					,/*($trow[3]+$trow[4]).'Bytes '.*/round((($trow[2]*1)+($trow[3]*1))*8/1024/600,2).' kbps')
 					,'translatable'=>false
-					,'class'=>array('bold','bold','bold','right','right','right')
+					,'class'=>array('bold','right','right','right')
 				); /*end of data row*/
+			/*calculate total of group*/
+			if (($trow[2]*1)>$totalUp) $totalUp=($trow[2])*1;
+			if (($trow[3]*1)>$totalUp) $totalDown=($trow[3])*1;
+			if ((($trow[2]*1)+($trow[3]*1))>$totalTotal) $totalTotal=(($trow[2]*1)+($trow[3]*1));
+			$g_data[$trow[0].'h']["_".(count($g_header)-1)]=round((($trow[2]*1)+($trow[3]*1))*8/1024/600);
 		}
-/*echo "<pre>";
-print_r($rows);
-die("/pre");*/
-		$tables[]=$this->new_table($rows);
+		$tables[]=$this->new_table($rows,$last_group_name,$totalUp,$totalDown,$totalTotal);
 
-		return array('tables'=>$tables);
+                /*convert graph data array*/
+                ksort($g_data);
+                foreach ($g_data as $label => $data){
+                        $line=split(",",str_replace(",",";",$label).str_repeat(",0",count($g_header)-1));
+                        foreach ($data as $num => $val) {
+                                $line[(substr($num,1)*1)]=$val;
+                        }
+                        $gn_data[]=$line;
+                }
+
+		return array(
+                        'graphics'=>array(/*array of charts*/
+                                'main_chart'=>array(/*chart defintion*/
+                                        'name'=>'Traffic overview in kbit (10 min averages)'
+                                        ,'width'=>800 //default: 350
+                                        ,'height'=>600 //default: 300
+                                        ,'type'=>'LineChart'
+                                        ,'headers'=>$g_header
+                                        ,'rows'=>$gn_data
+                                )
+                        )
+			,'tables'=>$tables);
 	}
 }

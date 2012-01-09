@@ -15,14 +15,14 @@ class Report_Service_CodeTemplate_UniqueUsers extends Report_Service_CodeTemplat
 	private function new_table($rows,$parent_group_id,$db,$dateFrom,$dateTo)
 	{
 		/*calculate group total?*/
-		$stmt=$db->query("SELECT count(DISTINCT user_mac), gp.name
+		$stmt=$db->query("SELECT count(DISTINCT user_mac), ".(!$parent_group_id?"'Total'":"gp.name")." as name
 FROM acct_internet_session s
 INNER JOIN acct_internet_roaming r ON s.session_id=r.session_id
 INNER JOIN node n ON r.node_id = n.node_id
 INNER JOIN `group` g on g.group_id = n.group_id
 INNER JOIN `group` gp on gp.group_id = g.parent_id
-WHERE gp.group_id = '$parent_group_id'
-AND (r.start_time BETWEEN '$dateFrom' AND '$dateTo'
+WHERE ".($parent_group_id?"gp.group_id = '$parent_group_id' AND ":"")."
+(r.start_time BETWEEN '$dateFrom' AND '$dateTo'
 OR r.stop_time BETWEEN '$dateFrom' AND '$dateTo'
 OR r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_time)))");
 		$row=$stmt->fetch();
@@ -43,7 +43,7 @@ OR r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_t
 						,'class'=>'right'
 					)
 				) /* end of first coldef*/
-				,array(/*second coldef*/
+				,(!$parent_group_id?array():array(/*second coldef*/
 					array( /*advanced column def as array*/
 						'name'=>'Nodes'
 						,'translatable'=>false
@@ -55,7 +55,7 @@ OR r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_t
 						,'translatable'=>false
 						,'class'=>'right'
 					)
-				) /* end of second coldef*/
+				)) /* end of second coldef*/
 			) /*end of coldefs*/
 			,'rows'=>$rows
 		);
@@ -102,6 +102,7 @@ ORDER BY g.parent_id, g.name;");
 				); /*end of data row*/
 		}
 		$tables[]=$this->new_table($rows,$last_group_id,$db,$dateFrom,$dateTo);
+		$tables[]=$this->new_table(array(),false,$db,$dateFrom,$dateTo);
 
 		return array('tables'=>$tables);
 	}
