@@ -29,21 +29,52 @@
 	<input type="hidden" name="<?php echo $this->prefix; ?>[order_mobile]" value="<?php echo $this->escape($this->content->getOrderMobile()); ?>"/>
 	<input type="hidden" name="<?php echo $this->prefix; ?>[widget]" value="Iframe"/>
 </div>
-<div class="formelement span-17 last">
-	<label><?php echo $this->translate('widget_iframe_admin_src'); ?>* :</label>
-	<input type="text" class="span-7 last" name="<?php echo $this->prefix; ?>[content][src]" value="<?php
-	    echo $this->escape($this->iframeData['src']);
-	?>" />
-</div>
-<div class="formelement span-17 last">
-	<label><?php echo $this->translate('widget_iframe_admin_width'); ?>* :</label>
-	<input type="text" name="<?php echo $this->prefix; ?>[content][width]" value="<?php
-	    echo $this->escape($this->iframeData['width']);
-	?>" />
-</div>
-<div class="formelement span-17 last">
-	<label><?php echo $this->translate('widget_iframe_admin_height'); ?>* :</label>
-	<input type="text" name="<?php echo $this->prefix; ?>[content][height]" value="<?php
-	    echo $this->escape($this->iframeData['height']);
-	?>" />
+<?php
+    $targetId = rand(0,999) . '-' . $this->content->getContentId() . '-' . $this->languageId;
+?>
+<div class="span-18 last tabs subtabs">
+    <ul class="span-18 last">
+    	<li><a href="#desktop-<?php echo $targetId; ?>">Desktop</a></li>
+    	<li><a href="#mobile-<?php echo $targetId; ?>">Mobile</a></li>
+    </ul>
+    <div id="desktop-<?php echo $targetId; ?>" class="subtabs-panel">
+        <div class="formelement span-17 last">
+        	<label><?php echo $this->translate('widget_iframe_admin_src'); ?>* :</label>
+        	<input type="text" class="span-7 last" name="<?php echo $this->prefix; ?>[content][desktop][src]" value="<?php
+        	    echo $this->escape($this->iframeData['desktop']['src']);
+        	?>" />
+        </div>
+        <div class="formelement span-17 last">
+        	<label><?php echo $this->translate('widget_iframe_admin_width'); ?>* :</label>
+        	<input type="text" name="<?php echo $this->prefix; ?>[content][desktop][width]" value="<?php
+        	    echo $this->escape($this->iframeData['desktop']['width']);
+        	?>" />
+        </div>
+        <div class="formelement span-17 last">
+        	<label><?php echo $this->translate('widget_iframe_admin_height'); ?>* :</label>
+        	<input type="text" name="<?php echo $this->prefix; ?>[content][desktop][height]" value="<?php
+        	    echo $this->escape($this->iframeData['desktop']['height']);
+        	?>" />
+        </div>
+	</div>
+    <div id="mobile-<?php echo $targetId; ?>" class="subtabs-panel">
+        <div class="formelement span-17 last">
+        	<label><?php echo $this->translate('widget_iframe_admin_src'); ?>* :</label>
+        	<input type="text" class="span-7 last" name="<?php echo $this->prefix; ?>[content][mobile][src]" value="<?php
+        	    echo $this->escape($this->iframeData['mobile']['src']);
+        	?>" />
+        </div>
+        <div class="formelement span-17 last">
+        	<label><?php echo $this->translate('widget_iframe_admin_width'); ?>* :</label>
+        	<input type="text" name="<?php echo $this->prefix; ?>[content][mobile][width]" value="<?php
+        	    echo $this->escape($this->iframeData['mobile']['width']);
+        	?>" />
+        </div>
+        <div class="formelement span-17 last">
+        	<label><?php echo $this->translate('widget_iframe_admin_height'); ?>* :</label>
+        	<input type="text" name="<?php echo $this->prefix; ?>[content][mobile][height]" value="<?php
+        	    echo $this->escape($this->iframeData['mobile']['height']);
+        	?>" />
+        </div>
+	</div>
 </div>

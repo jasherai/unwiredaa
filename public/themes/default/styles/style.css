@@ -462,6 +462,14 @@ span.button.blue.small:hover button, span.button.blue.small:hover a, span.button
 }
 .message.error { background-image: url('../images/icons/24x24/block.png'); }
 
+.subtabs {
+    border: 0px !important;
+}
+
+.subtabs-panel {
+    padding: 0px !important;
+}
+
 .ml220 {
 	margin-left: 220px;
 }

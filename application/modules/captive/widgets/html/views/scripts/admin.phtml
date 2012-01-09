@@ -10,30 +10,50 @@
 * license available at http://www.unwired.at/license.html
 */
 ?>
-<div class="span-17 formelement">
-	<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$this->languageId]->getName(); ?></label>
-	<?php
-	    if ($this->content->getContentId()) :
-	?>
-		<input type="hidden" name="<?php echo $this->prefix; ?>[content_id]" value="<?php echo $this->content->getContentId(); ?>" />
-	<?php
-	    endif;
-	?>
-	<input type="hidden" name="<?php echo $this->prefix; ?>[language_id]" value="<?php echo $this->languageId; ?>" />
-</div>
-<div class="formelement">
-	<label><?php echo $this->translate('widget_html_admin_title'); ?>* :</label>
-	<input type="text" name="<?php echo $this->prefix; ?>[title]" value="<?php echo $this->escape($this->content->getTitle()); ?>"/>
-	<input type="hidden" name="<?php echo $this->prefix; ?>[column]" value="<?php echo $this->escape($this->content->getColumn()); ?>"/>
-	<input type="hidden" name="<?php echo $this->prefix; ?>[order_web]" value="<?php echo $this->escape($this->content->getOrderWeb()); ?>"/>
-	<input type="hidden" name="<?php echo $this->prefix; ?>[order_mobile]" value="<?php echo $this->escape($this->content->getOrderMobile()); ?>"/>
-	<input type="hidden" name="<?php echo $this->prefix; ?>[widget]" value="Html"/>
-</div>
-<div class="formelement">
-	<label><?php echo $this->translate('widget_html_admin_content'); ?>* :</label>
-	<div class="span-17 last">
-		<textarea class="wysiwyg span-18 last" name="<?php echo $this->prefix; ?>[content]"><?php
-		    echo $this->escape($this->content->getContent());
-		?></textarea>
+<?php
+    if ($this->content->getContentId()) :
+?>
+	<input type="hidden" name="<?php echo $this->prefix; ?>[content_id]" value="<?php echo $this->content->getContentId(); ?>" />
+<?php
+    endif;
+?>
+<input type="hidden" name="<?php echo $this->prefix; ?>[column]" value="<?php echo $this->escape($this->content->getColumn()); ?>"/>
+<input type="hidden" name="<?php echo $this->prefix; ?>[order_web]" value="<?php echo $this->escape($this->content->getOrderWeb()); ?>"/>
+<input type="hidden" name="<?php echo $this->prefix; ?>[order_mobile]" value="<?php echo $this->escape($this->content->getOrderMobile()); ?>"/>
+<input type="hidden" name="<?php echo $this->prefix; ?>[widget]" value="Html"/>
+<div class="span-18 tabs subtabs">
+<?php
+    $targetId = rand(0,999) . '-' . $this->content->getContentId() . '-' . $this->languageId;
+?>
+    <div class="span-17 formelement">
+    	<label><?php echo $this->translate('captive_content_edit_language'); ?>: <?php echo $this->languages[$this->languageId]->getName(); ?></label>
+    	<input type="hidden" name="<?php echo $this->prefix; ?>[language_id]" value="<?php echo $this->languageId; ?>" />
+    </div>
+    <div class="span-17 formelement">
+    	<label><?php echo $this->translate('widget_html_admin_title'); ?>* :</label>
+    	<input type="text" name="<?php echo $this->prefix; ?>[title]" value="<?php echo $this->escape($this->content->getTitle()); ?>"/>
+    </div>
+    <div class="span-17 formelement">
+    	<label><?php echo $this->translate('widget_html_admin_content'); ?>* :</label>
+    </div>
+
+    <ul class="span-18 last">
+    	<li><a href="#desktop-<?php echo $targetId; ?>">Desktop</a></li>
+    	<li><a href="#mobile-<?php echo $targetId; ?>">Mobile</a></li>
+    </ul>
+
+	<div id="desktop-<?php echo $targetId; ?>" class="subtabs-panel">
+    	<div class="span-18 last">
+    		<textarea class="wysiwyg span-18 last" name="<?php echo $this->prefix; ?>[content][desktop]"><?php
+    		    echo $this->escape($this->contentData['desktop']);
+    		?></textarea>
+    	</div>
+	</div>
+	<div id="mobile-<?php echo $targetId; ?>" class="subtabs-panel">
+    	<div class="span-18 last">
+    		<textarea class="wysiwyg span-18 last" name="<?php echo $this->prefix; ?>[content][mobile]"><?php
+    		    echo $this->escape($this->contentData['mobile']);
+    		?></textarea>
+    	</div>
 	</div>
 </div>

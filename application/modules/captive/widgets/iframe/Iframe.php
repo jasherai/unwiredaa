@@ -41,13 +41,19 @@ class Widget_Iframe extends Unwired_Widget_Abstract
 
     public function renderAdmin($content, $params = array())
     {
-        $data = unserialize($content->getContent());
+        $data = @unserialize($content->getContent());
 
         if (!$data || !is_array($data)) {
-            $data = array();
+            $data = array('desktop' => array('src' => '', 'width' => '100%', 'height' => '300'),
+                          'mobile' => array('src' => '', 'width' => '100%', 'height' => '300'));
         }
 
-        $data = array_merge($this->_defaults, $data);
+        if (!isset($data['desktop'])) {
+            $data = array('desktop' => $data, 'mobile' => $data);
+        }
+
+        $data['desktop'] = array_merge($this->_defaults, $data['desktop']);
+        $data['mobile'] = array_merge($this->_defaults, $data['mobile']);
 
         $this->getView()->iframeData = $data;
         $this->getView()->content = $content;
