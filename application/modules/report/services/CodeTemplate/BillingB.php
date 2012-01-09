@@ -98,6 +98,7 @@ ORDER BY session_id, roaming_count, time
 ) as i1
 ) as i2 INNER JOIN node n on i2.delta_node_id = n.node_id INNER JOIN `group` g ON g.group_id = n.group_id
 WHERE delta_node_id >= 0 AND (delta_bytes_up>0 OR delta_bytes_down>0)
+AND n.billable=1 and n.status='enabled'
 GROUP BY group_id, epoch
 HAVING epoch >= '$dateFrom'
 ORDER BY group_id, epoch;
@@ -150,7 +151,8 @@ ORDER BY group_id, epoch;
 					'name'=>'Traffic in MB per month'
 					,'width'=>800 //default: 350
 					,'height'=>600 //default: 300
-					,'type'=>'LineChart'
+					,'stacked'=>'true'
+					,'type'=>'SteppedAreaChart'
 					,'headers'=>$g_header
 					,'rows'=>$gn_data
                                 )
