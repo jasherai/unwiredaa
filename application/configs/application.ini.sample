@@ -11,33 +11,52 @@ resources.frontController.params.displayExceptions = 0
 resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
 resources.view.doctype = "XHTML1_TRANSITIONAL"
 resources.view.assign.theme = "skiamade"
+resources.view.assign.serverUrl = "https://[your_admin_interface_url]"
+resources.view.assign.systemName = "[YOUR_SYSTEM_NAME]"
 resources.view.basePath = APPLICATION_PATH "/modules/default/views"
 resources.view.helperPath.Unwired_View_Helper = "Unwired/View/Helper"
 resources.view.helperPath.Users_View_Helper = APPLICATION_PATH "/modules/users/views/helpers"
 resources.view.helperPath.Groups_View_Helper = APPLICATION_PATH "/modules/groups/views/helpers"
 
 resources.db.adapter = "PDO_MYSQL"
-resources.db.params.host = "10.255.0.64"
+resources.db.params.host = [your_host]
 resources.db.params.dbname = "uwaa"
 resources.db.params.username = "uwaa"
-resources.db.params.password = "titmpw4uwaa"
+resources.db.params.password = [your_db_password]
 resources.db.params.charset="UTF8"
+
+;resources.mail.transport.type = sendmail
+resources.mail.transport.type = smtp
+resources.mail.transport.host = [your_smtp_server]
+resources.mail.transport.auth = login
+resources.mail.transport.username = [your_smtp_username]
+resources.mail.transport.password = [your_smtp_password]
+resources.mail.transport.ssl = ssl
+resources.mail.transport.port = 465
+resources.mail.transport.register = true ; True by default
+
+default.chilli.statsUrl = "http://[your_host]/live"
+
+resources.mail.defaultFrom.email = notification@[your_hostname] 
+resources.mail.defaultFrom.name = "[your_network_name] Wlan"
+resources.mail.defaultReplyTo.email = notification@[your_hostname]
+resources.mail.defaultReplyTo.name = "[your_network_name] Wlan"
 
 captive.resources.db.isDefaultTableAdapter = 0
 captive.resources.db.adapter = "PDO_MYSQL"
-captive.resources.db.params.host = "10.255.0.64"
-captive.resources.db.params.dbname = "uwaa_captive"
-captive.resources.db.params.username = "uwcaptive"
-captive.resources.db.params.password = "titmpw4captive"
+captive.resources.db.params.host = "[your_db_host]"
+captive.resources.db.params.dbname = "[your_dbname]"
+captive.resources.db.params.username = "[your db_user]"
+captive.resources.db.params.password = "[your db_password]"
 captive.resources.db.params.charset="UTF8"
 
 captive.shellpaths.scp = "/usr/bin/scp"
 captive.shellpaths.ssh = "/usr/bin/ssh"
 
-captive.splashpage.default.host = "10.255.0.64"
-captive.splashpage.default.user = "splashupdate"
+captive.splashpage.default.host = ""
+captive.splashpage.default.user = ""
 captive.splashpage.default.publicpath = "/var/www/splashpage/public"
-captive.splashpage.default.url = "http://captive.unwired.at/"
+captive.splashpage.default.url = "http://[your_default_url]/"
 captive.splashpage.default.sshoptions.i = "/home/splashupdate/.ssh/id_rsa"
 captive.splashpage.default.sshoptions.o = "UserKnownHostsFile=/home/splashupdate/.ssh/known_hosts"
 
