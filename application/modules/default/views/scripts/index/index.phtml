@@ -79,8 +79,11 @@
 
 				if (data) {
 
+					var garden_users = 'N/A';
 					if (data.session_count == -1) {
 						data = defaultData;
+					} else {
+						garden_users = data.session_count - data.internet_users;
 					}
 
     				$('#infowindowcontainer div.stats').html(
