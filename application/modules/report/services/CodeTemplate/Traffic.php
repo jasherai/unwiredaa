@@ -12,18 +12,35 @@
 
 class Report_Service_CodeTemplate_Traffic extends Report_Service_CodeTemplate_Abstract {
 
-	private function new_table($rows)
+	private function new_table($rows,$name,$totalUp,$totalDown,$totalTotal)
 	{
 		/*build table and add total line add beginning and end*/
 		return array(/*table definition*/
 			'colDefs'=>array(/*array of coldefs*/
-				array(/*second coldef*/
+				array(
 					array( /*advanced column def as array*/
-						'name'=>'Group'
+						'name'=>$name
+						,'translatable'=>false
+						,'class'=>'bold'
+					)
+					,array( /*advanced column def as array*/
+						'name'=>'<div align=right>'.round($totalUp/1024).' KB<div>'
+						,'translatable'=>false
+						,'class'=>'right' /*does not work !!??*/
+					)
+					,array( /*advanced column def as array*/
+						'name'=>'<div align=right>'.round($totalDown/1024).' KB<div>'
 						,'translatable'=>false
 						,'class'=>'right'
 					)
 					,array( /*advanced column def as array*/
+						'name'=>'<div align=right>'.round(($totalUp+$totalDown)/1024).' KB<div>'
+						,'translatable'=>false
+						,'class'=>'right'
+					)
+				)
+				,array(/*second coldef*/
+					array( /*advanced column def as array*/
 						'name'=>'Time'
 						,'translatable'=>false
 						,'width'=>'20%'
@@ -54,10 +71,7 @@ class Report_Service_CodeTemplate_Traffic extends Report_Service_CodeTemplate_Ab
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 		$db->setFetchMode(Zend_Db::FETCH_NUM);
 
-		$tables=array();
-		$rows=array();
-		/*query node-groups*/
-		$tstmt=$db->query("SET @tlen = 14;");
+		$tstmt=$db->query("SET @tlen = 13;");
                 $tstmt=$db->query("SET @temp_last_bytes_up = 0;");
                 $tstmt=$db->query("SET @last_bytes_up = 0;");
                 $tstmt=$db->query("SET @temp_last_bytes_down = 0;");
@@ -88,28 +102,59 @@ GROUP BY group_id, epoch
 HAVING epoch >= '$dateFrom'
 ORDER BY group_id, epoch;
 ");
+		$tables=array();
+		$rows=array();
+		$g_header=array('labels');$g_data=array();
 		/*initialize*/
-		$last_group_id=false;
+		$last_group_id=false;$last_group_name="";
+		$totalUp=$totalDown=0;
 		while ($trow=$tstmt->fetch()){
 /*start new table if group changed*/
 			if ($trow[1]!=$last_group_id) {
 				if ($last_group_id) { /*no need to start new table if we have no old one*/
-					$tables[]=$this->new_table($rows);
+					$tables[]=$this->new_table($rows,$last_group_name,$totalUp,$totalDown);
 					$rows=array();
+					$totalUp=$totalDown=0;
 				}
 				$last_group_id=$trow[1];
+				$last_group_name=$trow[4];
+				$g_header[]=$trow[4];
 			}
 			$rows[]=array(/*data row*/
-					'data'=>array($trow[4],$trow[0].'00-59'
+					'data'=>array($trow[0].'h'
 					,round($trow[2]).' KB'/*.round($trow[3]*8/1024/600,2).' kbps'*/
 					,round($trow[3]).' KB'/*.round($trow[4]*8/1024/600,2).' kbps'*/
 					,round(($trow[2]+$trow[2])/1024).' KB')/*.round(($trow[3]+$trow[4])*8/1024/600,2).' kbps')*/
 					,'translatable'=>false
-					,'class'=>array('bold','bold','right','right','right')
+					,'class'=>array('bold','right','right','right')
 				); /*end of data row*/
+			$totalUp+=$trow[2];
+			$totalDown+=$trow[3];
+			$g_data[$trow[0].'h']["_".(count($g_header)-1)]=round(($trow[2]+$trow[2])/(1024*1024));
 		}
-		$tables[]=$this->new_table($rows);
+		$tables[]=$this->new_table($rows,$last_group_name,$totalUp,$totalDown);
 
-		return array('tables'=>$tables);
+		/*convert graph data array*/
+		ksort($g_data);
+		foreach ($g_data as $label => $data){
+			$line=split(",",str_replace(",",";",$label).str_repeat(",0",count($g_header)-1));
+			foreach ($data as $num => $val) {
+				$line[(substr($num,1)*1)]=$val;
+			}
+			$gn_data[]=$line;
+		}
+
+		return array(
+			'graphics'=>array(/*array of charts*/
+                                'main_chart'=>array(/*chart defintion*/
+					'name'=>'Traffic in MB per hour'
+					,'width'=>800 //default: 350
+					,'height'=>600 //default: 300
+					,'type'=>'LineChart'
+					,'headers'=>$g_header
+					,'rows'=>$gn_data
+                                )
+                        )
+			,'tables'=>$tables);
 	}
 }
