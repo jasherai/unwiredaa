@@ -22,9 +22,10 @@ INNER JOIN node n ON r.node_id = n.node_id
 INNER JOIN `group` g on g.group_id = n.group_id
 INNER JOIN `group` gp on gp.group_id = g.parent_id
 WHERE ".($parent_group_id?"gp.group_id = '$parent_group_id' AND ":"")."
-(r.start_time BETWEEN '$dateFrom' AND '$dateTo'
-OR r.stop_time BETWEEN '$dateFrom' AND '$dateTo'
-OR r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_time)))");
+(	r.start_time BETWEEN '$dateFrom' AND '$dateTo'
+	OR r.stop_time BETWEEN '$dateFrom' AND '$dateTo'
+	OR ( r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_time)))
+)");
 		$row=$stmt->fetch();
 
 		/*build table and add total line add beginning and end*/
