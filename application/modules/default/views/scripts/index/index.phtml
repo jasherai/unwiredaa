@@ -70,9 +70,24 @@
 					return;
 				}
 
+				var  defaultData = {
+									"session_count": "N/A",
+									"internet_users": "N/A",
+									"total_kbps_up": "N/A",
+									"total_kbps_down": "N/A"
+									} ;
+
 				if (data) {
+
+					if (data.session_count == -1) {
+						data = defaultData;
+					}
+
     				$('#infowindowcontainer div.stats').html(
-    					'<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>:</strong> ' + data.session_count + '</div>' +
+    					'<div><strong><?php echo $this->translate('default_index_index_ap_users')?>: </strong><ul>' +
+					    '<li><strong><?php echo $this->translate('default_index_index_ap_users_total')?>: </strong>' + data.session_count + '</li>' +
+					    '<li><strong><?php echo $this->translate('default_index_index_ap_users_online')?>: </strong>' + data.internet_users + '</li>' +
+					    '<li><strong><?php echo $this->translate('default_index_index_ap_users_garden')?>: </strong>' + (data.session_count - data.internet_users) + '</li></ul></div>' +
     					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>:</strong> ' + data.total_kbps_up + '</div>' +
     					'<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>:</strong> ' + data.total_kbps_down + '</div>'
     				);
@@ -175,10 +190,13 @@
 									  '<h5>' + marker.getTitle() +'</h5>' +
 									  '<div>MAC: ' + data.mac + '</div>' +
 									  '<div>Address: ' + data.location.address + ', ' + data.location.city +', ' + data.location.country + '</div>' +
-									  '<div>' + onlinemsg + '</div>' +
+									  '<div>' + onlinemsg + '</div><br/>' +
 				<?php if (isset($this->currentUser)) :?>
 									  '<div class="stats">' +
-									  '<div><strong><?php echo $this->translate('default_index_index_ap_active_users')?>: </strong> 0</div>' +
+									  '<div><strong><?php echo $this->translate('default_index_index_ap_users')?>: </strong>0<ul>' +
+									  '<li><strong><?php echo $this->translate('default_index_index_ap_users_total')?>: </strong>0</li>' +
+									  '<li><strong><?php echo $this->translate('default_index_index_ap_users_online')?>: </strong>0</li>' +
+									  '<li><strong><?php echo $this->translate('default_index_index_ap_users_garden')?>: </strong>0</li></ul></div>' +
 									  '<div><strong><?php echo $this->translate('default_index_index_ap_speed_up')?>: </strong> 0</div>' +
 									  '<div><strong><?php echo $this->translate('default_index_index_ap_speed_down')?>: </strong> 0</div>' +
 									  '</div>' +
