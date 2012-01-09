@@ -102,10 +102,10 @@ GROUP BY group_id, epoch
 HAVING epoch >= '$dateFrom'
 ORDER BY group_id, epoch;
 ");
+		/*initialize*/
 		$tables=array();
 		$rows=array();
 		$g_header=array('labels');$g_data=array();
-		/*initialize*/
 		$last_group_id=false;$last_group_name="";
 		$totalUp=$totalDown=0;
 		while ($trow=$tstmt->fetch()){
@@ -130,7 +130,7 @@ ORDER BY group_id, epoch;
 				); /*end of data row*/
 			$totalUp+=$trow[2];
 			$totalDown+=$trow[3];
-			$g_data[$trow[0].'h']["_".(count($g_header)-1)]=round(($trow[2]+$trow[2])/(1024*1024));
+			$g_data[$trow[0].'h']["_".(count($g_header)-1)]=round(($trow[2]+$trow[3])/(1024*1024));
 		}
 		$tables[]=$this->new_table($rows,$last_group_name,$totalUp,$totalDown);
 

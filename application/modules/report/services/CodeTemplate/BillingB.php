@@ -101,7 +101,7 @@ WHERE delta_node_id >= 0 AND (delta_bytes_up>0 OR delta_bytes_down>0)
 AND n.billable=1 and n.status='enabled'
 GROUP BY group_id, epoch
 HAVING epoch >= '$dateFrom'
-ORDER BY group_id, epoch;
+ORDER BY g.name, epoch;
 ");
 		$tables=array();
 		$rows=array();
