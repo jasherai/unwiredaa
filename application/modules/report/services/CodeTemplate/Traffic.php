@@ -12,7 +12,7 @@
 
 class Report_Service_CodeTemplate_Traffic extends Report_Service_CodeTemplate_Abstract {
 
-	private function new_table($rows,$name,$totalUp,$totalDown,$totalTotal)
+	private function new_table($rows,$name,$totalUp,$totalDown)
 	{
 		/*build table and add total line add beginning and end*/
 		return array(/*table definition*/
@@ -122,37 +122,53 @@ ORDER BY group_id, epoch;
 			}
 			$rows[]=array(/*data row*/
 					'data'=>array($trow[0].'h'
-					,round($trow[2]).' KB'/*.round($trow[3]*8/1024/600,2).' kbps'*/
-					,round($trow[3]).' KB'/*.round($trow[4]*8/1024/600,2).' kbps'*/
-					,round(($trow[2]+$trow[2])/1024).' KB')/*.round(($trow[3]+$trow[4])*8/1024/600,2).' kbps')*/
+					,round($trow[2]/1024).' KB'/*.round($trow[3]*8/1024/3600,2).' kbps'*/
+					,round($trow[3]/1024).' KB'/*.round($trow[4]*8/1024/3600,2).' kbps'*/
+					,round((($trow[2]*1)+($trow[3]*1))/1024).' KB')/*.round(($trow[3]+$trow[4])*8/1024/3600,2).' kbps')*/
 					,'translatable'=>false
 					,'class'=>array('bold','right','right','right')
 				); /*end of data row*/
-			$totalUp+=$trow[2];
-			$totalDown+=$trow[3];
-			$g_data[$trow[0].'h']["_".(count($g_header)-1)]=round(($trow[2]+$trow[3])/(1024*1024));
+			$totalUp+=($trow[2]*1);
+			$totalDown+=($trow[3]*1);
+			$g_data[$trow[0].'h']["_".(count($g_header)-1)]=round((($trow[2]*1)+($trow[3]*1))/(1024*1024));
 		}
 		$tables[]=$this->new_table($rows,$last_group_name,$totalUp,$totalDown);
 
-		/*convert graph data array*/
-		ksort($g_data);
+		/*convert graph data array*/ /*!!?? make sure missing intervals are not missing?*/
+		ksort($g_data);$t_data=array();$_95=array();
 		foreach ($g_data as $label => $data){
 			$line=split(",",str_replace(",",";",$label).str_repeat(",0",count($g_header)-1));
+			$td=array($label,0);
 			foreach ($data as $num => $val) {
 				$line[(substr($num,1)*1)]=$val;
+				$td[1]+=$val;
 			}
 			$gn_data[]=$line;
-		}
+			/*$_95[]=*/$td[2]=round($td[1]*1024*8/3600);
+			$t_data[]=$td;
+		}/*!!?? calculate an total table based on this, collecting all times with data*/
+
+		/*calculate 95/5 (but not very useful based on hourls values)
+		rsort($_95);
+		$_p95=$_95[floor(count($_95)/20)];*/
 
 		return array(
 			'graphics'=>array(/*array of charts*/
                                 'main_chart'=>array(/*chart defintion*/
-					'name'=>'Traffic in MB per hour'
+					'name'=>'Traffic per Group in MB/hour'
 					,'width'=>800 //default: 350
 					,'height'=>600 //default: 300
 					,'type'=>'LineChart'
 					,'headers'=>$g_header
 					,'rows'=>$gn_data
+                                )
+                                ,'total_chart'=>array(/*chart defintion*/
+					'name'=>'Total Traffic in MB/hour and kbit/sec'/*.' (95/5='.$_p95.' kbit/sec)'*/
+					,'width'=>800 //default: 350
+					,'height'=>600 //default: 300
+					,'type'=>'LineChart'
+					,'headers'=>array('labels','MB/hour','kbit/sec')
+					,'rows'=>$t_data
                                 )
                         )
 			,'tables'=>$tables);

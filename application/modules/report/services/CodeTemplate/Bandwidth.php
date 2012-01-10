@@ -120,9 +120,9 @@ ORDER BY group_id, epoch;
 			}
 			$rows[]=array(/*data row*/
 					'data'=>array($trow[0].'0:00 - '.substr($trow[0],11,4).'9:59'
-					,/*$trow[3].'Bytes '.*/round($trow[2]*8/1024/600,2).' kbps'
-					,/*$trow[4].'Bytes '.*/round($trow[3]*8/1024/600,2).' kbps'
-					,/*($trow[3]+$trow[4]).'Bytes '.*/round((($trow[2]*1)+($trow[3]*1))*8/1024/600,2).' kbps')
+					,/*$trow[2].'Bytes '.*/round($trow[2]*8/1024/600,2).' kbps'
+					,/*$trow[3].'Bytes '.*/round($trow[3]*8/1024/600,2).' kbps'
+					,/*($trow[2]+$trow[3]).'Bytes '.*/round((($trow[2]*1)+($trow[3]*1))*8/1024/600,2).' kbps')
 					,'translatable'=>false
 					,'class'=>array('bold','right','right','right')
 				); /*end of data row*/
