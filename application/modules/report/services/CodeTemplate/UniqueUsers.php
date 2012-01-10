@@ -99,7 +99,7 @@ ORDER BY g.parent_id, g.name;");
 			$rows[]=array(/*data row*/
 					'data'=>array($trow[0],$trow[1])
 					,'translatable'=>false
-					,'class'=>array('left','right')
+					,'class'=>array('','right')
 				); /*end of data row*/
 		}
 		$tables[]=$this->new_table($rows,$last_group_id,$db,$dateFrom,$dateTo);

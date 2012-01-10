@@ -30,7 +30,7 @@ class Report_Service_CodeTemplate_Virus extends Report_Service_CodeTemplate_Abst
 						array('data'=>'Total','translatable'=>false)
 						,array('data'=>$row[1],'translatable'=>false)
 					)
-					,'class'=>array('left bold total','right bold total') /*!!?? total class is likely to be unexisting*/
+					,'class'=>array('bold total','right bold total') /*!!?? total class is likely to be unexisting*/
 				) /*end of total data row*/
 			);
 			/*query top 50 virus threats*/
@@ -41,7 +41,7 @@ class Report_Service_CodeTemplate_Virus extends Report_Service_CodeTemplate_Abst
 							array('data'=>$trow[0],'translatable'=>false)
 							,array('data'=>$trow[1],'translatable'=>false)
 						)
-						,'class'=>array('left','right')
+						,'class'=>array('','right')
 					); /*end of data row*/
 			}
 			/*build table and add total line add beginning and end*/

@@ -15,7 +15,7 @@ class Report_Service_CodeTemplate_Sample extends Report_Service_CodeTemplate_Abs
 	public function getData($groupIds, $dateFrom, $dateTo) {
 		$db = Zend_Db_Table_Abstract::getDefaultAdapter ();
 
-		$row=array(array('data'=>array('a','b'),'class'=>array('bold','left')));
+		$row=array(array('data'=>array('a','b'),'class'=>array('bold','')));
 		return array(/*the result array*/
 			'graphics'=>array(/*array of charts*/
 				'test_id1'=>array(/*chart defintion*/
@@ -110,12 +110,12 @@ class Report_Service_CodeTemplate_Sample extends Report_Service_CodeTemplate_Abs
 							,'class'=>array('right','right','bold')
 						) /*end of second data row*/
 						,array(
-							'data'=>array('a3 (class left is broken)','b3 (and not even an intact table cell)','c3')
-							,'class'=>array('left','left','right')
+							'data'=>array('a3','b3','c3')
+							,'class'=>array('','','right')
 						)
 						,array(/*second data row*/
 							'data'=>array('a4','b4','c4')
-							,'class'=>array('left','left','bold')
+							,'class'=>array('','','bold')
 						)
 					) /*end of rows*/
 				) /*end of table 1*/
