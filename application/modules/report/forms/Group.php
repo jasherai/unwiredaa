@@ -80,7 +80,24 @@ class Report_Form_Group extends Unwired_Form {
 		$mapper = null;
 
 		$this->addElement ( 'submit', 'form_element_submit', array ('label' => 'report_group_edit_form_save', 'tabindex' => 20, 'class' => 'button', 'decorators' => array ('ViewHelper', array (array ('span' => 'HtmlTag' ), array ('tag' => 'span', 'class' => 'button green' ) ) ) ) );
-		$this->addElement ( 'href', 'form_element_cancel', array ('label' => 'report_group_edit_form_cancel', 'tabindex' => 20, 'href' => (isset ( $this->getView ()->refererUrl )) ? $this->getView ()->refererUrl : null, 'data' => array ('params' => array ('module' => 'report', 'controller' => 'group', 'action' => 'index' ), 'route' => 'default', 'reset' => true ), 'decorators' => array ('ViewHelper', array (array ('span' => 'HtmlTag' ), array ('tag' => 'span', 'class' => 'button blue' ) ) ) ) );
+
+		$this->addElement('href',
+						  'form_element_cancel',
+		                  array('label' => 'report_group_edit_form_cancel',
+		                  		'tabindex' => 20,
+		                  		'href' => (isset($this->getView()->refererUrl)) ? $this->getView()->refererUrl : null,
+		                  		'data' => array('params' => array('module' => 'report',
+		                  										  'controller' => 'group',
+		                  										  'action' => 'index'),
+		                                        'route' => 'default',
+		                  						'reset' => true ),
+		                  		'decorators' => array('ViewHelper',
+		                                              array(array('span' => 'HtmlTag' ),
+		                                                    array('tag' => 'span',
+		                                                          'class' => 'button blue'))
+		                                                    )
+                                )
+		                 );
 
 		$this->addDisplayGroup ( array ('title', 'description', 'date_from', 'date_to', 'report_type', 'report_interval' ), 'personal' );
 		//$this->addDisplayGroup ( array ('title', 'description', 'date_from', 'date_to' ), 'personal' );

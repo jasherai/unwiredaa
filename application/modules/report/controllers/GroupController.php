@@ -33,6 +33,8 @@ class Report_GroupController extends Unwired_Controller_Crud {
             		  ->addActionContext('instant', 'pdf')
             		  ->initContext();
 
+	    $this->_actionsToReferer[] = 'instant';
+
 		parent::init();
 	}
 
@@ -177,7 +179,7 @@ class Report_GroupController extends Unwired_Controller_Crud {
 
 		$this->view->instant = true;
 
-	    $form = new Report_Form_Instant();
+	    $form = new Report_Form_Instant(array('view' => $this->view));
 
 	    $this->view->form = $form;
 	    $this->_helper->viewRenderer->setScriptAction('edit');
@@ -222,7 +224,7 @@ class Report_GroupController extends Unwired_Controller_Crud {
 	    $report->fromArray($form->getValues());
 
 	    $report->setTitle('Instant report');
-	    
+
 	    $groupsAssigned = $report->getGroupsAssigned();
 
 	    if (!$this->getRequest()->isPost()) {
