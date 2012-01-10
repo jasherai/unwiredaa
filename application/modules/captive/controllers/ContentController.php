@@ -12,7 +12,7 @@
 
 class Captive_ContentController extends Unwired_Controller_Crud
 {
-    protected $_actionsToReferer = array('template', 'splashpage');
+    protected $_actionsToReferer = array('template', 'splashpage', 'files', 'upload');
 
 	public function preDispatch()
 	{

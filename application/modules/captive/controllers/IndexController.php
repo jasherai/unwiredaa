@@ -4,6 +4,13 @@ class Captive_IndexController extends Unwired_Controller_Crud
 {
     protected $_defaultMapper = 'Captive_Model_Mapper_SplashPage';
 
+    public function init()
+    {
+        $this->_actionsToReferer[] = 'group-templates';
+
+        parent::init();
+    }
+
     public function indexAction()
     {
         $groupService = new Groups_Service_Group();
@@ -27,7 +34,7 @@ class Captive_IndexController extends Unwired_Controller_Crud
 		    /**
 		     * Redirect to splash page content editing on update
 		     */
-		    if ($entity && $entity->getTemplateId()) {
+		    if ($entity && $entity->getSplashId()) {
                 $this->_referer = $this->view->serverUrl($this->_helper->url->url(array('module' => 'captive',
                                                             'controller' => 'content',
                                                             'action' => 'splashpage',
@@ -62,7 +69,7 @@ class Captive_IndexController extends Unwired_Controller_Crud
 		    }
 		}
 
-		parent::_add($mapper, $entity, $form);
+		return parent::_add($mapper, $entity, $form);
     }
 
     public function addAction()
@@ -91,7 +98,7 @@ class Captive_IndexController extends Unwired_Controller_Crud
 
         if (!$id) {
             echo $this->view->json(array());
-            exit;
+            return;
         }
 
         $serviceSplash = new Captive_Service_SplashPage();
@@ -106,7 +113,5 @@ class Captive_IndexController extends Unwired_Controller_Crud
         }
 
         echo $this->view->json($templateArray);
-        exit;
-
     }
 }

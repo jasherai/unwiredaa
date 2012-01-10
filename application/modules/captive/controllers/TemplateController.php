@@ -58,7 +58,7 @@ class Captive_TemplateController extends Unwired_Controller_Crud
 		    }
 		}
 
-		parent::_add($mapper, $entity, $form);
+		return parent::_add($mapper, $entity, $form);
     }
 
     public function addAction()
