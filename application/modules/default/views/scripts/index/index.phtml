@@ -173,6 +173,9 @@
 				mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-grey.png")?>";
 			}
 
+			<?php if (!isset($this->currentUser)) :?>
+				mimage = "<?php echo $this->baseUrl("themes/" . $this->theme . "/images/icons/32x32/marker-grey.png")?>";
+			<?php endif; ?>
 			var marker = new google.maps.Marker({
 		        position: new google.maps.LatLng(data.location.latitude, data.location.longitude),
 		        title: data.name,
