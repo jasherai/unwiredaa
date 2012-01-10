@@ -30,12 +30,12 @@ class Report_Service_CodeTemplate_ServerInternetBandwidth extends Report_Service
 						,'class'=>'right'
 					)
 					,array( /*advanced column def as array*/
-						'name'=>'Download'
+						'name'=>'Upload'
 						,'translatable'=>false
 						,'class'=>'right'
 					)
 					,array( /*advanced column def as array*/
-						'name'=>'Upload'
+						'name'=>'Download'
 						,'translatable'=>false
 						,'class'=>'right'
 					)
@@ -100,13 +100,13 @@ ORDER BY epoch;
                 $_95=array();
                 while ($trow=$tstmt->fetch()){
 /*ad ~ 3.4% resp. 17.5% overhead (to uplink downlink)*/
-                        $up=round((($trow[1]*8/850)+($trow[2]*8/990))/$intv);
-                        $down=round((($trow[2]*8/850)+($trow[1]*8/990))/$intv);
+                        $down=round((($trow[1]*8/850)+($trow[2]*8/990))/$intv);
+                        $up=round((($trow[2]*8/850)+($trow[1]*8/990))/$intv);
                         $_95[]=$max=max($up,$down);
                         $data=array(date("Y-m-d H:i",($trow[0]*$intv))
                                 ,$max /*max*/
-                                ,$down /*down*/
                                 ,$up /*up*/
+                                ,$down /*down*/
                         );
                         $rows[]=array(/*data row*/
                                         'data'=>$data
@@ -126,7 +126,7 @@ ORDER BY epoch;
 					,'width'=>800 //default: 350
 					,'height'=>600 //default: 300
 					,'type'=>'SteppedAreaChart'
-					,'headers'=>array('label','max','down','up')
+					,'headers'=>array('label','max','up','down')
 					,'rows'=>$g_data
                                 )
                         )
