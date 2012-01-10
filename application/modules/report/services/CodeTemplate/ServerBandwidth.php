@@ -127,7 +127,7 @@ ORDER BY epoch;
 			$down=round((($trow['interval_bytes_up']*8/850)+($trow['interval_bytes_down']*8/990))/$intv);
 			$up=round((($trow['interval_bytes_down']*8/850)+($trow['interval_bytes_up']*8/990))/$intv);
 			$_95[]=$max=max($up,$down);
-			$data=array(date("Y-m-d H:i",($trow[0]*$intv))
+			$data=array(date("Y-m-d H:i",($trow['epoch']*$intv))
 				,$max /*max*/
 				,$up /*up*/
 				,$down /*down*/
@@ -139,18 +139,56 @@ ORDER BY epoch;
 				); /*end of data row*/
 			$g_data[]=$data;
 		}
-		$tables[]=$this->new_table($rows);
+//do not display table
+//		$tables[]=$this->new_table($rows);
 		rsort($_95);
 		$p95=($_95[count($_95)/20]);
+
+		/*add 95/5 to chart*/
+		for ($i=0;$i<count($g_data);$i++){
+			$g_data[$i][1]=$p95;
+		}
+
+		/*calculate clipping area for chart and number of axis lines (or find smarter way to have nice scale) -> this will only scale up to 25mbit max!*/
+		$p99=$_95[count($_95)/100];
+		$dv=10;
+		$max_lines=18;
+		while (true){ /*step up from 10kbit in 10,20,50,100 logic*/
+			if (($p99/$dv) < $max_lines) break;
+			$dv*=2;
+			if (($p99/$dv) < $max_lines) break;
+			$dv*=5;
+		}
+		$mb=ceil($p99/$dv); //use 99/1 percentile to define scale
 
 		return array(
 			'graphics'=>array(/*array of charts*/
                                 'main_chart'=>array(/*chart defintion*/
-					'name'=>'Traffic in mbit/sec (95/5 is at '.$p95.' kbit/sec)'
+					'name'=>'Traffic in kbit/sec'
 					,'width'=>800 //default: 350
 					,'height'=>600 //default: 300
+/*adda 95/5 line via an opaque area*/
 					,'type'=>'SteppedAreaChart'
-					,'headers'=>array('label','max','up','down')
+					,'nativeOptions'=>'areaOpacity:1
+						,series:{
+							0:{areaOpacity:0}
+							,1:{areaOpacity:0}
+						}
+						,colors:["red","blue","#00AA00"]
+						,vAxis:{
+							maxValue:'.($mb*$dv).'
+							,viewWindow:{
+								min:0
+								,max:'.($mb*$dv).'
+							}
+						,gridlines:{count: '.($mb+1).'}
+					}'
+
+/*add a 95/5 line via a combo chart (but as bars are next to each other this does not look very well)
+					,'type'=>'ComboChart'
+					,'nativeOptions'=>'seriesType:"bars",series:{0:{type:"line"}}'*/
+
+					,'headers'=>array('label','95/5','up','down')
 					,'rows'=>$g_data
                                 )
                         )

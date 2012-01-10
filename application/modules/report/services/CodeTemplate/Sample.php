@@ -48,10 +48,10 @@ class Report_Service_CodeTemplate_Sample extends Report_Service_CodeTemplate_Abs
 				)
 				,'test_id3'=>array(/*chart defintion*/
 					'name'=>'testLine'
-					,'width'=>400 //default: 350
+					,'width'=>300 //default: 350
 					,'height'=>200 //default: 300
-					,'stacked'=>true //optional feature isStacking (for AreaCharts)
-					,'type'=>'SteppedAreaChart' //default: PieChart (wants rows with only 2 columns, first is label)
+					,'type'=>'SteppedAreaChart'
+					,'nativeOptions'=>'isStacked:true,vAxis:{minValue:0,maxValue:10000000}' //optional elements for Google-Charts javascript options array (javascript syntax!), e.g.: isStacked:true,seriesType:"area",series: {3: {type: "line"}}
 					,'headers'=>array( //column labels (even if there values is not used anywhere, they are required!)
 						'labels'
 						,'planai'
@@ -61,6 +61,24 @@ class Report_Service_CodeTemplate_Sample extends Report_Service_CodeTemplate_Abs
 						array('2012-01-08 11:',3456712,1231232) //second column must be numerical
 						,array('2012-01-08 12:',1234567,2342345)
 						,array('2012-01-08 12:',1234567,3211231)
+					)
+				)
+				,'test_id4'=>array(/*chart defintion*/
+					'name'=>''
+					,'width'=>400 //default: 350
+					,'height'=>200 //default: 300
+					,'type'=>'ComboChart'
+					,'nativeOptions'=>'seriesType:"bars",isStacked:true,series:{2:{type:"line"}},hAxis:{title:"horizontal title"},vAxis:{viewWindow:{min:0,max:3456789},title:"Vertical Title"}'
+					,'headers'=>array( //column labels (even if there values is not used anywhere, they are required!)
+						'labels'
+						,'planai'
+						,'zauchensee'
+						, 'average'
+					)
+					,'rows'=>array(/*with as many columsn as defined in headers*/
+						array('2012-01-08 11:',3456712,1231232,2342341) //second column must be numerical
+						,array('2012-01-08 12:',1234567,2342345,1615151)
+						,array('2012-01-08 12:',1234567,3211231,2243223)
 					)
 				)
 			)
