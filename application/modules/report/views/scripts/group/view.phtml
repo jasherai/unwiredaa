@@ -69,7 +69,7 @@ $acl = Zend_Registry::get ( 'acl' );
 		<?php endforeach; ?>
 
 		var chart = new google.visualization.<?=isset($value->type)?$value->type:"PieChart"?>(document.getElementById("chart_div<?php echo $key ?>"));
-		chart.draw(data, {<?=isset($value->stacked)?"isStacked: true, ":""?>width: <?=isset($value->width)?$value->width:"350"?>, height: <?=isset($value->height)?$value->height:"300"?>, title: "<?php echo $this->translate($value->name) ?>"});
+		chart.draw(data, {<?=isset($value->stacked)?"isStacked: true, ":""?>width: <?=isset($value->width)?$value->width:"350"?>, height: <?=isset($value->height)?$value->height:"300"?>, title: "<?php echo $this->translate($value->name) ?>", areaOpacity:1});
 	}
 	<?php endforeach; ?>
 	</script>
