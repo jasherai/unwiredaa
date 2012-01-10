@@ -81,11 +81,12 @@ class Nodes_IndexController extends Unwired_Rest_Controller
 		$filter['name'] = $this->getRequest()->getParam('name', null);
 		$filter['mac'] = strtoupper($this->getRequest()->getParam('mac', null));
 		$filter['ipaddress'] = $this->getRequest()->getParam('ipaddress', null);
+		$filter['billable'] = $this->getRequest()->getParam('billable', null);
 
 		$this->view->filter = $filter;
 
 		foreach ($filter as $key => $value) {
-			if (null == $value || empty($value)) {
+			if (null == $value || (!is_numeric($value) && empty($value))) {
 				unset($filter[$key]);
 				continue;
 			}

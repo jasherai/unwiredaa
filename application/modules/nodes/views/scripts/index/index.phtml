@@ -25,6 +25,7 @@ $(document).ready(function(){
 			<th><?php echo $this->translate('nodes_index_index_name');?></th>
 			<th><?php echo $this->translate('nodes_index_index_mac');?></th>
 			<th><?php echo $this->translate('nodes_index_index_wanip');?></th>
+			<th><?php echo $this->translate('nodes_index_index_billable');?></th>
 			<th><?php echo $this->translate('nodes_index_index_status');?></th>
 			<th><?php echo $this->translate('nodes_index_index_online');?></th>
 			<th><?php echo $this->translate('nodes_index_index_onlineusers');?></th>
@@ -49,6 +50,13 @@ $(document).ready(function(){
 			<th><input type="text" name="name" value="<?php echo $this->filter['name']; ?>" /></th>
 			<th><input type="text" name="mac" value="<?php echo $this->filter['mac']; ?>" /></th>
 			<th><input type="text" name="ipaddress" value="<?php echo $this->filter['ipaddress']; ?>" /></th>
+			<th>
+				<select name="billable">
+					<option value=""><?php echo $this->translate('nodes_index_index_billable_all')?></option>
+					<option value="1" <?php echo ($this->filter['billable'] == 1) ? 'selected="selected"' : ''; ?>><?php echo $this->translate('nodes_index_index_billable_yes')?></option>
+					<option value="0" <?php echo ($this->filter['billable'] != '' && $this->filter['billable'] == 0) ? 'selected="selected"' : ''; ?>><?php echo $this->translate('nodes_index_index_billable_no')?></option>
+				</select>
+			</th>
 			<th></th>
 			<th></th>
 			<th></th>
@@ -75,6 +83,7 @@ $(document).ready(function(){
 			<td><?php echo $node->getName(); ?></td>
 			<td><?php echo $node->getMac(); ?></td>
 			<td><?php echo $node->getSettings()->getIpaddress(); ?></td>
+			<td style="text-align: center;"><img alt="" src="<?php echo $this->baseUrl('themes/' . $this->theme . '/images/icons/16x16/status' . $node->isBillable() . '.png'); ?>" /></td>
 			<td><?php echo $this->translate('nodes_index_edit_form_status_' . $node->getStatus()); ?></td>
 			<td><?php echo $this->onlineStatusSince($node); ?></td>
 			<td><?php echo $node->getOnlineUsersCount(); ?></td>
