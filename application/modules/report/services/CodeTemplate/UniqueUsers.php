@@ -15,9 +15,12 @@ class Report_Service_CodeTemplate_UniqueUsers extends Report_Service_CodeTemplat
 	private function new_table($rows,$parent_group_id,$db,$dateFrom,$dateTo)
 	{
 		/*calculate group total?*/
+//echo microtime().", $parent_group_id<br>";
+/*mysql can not handle the time constraints (can`t merge multiple indexes) -> use other DBMS or other query, but faster on large results (but mieght get it wrong with unclosed sessions)*/
+//		if (!$parent_group_id)
 		$stmt=$db->query("SELECT count(DISTINCT user_mac), ".(!$parent_group_id?"'Total'":"gp.name")." as name
 FROM acct_internet_session s
-INNER JOIN acct_internet_roaming r ON s.session_id=r.session_id
+INNER JOIN acct_interner_roaming r ON s.session_id=r.session_id
 INNER JOIN node n ON r.node_id = n.node_id
 INNER JOIN `group` g on g.group_id = n.group_id
 INNER JOIN `group` gp on gp.group_id = g.parent_id
@@ -26,6 +29,16 @@ WHERE ".($parent_group_id?"gp.group_id = '$parent_group_id' AND ":"")."
 	OR r.stop_time BETWEEN '$dateFrom' AND '$dateTo'
 	OR ( r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_time)))
 )");
+//		else
+/*simpler time constraint, faster in mysql, and maybe even groupable by time, and especially faster with limited groups and especially time!*/
+/*		$stmt=$db->query("SELECT count(DISTINCT user_mac), ".(!$parent_group_id?"'Total'":"gp.name")." as name
+FROM acct_garden_session s
+INNER JOIN acct_garden_interim i ON s.session_id=i.session_id
+INNER JOIN node n ON i.node_id = n.node_id
+INNER JOIN `group` g on g.group_id = n.group_id
+INNER JOIN `group` gp on gp.group_id = g.parent_id
+WHERE ".($parent_group_id?"gp.group_id = '$parent_group_id' AND ":"")."	i.time BETWEEN '$dateFrom' AND '$dateTo'");*/
+
 		$row=$stmt->fetch();
 
 		/*build table and add total line add beginning and end*/
@@ -71,10 +84,11 @@ include garden counts (either seperate queries and php, or mysql union)
 calculate total
 maybe do really correct hierarchy
 */
-
+//echo ($time=microtime())."<hr>";
 		$tables=array();
 		$rows=array();
 		/*query node-groups*/
+/* slow, as mysql can not use index for start_Time and stop_time simutaneously*/
 		$tstmt=$db->query("SELECT g.name, count(DISTINCT user_mac), g.parent_id
 FROM acct_internet_session s
 INNER JOIN acct_internet_roaming r ON s.session_id=r.session_id
@@ -85,6 +99,16 @@ OR r.stop_time BETWEEN '$dateFrom' AND '$dateTo'
 OR r.start_time < '$dateFrom' AND ( r.stop_time > '$dateFrom' OR ISNULL(r.stop_time))
 GROUP BY g.group_id
 ORDER BY g.parent_id, g.name;");
+
+/*simpler to use indexes, but enourmous data, might be faster for small timeranges, or node_id sets*/
+/*		$tstmt=$db->query("SELECT g.name, count(DISTINCT user_mac), g.parent_id
+FROM acct_garden_session s
+INNER JOIN acct_garden_interim i ON s.session_id=i.session_id
+INNER JOIN node n ON i.node_id = n.node_id
+INNER JOIN `group` g on g.group_id = n.group_id
+WHERE i.time BETWEEN '$dateFrom' AND '$dateTo'
+GROUP BY g.group_id
+ORDER BY g.parent_id, g.name;");*/
 		/*initialize*/
 		$last_group_id=false;
 		while ($trow=$tstmt->fetch()){
@@ -104,7 +128,8 @@ ORDER BY g.parent_id, g.name;");
 		}
 		$tables[]=$this->new_table($rows,$last_group_id,$db,$dateFrom,$dateTo);
 		$tables[]=$this->new_table(array(),false,$db,$dateFrom,$dateTo);
-
+//echo "<hr>".microtime()."<br>";
+//die();
 		return array('tables'=>$tables);
 	}
 }
