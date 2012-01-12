@@ -30,7 +30,7 @@ class Report_Service_CodeTemplate_Proxy extends Report_Service_CodeTemplate_Abst
                                                 array('data'=>'Total','translatable'=>false)
                                                 ,array('data'=>$row[1],'translatable'=>false)
                                         )
-                                        ,'class'=>array('left bold total','right bold total') /*!!?? total class is likely to be unexisting*/
+                                        ,'class'=>array('bold total','right bold total') /*!!?? total class is likely to be unexisting*/
                                 ) /*end of total data row*/
                         );
 			/*query top 10 domains*/
@@ -39,7 +39,7 @@ class Report_Service_CodeTemplate_Proxy extends Report_Service_CodeTemplate_Abst
 				$rows[]=array(/*data row*/
 						'data'=>array($trow[0],$trow[1])
 						,'translatable'=>false
-						,'class'=>array('left','right')
+						,'class'=>array('','right')
 					); /*end of data row*/
 			}
 			/*build table and add total line add beginning and end*/

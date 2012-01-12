@@ -151,8 +151,8 @@ ORDER BY g.name, epoch;
 					'name'=>'Traffic in MB per month'
 					,'width'=>800 //default: 350
 					,'height'=>600 //default: 300
-					,'nativeOptions'=>'isStacked:true'
-					,'type'=>'SteppedAreaChart'
+//					,'nativeOptions'=>'isStacked:true'
+					,'type'=>'SteppedAreaChart' /*SteppedAreaChart, Columnchart*/
 					,'headers'=>$g_header
 					,'rows'=>$gn_data
                                 )
