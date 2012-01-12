@@ -12,10 +12,19 @@
  */
 class Report_Service_CodeTemplate_BillingA extends Report_Service_CodeTemplate_Abstract {
 
+	private function prepareGroupTable($db)
+	{
+		/*build group structure*/
+		/*create temporary table*/
+		/*fill with node_id report_part_id relations (depending on report type (summarizeable), and planned depth)*/
+	}
    
     public function getData($groupIds, $dateFrom, $dateTo) {
         $db = Zend_Db_Table_Abstract::getDefaultAdapter();
-		$groupTotals = array();
+
+	$tblname=prepareGroupTable($db);
+
+	$groupTotals = array();
 		
         foreach ($groupIds as $k => $v) {
         	
