@@ -144,15 +144,27 @@ ORDER BY epoch;
 		rsort($_95);
 		$p95=($_95[count($_95)/20]);
 
-		/*add 95/5 to chart*/
+/*1h*/		$down_avg=($g_data[0][3]*6)+($g_data[1][3]*4)+($g_data[2][3]*2);
+		$down_avgl=array($g_data[0][3],$g_data[1][3],$g_data[0][3],$g_data[2][3],$g_data[0][3],$g_data[1][3],$g_data[0][3],$g_data[1][3],$g_data[0][3],$g_data[2][3],$g_data[0][3],$g_data[1][3]);
+		$up_avg=($g_data[0][2]*6)+($g_data[1][2]*4)+($g_data[2][2]*2);
+		$up_avgl=array($g_data[0][2],$g_data[1][2],$g_data[0][2],$g_data[2][2],$g_data[0][2],$g_data[1][2],$g_data[0][2],$g_data[1][2],$g_data[0][2],$g_data[2][2],$g_data[0][2],$g_data[1][2]);
+/**/		/*add 95/5 to chart*/
 		for ($i=0;$i<count($g_data);$i++){
 			$g_data[$i][1]=$p95;
-		}
+			/*calculate running average*/
+/*1h*/			$down_avg+=$down_avgl[]=$g_data[$i][3];
+			$up_avg+=$up_avgl[]=$g_data[$i][2];
+			$down_avg-=array_shift($down_avgl);
+			$up_avg-=array_shift($up_avgl);
+			$g_data[max(0,$i-6)][4]=round($up_avg/12);
+			$g_data[max(0,$i-6)][5]=round($down_avg/12);
+/**/		}
 
 		/*calculate clipping area for chart and number of axis lines (or find smarter way to have nice scale) -> this will only scale up to 25mbit max!*/
-		$p99=$_95[count($_95)/100];
+		//$p99=$_95[count($_95)/1000]; -> does not look too well (especially in correctly clipping browsers)
+		$p99=$_95[0];
 		$dv=10;
-		$max_lines=18;
+		$max_lines=17;
 		while (true){ /*step up from 10kbit in 10,20,50,100 logic*/
 			if (($p99/$dv) < $max_lines) break;
 			$dv*=2;
@@ -165,16 +177,19 @@ ORDER BY epoch;
 			'graphics'=>array(/*array of charts*/
                                 'main_chart'=>array(/*chart defintion*/
 					'name'=>'Traffic in kbit/sec'
-					,'width'=>800 //default: 350
+					,'width'=>950 //default: 350
 					,'height'=>600 //default: 300
 /*adda 95/5 line via an opaque area*/
-					,'type'=>'SteppedAreaChart'
-					,'nativeOptions'=>'areaOpacity:1
+					,'type'=>'SteppedAreaChart' /*SteppedAreaChart*/
+					,'nativeOptions'=>'areaOpacity:0
 						,series:{
-							0:{areaOpacity:0}
-							,1:{areaOpacity:0}
+							1:{areaOpacity:1}
+							,2:{areaOpacity:1}
 						}
-						,colors:["red","blue","#00AA00"]
+						,lineWidth:1
+						,colors:["red","#0000BB","#00AA00"
+/*1h*/							,"5544FF","#22FF22"
+/**/							]
 						,vAxis:{
 							maxValue:'.($mb*$dv).'
 							,viewWindow:{
@@ -188,7 +203,9 @@ ORDER BY epoch;
 					,'type'=>'ComboChart'
 					,'nativeOptions'=>'seriesType:"bars",series:{0:{type:"line"}}'*/
 
-					,'headers'=>array('label','95/5','up','down')
+					,'headers'=>array('label','95/5','up','down'
+/*1h*/							,'up 1h','down 1h'
+/**/					)
 					,'rows'=>$g_data
                                 )
                         )
