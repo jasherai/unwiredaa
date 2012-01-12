@@ -65,21 +65,24 @@ class Default_ErrorController extends Unwired_Controller_Action
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
-                $priority = Zend_Log::CRIT;
+
+                // Log exception, if logger available
+                $log = $this->getLog();
+                if ($log) {
+                    $logInfo = 'Exception: ' .$this->exception->getMessage() . "\n\t"
+                    		 . 'Trace: ' . $this->exception->getTraceAsString() . "\n\t"
+                             . 'Request: ' . var_export($errors->request->getParams(), true);
+                    $log->crit($logInfo);
+                }
+
                 $this->view->message = 'default_error_error_application';
                 break;
         }
 
-        // Log exception, if logger available
-      /*  if ($log = $this->getLog()) {
-            $log->log($this->view->message, $priority, $errors->exception);
-            $log->log('Request Parameters', $priority, $errors->request->getParams());
-        } */
-
         // conditionally display exceptions
-        // if ($this->getInvokeArg('displayExceptions') == true) {
+        if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->exception = $errors->exception;
-        //}
+        }
 
         $this->view->request   = $errors->request;
     }
