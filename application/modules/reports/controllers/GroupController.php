@@ -155,7 +155,7 @@ class Reports_GroupController extends Unwired_Controller_Crud {
 		$entity->setData($result);
 		$entity->setReportGroupId($this->getRequest()->getParam('id'));
 		$iMapper->save($entity);
-		$this->_helper->redirector->gotoUrlAndExit('/report/group/view/id/'.$entity->getItemId());
+		$this->_helper->redirector->gotoUrlAndExit('/reports/group/view/id/'.$entity->getItemId());
 	}
 
 	public function instantAction() {
