@@ -28,6 +28,11 @@ class Groups_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 		 */
 		$acl = Zend_Registry::get('acl');
 
+		if ($acl instanceof Zend_Acl) {
+		    $acl = new Groups_Service_AclProxy($acl);
+		    Zend_Registry::set('acl', $acl);
+		}
+
 		$this->_acl = $acl;
 
 		$acl->deny();
