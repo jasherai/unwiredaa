@@ -1,0 +1,65 @@
+<a href="/report"><?php echo $this->translate('report_index_heading'); ?></a>
+<br /><br />
+<h1><?php echo $this->translate('report_index_heading'); ?></h1>
+
+<?php
+	echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml');
+
+	$acl = Zend_Registry::get('acl');
+?>
+<form class="span-19 last" method="get" action="<?php echo $this->url(array('module' => 'reports',
+													   'controller' => 'index',
+													   'action' => 'index'),
+												null,
+												true); ?>/index/index">
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('report_index_id');?></th>
+			<th><?php echo $this->translate('report_index_title');?></th>
+			<th></th>
+
+		</tr>
+		<tr>
+			<th></th>
+			<th><input type="text" name="title" value="<?php echo $this->filter['title']; ?>" /></th>
+			<th class="tools">
+				<a name="index" class="icon filter"><?php echo $this->translate('report_index_button_filter'); ?></a>
+				<a name="index" class="icon reset"><?php echo $this->translate('report_index_button_reset'); ?></a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			foreach ($this->paginator as $user) :
+		?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="column_id"><?php echo $user->getCodetemplateId(); ?></td>
+			<td><?php echo $user->getTitle(); ?></td>
+
+			<td class="tools">
+					<a href="<?php echo $this->url(array('module' => 'reports',
+													     'controller' => 'group',
+													     'action' => 'index',
+													     'id'	=> $user->getCodetemplateId()),
+												   null,
+												   true); ?>" class="icon view"><?php
+
+						echo $this->translate('report_index_button_index');
+				   ?></a>
+					<a href="<?php echo $this->url(array('module' => 'reports',
+													     'controller' => 'group',
+													     'action' => 'instant',
+													     'id'	=> $user->getCodetemplateId()),
+												   null,
+												   true); ?>" class="icon instant"><?php
+
+						echo $this->translate('report_index_button_instant');
+				   ?></a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+</form>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'partial/pagination.phtml'); ?>

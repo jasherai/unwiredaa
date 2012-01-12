@@ -1,0 +1,136 @@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<?php if (!isset($this->pdf)) :?>
+<a href="<?php echo $this->url(array('module' => 'reports'), null, true); ?>"><?php echo $this->translate('report_index_heading'); ?></a> &raquo;
+<a href="<?php echo $this->url(array('module' => 'reports',
+                                     'controller' => 'group',
+                                     'id' => $this->parent->getCodetemplateId()), null, true);
+        ?>">Reports for <?php echo $this->parent->getTitle();?> </a>
+    <?php if (!isset($this->instant)) :?>
+     &raquo;
+    <a href="<?php echo $this->url(array('module' => 'reports',
+                                     'controller' => 'group',
+                                     'action' => 'reports',
+                                     'id' => $this->parent->getReportGroupId()), null, true);
+        ?>"><?php echo $this->parent->getTitle(); ?> Results</a> &raquo;
+    <a href="<?php echo $this->url(array('module' => 'reports',
+                                     'controller' => 'group',
+                                     'action' => 'view',
+                                     'id' => $this->report->getItemId()), null, true);
+        ?>"><?php echo $this->translate('report_group_heading_result'); ?>  at <?php echo $this->parent->getDateAdded(); ?></a>
+    <?php endif; // instant?>
+<?php endif; // pdf?>
+<br /><br />
+<h1><?php echo $this->translate('report_group_heading_result'); ?> <?php echo $this->parent->getTitle(); ?> at <?php echo $this->parent->getDateAdded(); ?></h1>
+<?php
+    if (!isset($this->pdf)) :
+    $request = Zend_Controller_Front::getInstance()->getRequest();
+?>
+<div class="buttons span-18">
+	<a class="button small blue" href="<?php echo $this->url(array_merge($request->getParams(), array('format' => 'csv')), 'default', false);?>"><span><?php
+	    echo $this->translate('report_group_button_csv');
+	?></span></a>
+<!--
+	<a class="button small blue" href="<?php echo $this->url(array_merge($request->getParams(), array('format' => 'pdf')), 'default', false);?>"><span><?php
+	    echo $this->translate('report_group_button_pdf');
+	?></span></a>  -->
+</div>
+<?php endif; // pdf?>
+<table width="100%" class="listing">
+<tr>
+	<th colspan="4"><?php echo $this->translate('report_result_parameters'); ?></th>
+</tr>
+<tr>
+	<td><?php echo $this->translate('report_result_parameters_description'); ?></td><td colspan="3"><?php echo $this->parent->getDescription(); ?></td>
+</tr>
+<tr>
+	<td><?php echo $this->translate('report_result_parameters_datefrom'); ?></td><td><?php echo $this->parent->getDateFrom();?></td><td><?php echo $this->translate('report_result_parameters_dateto'); ?></td><td><?php echo $this->parent->getDateTo();?></td>
+</tr>
+<tr>
+	<td><?php echo $this->translate('report_result_parameters_devicegroups'); ?></td><td colspan="3"><?php echo str_replace("\n", ", ", $this->parent->getGroupsAssignedFormatted());?></td>
+</tr>
+</table>
+
+<h3>Results</h3>
+
+<?php
+
+
+$acl = Zend_Registry::get ( 'acl' );
+
+?>
+
+
+<?php if (isset($this->data->graphics) && !empty($this->data->graphics)): ?>
+	<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+	<?php foreach ($this->data->graphics as $key => $value): ?>
+	google.setOnLoadCallback(drawChart<?php echo $key?>);
+    function drawChart<?php echo $key?>() {
+		var data = new google.visualization.DataTable();
+		<?php foreach ($value->headers as $k => $v): ?>
+		data.addColumn(<?php if (isset($value->rows[0][$k]) && is_numeric($value->rows[0][$k])): ?>"number"<?php else: ?>"string"<?php endif; ?>, "<?=$this->translate($v)?>");
+		<?php endforeach; ?>
+
+   		data.addRows(<?php echo count($value->rows); ?>);
+   		<?php $j = 0; ?>
+		<?php foreach ($value->rows as $k => $v): ?>
+			<?php foreach ($v as $kk => $vv): ?>
+			data.setValue(<?php echo $k?>, <?php echo $kk?>, <?php if (is_numeric($vv)): ?><?php echo $vv;?><?php else: ?>"<?php echo $this->translate($vv); ?>"<?php endif; ?>);
+			<?php endforeach; ?>
+		<?php endforeach; ?>
+
+		var chart = new google.visualization.<?=isset($value->type)?$value->type:"PieChart"?>(document.getElementById("chart_div<?php echo $key ?>"));
+		chart.draw(data, {width: <?=isset($value->width)?$value->width:"350"?>, height: <?=isset($value->height)?$value->height:"300"?>, title: "<?php echo $this->translate($value->name) ?>"<?=isset($value->nativeOptions)?','.$value->nativeOptions:''?>});
+	}
+	<?php endforeach; ?>
+	</script>
+
+	<?php foreach ($this->data->graphics as $key => $value): ?>
+	<div id="chart_div<?php echo $key; ?>" style="float: left;"></div>
+	<?php endforeach; ?>
+	<div style="clear: both;"></div>
+<?php endif; ?>
+
+<?php if (isset($this->data->tables) && (is_array($this->data->tables) || is_object($this->data->tables))): ?>
+	<?php foreach ($this->data->tables as $key => $value): ?>
+		<table class="listing">
+		<?php foreach ($value->colDefs as $kk => $vv): ?>
+		<tr>
+				<?php foreach ($value->colDefs[$kk] as $k => $v): ?>
+				<?php if (is_object($v)):?>
+					<th
+						<?php if (isset($v->width)): ?>width="<?php echo $v->width?>"<?php endif; ?>
+						<?php if (isset($v->rowspan)): ?>rowspan="<?php echo $v->rowspan?>"<?php endif; ?>
+						<?php if (isset($v->colspan)): ?>colspan="<?php echo $v->colspan?>"<?php endif; ?>
+					><?=(isset($v->translatable) && $v->translatable)?$this->translate($vv->data):$v->name?></th>
+				<?php else: ?>
+					<th><?php echo $this->translate($v); ?></th>
+				<?php endif; ?>
+				<?php endforeach; ?>
+		</tr>
+		<?php endforeach; ?>
+		<?php if (isset($value->rows)): ?>
+			<?php foreach ($value->rows as $k => $v): ?>
+			<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+				<?php
+				    foreach ($v->data as $kk => $vv):
+
+				    if (isset($v->class) && is_object($v->class)) {
+				        $v->class = (array) $v->class;
+				    }
+				?>
+
+				<td class="<?php echo (isset($v->class[$kk]))? $v->class[$kk]:'';?>" <?php if (is_object($vv) && isset($vv->rowspan)): ?>rowspan="<?php echo $vv->rowspan?>"<?php endif; ?> <?php if (is_object($vv) && isset($vv->colspan)): ?>colspan="<?php echo $vv->colspan?>"<?php endif; ?>>
+				<?php if (is_object($vv)):?>
+					<?php echo (isset($vv->translatable) && $vv->translatable)?$this->translate($vv->data):$vv->data?>
+				<?php else: ?>
+					<?php echo $vv?>
+				<?php endif; ?>
+				</td>
+				<?php endforeach; ?>
+			</tr>
+			<?php endforeach; ?>
+		<?php endif; ?>
+		</table>
+	<?php endforeach; ?>
+<?php endif; ?>
