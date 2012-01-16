@@ -87,7 +87,7 @@ class Reports_Service_CodeTemplate_OperatingSystem extends Reports_Service_CodeT
         		'graphics' => array(
         				array(
         						'name' => 'report_result_top_oses',
-        						'type' => 'piechart',
+        						'type' => 'PieChart',
         						'headers' => array('report_result_os', 'report_result_users'),
         						'rows' => $graphics
         				),

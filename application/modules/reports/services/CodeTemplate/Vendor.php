@@ -128,7 +128,7 @@ class Reports_Service_CodeTemplate_Vendor extends Reports_Service_CodeTemplate_A
         		'graphics' => array(
         				array(
         						'name' => 'report_result_top_vendors',
-        						'type' => 'piechart',
+        						'type' => 'PieChart',
         						'headers' => array('report_result_vendor', 'report_result_users'),
         						'rows' => $graphics
         				),

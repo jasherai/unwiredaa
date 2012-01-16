@@ -92,7 +92,7 @@ class Reports_Service_CodeTemplate_AccessPointsCount extends Reports_Service_Cod
 			'graphics' => array(
 				array(
 					'name' => 'report_status_ap_count',
-					'type' => 'piechart',
+					'type' => 'PieChart',
 					'headers' => array('report_result_status', 'report_result_ap_count'),
 					'rows' => $graphics
 				),

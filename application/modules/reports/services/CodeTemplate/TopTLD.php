@@ -91,7 +91,7 @@ class Reports_Service_CodeTemplate_TopTLD extends Reports_Service_CodeTemplate_A
             }
 
             $report['graphics'] = array('tld' => array('name' => 'report_result_tld',
-			                                           'type' => 'piechart',
+			                                           'type' => 'PieChart',
 													   'headers' => array('report_result_tld', 'report_result_request_count'),
 			                                           'rows' => $graphics));
 

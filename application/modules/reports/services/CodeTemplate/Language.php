@@ -67,7 +67,7 @@ class Reports_Service_CodeTemplate_Language extends Reports_Service_CodeTemplate
         		'graphics' => array(
         				array(
         						'name' => 'report_result_top_languages',
-        						'type' => 'piechart',
+        						'type' => 'PieChart',
         						'headers' => array('report_result_language', 'report_result_users'),
         						'rows' => $graphics
         				),

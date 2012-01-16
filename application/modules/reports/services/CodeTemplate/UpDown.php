@@ -141,7 +141,7 @@ class Reports_Service_CodeTemplate_UpDown extends Reports_Service_CodeTemplate_A
 			'graphics' => array(
 				array(
 					'name' => 'report_result_group',
-					'type' => 'piechart',
+					'type' => 'PieChart',
 					'headers' => array('report_result_group', 'report_result_traffic'),
 					'rows' => $graphics
 				),

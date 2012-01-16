@@ -167,7 +167,7 @@ class Reports_Service_CodeTemplate_ConnectedSessions extends Reports_Service_Cod
 			'graphics' => array(
 				array(
 					'name' => 'report_status_sessions_status',
-					'type' => 'piechart',
+					'type' => 'PieChart',
 					'headers' => array('report_result_sessions', 'report_result_session_count'),
 					'rows' => array(
 						array('report_result_offline', ($totals ['garden'] [$k])),
@@ -176,7 +176,7 @@ class Reports_Service_CodeTemplate_ConnectedSessions extends Reports_Service_Cod
 				),
 				array(
 					'name' => 'report_status_sessions_authmethod',
-					'type' => 'piechart',
+					'type' => 'PieChart',
 					'headers' => array('report_result_authmethod', 'report_result_session_count'),
 					'rows' => array(
 						array('report_result_guest', ($totals ['garden'] [$k])),

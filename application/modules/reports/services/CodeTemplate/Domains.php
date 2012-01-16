@@ -82,7 +82,7 @@ class Reports_Service_CodeTemplate_Domains extends Reports_Service_CodeTemplate_
 			'graphics' => array(
 				array(
 					'name' => 'report_result_top_domains',
-					'type' => 'piechart',
+					'type' => 'PieChart',
 					'headers' => array('report_result_domain', 'report_result_users'),
 					'rows' => $graphics
 				),

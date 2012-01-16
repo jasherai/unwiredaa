@@ -97,11 +97,11 @@ class Reports_Service_CodeTemplate_TopDNS extends Reports_Service_CodeTemplate_A
 			$topTldRows = null;
 
 			$result['graphics'] = array('sld' => array('name' => 'report_result_domain',
-			                                           'type' => 'piechart',
+			                                           'type' => 'PieChart',
 			                                           'headers' => array('report_result_domain', 'report_result_request_count'),
 			                                           'rows' => array()),
 			                            'tld' => array('name' => 'report_result_tld',
-			                                           'type' => 'piechart',
+			                                           'type' => 'PieChart',
 													   'headers' => array('report_result_tld', 'report_result_request_count'),
 			                                           'rows' => array()));
 

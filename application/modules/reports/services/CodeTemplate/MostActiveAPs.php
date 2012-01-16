@@ -103,7 +103,7 @@ class Reports_Service_CodeTemplate_MostActiveAPs extends Reports_Service_CodeTem
 
         return array('graphics' => array(
                         array('name' => 'report_most_active_device',
-                              'type' => 'piechart',
+                              'type' => 'PieChart',
                               'headers' => array('report_device_name', 'report_result_total'),
                               'rows' => $graphics)
                      ),
@@ -161,7 +161,7 @@ class Reports_Service_CodeTemplate_MostActiveAPs extends Reports_Service_CodeTem
         	'graphics' => array(
         			array(
         					'name' => 'report_status_ap_count',
-        					'type' => 'piechart',
+        					'type' => 'PieChart',
         					'headers' => array('report_result_user', 'report_result_traffic'),
         					'rows' => $graphics
         			),
