@@ -20,7 +20,7 @@ class Reports_Service_CodeTemplate_UniqueUsers extends Reports_Service_CodeTempl
 //		if (!$parent_group_id)
 		$stmt=$db->query("SELECT count(DISTINCT user_mac), ".(!$parent_group_id?"'Total'":"gp.name")." as name
 FROM acct_internet_session s
-INNER JOIN acct_interner_roaming r ON s.session_id=r.session_id
+INNER JOIN acct_internet_roaming r ON s.session_id=r.session_id
 INNER JOIN node n ON r.node_id = n.node_id
 INNER JOIN `group` g on g.group_id = n.group_id
 INNER JOIN `group` gp on gp.group_id = g.parent_id
