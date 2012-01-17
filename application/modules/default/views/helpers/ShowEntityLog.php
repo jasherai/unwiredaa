@@ -31,6 +31,8 @@ class Zend_View_Helper_ShowEntityLog extends Zend_View_Helper_Abstract
 
 
 		$this->view->logEntries = $logEntries;
+        $this->view->filter_entity = crc32(get_class($entity));
+        $this->view->filter_entity_id = $id;
 
 		return $this->view->render('log/entity-log.phtml');
     }

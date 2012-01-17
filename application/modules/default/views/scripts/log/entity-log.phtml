@@ -116,4 +116,15 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+<div class="paging span-18">
+	<a href="<?php
+	    echo $this->url(array('module' => 'default',
+	                          'controller' => 'log',
+	                          'action' => 'index',
+	                          'entity' => $this->filter_entity,
+	                          'entity_id' => $this->filter_entity_id),
+	                    'default',
+	                    true);
+	?>"><?php echo $this->translate('default_log_showentitylog_showall');?></a>
+</div>
 </div>
