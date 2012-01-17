@@ -1,0 +1,119 @@
+<div class="prepend-top span-19 last">
+<h1><?php echo $this->translate('default_log_index_heading'); ?></h1>
+
+<table class="listing">
+	<thead>
+		<tr>
+			<th><?php echo $this->translate('default_log_index_id');?></th>
+			<th class="span-5 last"><?php echo $this->translate('default_log_index_user');?></th>
+			<th class="span-3 last"><?php echo $this->translate('default_log_index_event');?></th>
+			<th class="span-3 last"><?php echo $this->translate('default_log_index_entity');?></th>
+			<th class="span-2 last"><?php echo $this->translate('default_log_index_entity_id');?></th>
+			<th><?php echo $this->translate('default_log_index_remote');?></th>
+			<th><?php echo $this->translate('default_log_index_timestamp');?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+			$filter = new Zend_Filter_Word_CamelCaseToUnderscore();
+			foreach ($this->logEntries as $log) :
+		?>
+		<tr class="<?php echo $this->cycle(array('odd', 'even'))->next(); ?>">
+			<td class="span-2"><?php echo $log->getLogId(); ?></td>
+			<td><?php
+				if ($log->getUserId()) :
+
+					$admin = $this->findAdmin($log->getUserId());
+
+					if ($admin) {
+						echo $admin->getEmail();
+					}
+				endif;
+				?>
+			</td>
+			<td><?php echo $log->getEventName(); ?></td>
+			<td><?php
+				if ($log->getEntityId()):
+					try {
+					    $entity = null;
+					    $currentEntity = null;
+
+						$class = $log->getEntityName();
+
+						if (class_exists($class)) {
+						    $entity = new $class;
+
+						    $mapperClass = str_replace('_Model_', '_Model_Mapper_', $class);
+
+						    if (class_exists($mapperClass)) {
+						    	$mapper = new $mapperClass;
+
+						    	$currentEntity = $mapper->find($log->getEntityId());
+
+						    	$mapper = null;
+						    }
+						}
+
+
+						if ($entity) :
+							$classParts = explode('_', $class);
+							if ($classParts[0] == $classParts[2] || $classParts[0] == $classParts[2] . 's') {
+								$classParts[2] = 'index';
+							}
+							?>
+							<a href="<?php echo $this->url(array('module' => strtolower($filter->filter($classParts[0])),
+																'controller' => strtolower($filter->filter($classParts[2])),
+																'action' => 'edit',
+																'id' => $log->getEntityId()),
+														  'default',
+														  true); ?>"><?php
+						endif;
+
+						echo ($entity && $entity instanceof Zend_Acl_Resource_Interface)
+							 ? $this->translate('resource_' . $entity->getResourceId())
+							 : $this->translate($log->getEntityName());
+
+						// echo ' : ';
+
+						$eventData = $log->getEventData();
+						if (!empty($eventData)) {
+							$entityData = @unserialize($eventData);
+							if (is_array($entityData)) {
+								foreach ($entityData as $key => $value) {
+									if (null === $value) {
+										unset($entityData[$key]);
+									}
+								}
+								$entity->fromArray($entityData);
+							}
+						} else {
+							$entity = null;
+						}
+
+						if (method_exists($entity, 'getName')) {
+
+							echo ' : ' . $entity->getName();
+						} elseif (method_exists($currentEntity, 'getName')) {
+							echo ' : ' . $currentEntity->getName();
+						}
+
+					} catch (Exception $e) {
+						// nothing
+					}
+
+					if ($entity) :
+						?></a><?php
+					endif;
+
+				endif;
+			?></td>
+			<td>
+				<?php echo $log->getEntityId(); ?>
+			</td>
+			<td><?php echo $log->getRemoteHost(); ?></td>
+			<td><?php echo $log->getStamp(); ?></td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+</div>

@@ -48,4 +48,38 @@ class Default_LogController extends Unwired_Controller_Crud
 
 		return $filter;
 	}
+
+	public function viewAction()
+	{
+	    $id = (int) $this->getRequest()->getParam('id', 0);
+
+	    if (!$id) {
+	        throw new Unwired_Exception('entity_not_found', 404);
+	    }
+
+	    $logEntity = $this->_getDefaultMapper()->find($id);
+
+	    if (!$logEntity) {
+	        throw new Unwired_Exception('entity_not_found', 404);
+	    }
+
+	    $this->view->logEntity = $logEntity;
+
+	    $class = $logEntity->getEntityName();
+
+		if (class_exists($class)) {
+		    $entity = new $class;
+
+		    $mapperClass = str_replace('_Model_', '_Model_Mapper_', $class);
+
+		    if (class_exists($mapperClass)) {
+		    	$mapper = new $mapperClass;
+
+		    	$currentEntity = $mapper->find($logEntity->getEntityId());
+
+		    	$mapper = null;
+		    }
+		}
+
+	}
 }

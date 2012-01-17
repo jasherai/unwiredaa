@@ -258,3 +258,9 @@ $(function () {
 		</div>
 	</div>
 </div>
+
+<?php
+    if ($this->entity->getNodeId()) {
+        echo $this->showEntityLog($this->entity, $this->entity->getNodeId());
+    }
+?>

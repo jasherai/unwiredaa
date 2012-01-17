@@ -81,3 +81,9 @@ $(function () {
 <div class="grouptree span-8">
 	<?php echo $this->tree($this->rootGroup, null, array('prefix' => 'group_')); ?>
 </div>
+
+<?php
+    if ($this->entity->getUserId()) {
+        echo $this->showEntityLog($this->entity, $this->entity->getUserId());
+    }
+?>
