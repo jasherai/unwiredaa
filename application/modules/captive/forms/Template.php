@@ -67,6 +67,7 @@ class Captive_Form_Template extends Unwired_Form
 
 
 		$this->getElement('auth')->addMultiOptions(array('guest' => 'captive_template_edit_form_settings_auth_guest',
+		                                                 'autologin' => 'captive_template_edit_form_settings_auth_autologin',
 		                                                 'login' => 'captive_template_edit_form_settings_auth_login'));
 
 		$this->addElement('multiCheckbox', 'groups_assigned', array('label' => 'captive_template_edit_form_group',
