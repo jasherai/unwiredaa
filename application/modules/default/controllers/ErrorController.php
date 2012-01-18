@@ -69,8 +69,8 @@ class Default_ErrorController extends Unwired_Controller_Action
                 // Log exception, if logger available
                 $log = $this->getLog();
                 if ($log) {
-                    $logInfo = 'Exception: ' .$this->exception->getMessage() . "\n\t"
-                    		 . 'Trace: ' . $this->exception->getTraceAsString() . "\n\t"
+                    $logInfo = 'Exception: ' .$errors->exception->getMessage() . "\n\t"
+                    		 . 'Trace: ' . $errors->exception->getTraceAsString() . "\n\t"
                              . 'Request: ' . var_export($errors->request->getParams(), true);
                     $log->crit($logInfo);
                 }
