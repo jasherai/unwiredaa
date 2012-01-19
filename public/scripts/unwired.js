@@ -51,6 +51,9 @@ $(document).ready(function(){
     		return;
     	}
 
+    	if ($(this).hasClass('disabled')) {
+    		return false;
+    	}
     	/**
     	 * If selecting children is disabled check and show alert
     	 */

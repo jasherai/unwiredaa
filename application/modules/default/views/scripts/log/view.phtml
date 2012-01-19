@@ -1,0 +1,78 @@
+<?php
+/**
+* Unwired AA GUI
+*
+* Author & Copyright (c) 2011 Unwired Networks GmbH
+* alexander.szlezak@unwired.at
+*
+* Licensed under the terms of the Affero Gnu Public License version 3
+* (AGPLv3 - http://www.gnu.org/licenses/agpl.html) or our proprietory
+* license available at http://www.unwired.at/license.html
+*/
+?>
+<div class="span-19 last">
+    <div class="span-19 last">
+    <table id="log" class="listing">
+    	<thead>
+    		<tr>
+    			<th><?php echo $this->translate('default_log_index_id');?></th>
+    			<th class="span-5 last"><?php echo $this->translate('default_log_index_user');?></th>
+    			<th class="span-3 last"><?php echo $this->translate('default_log_index_event');?></th>
+    			<th class="span-3 last"><?php echo $this->translate('default_log_index_entity');?></th>
+    			<th class="span-2 last"><?php echo $this->translate('default_log_index_entity_id');?></th>
+    			<th><?php echo $this->translate('default_log_index_remote');?></th>
+    			<th><?php echo $this->translate('default_log_index_timestamp');?></th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td class="span-2"><?php echo $this->logEntity->getLogId(); ?></td>
+    			<td><?php
+    				if ($this->logEntity->getUserId()) :
+
+    					$admin = $this->findAdmin($this->logEntity->getUserId());
+
+    					if ($admin) {
+    						echo $admin->getEmail();
+    					}
+    				endif;
+    				?>
+    			</td>
+    			<td><?php echo $this->logEntity->getEventName(); ?></td>
+    			<td><?php
+    				if ($this->logEntity->getEntityId()):
+    					try {
+    					    $entity = $this->entity;
+    					    $currentEntity = $this->currentEntity;
+
+    						echo ($entity && $entity instanceof Zend_Acl_Resource_Interface)
+    							 ? $this->translate('resource_' . $entity->getResourceId())
+    							 : $this->translate($this->logEntity->getEntityName());
+
+
+    						if (method_exists($entity, 'getName') && $entity->getName()) {
+
+    							echo ' : ' . $entity->getName();
+    						} elseif (method_exists($currentEntity, 'getName')) {
+    							echo ' : ' . $currentEntity->getName();
+    						}
+
+    					} catch (Exception $e) {
+    						// nothing
+    					}
+
+    				endif;
+    			?></td>
+    			<td>
+    				<?php echo $this->logEntity->getEntityId(); ?>
+    			</td>
+    			<td><?php echo $this->logEntity->getRemoteHost(); ?></td>
+    			<td><?php echo $this->logEntity->getStamp(); ?></td>
+    		</tr>
+    	</tbody>
+    </table>
+    </div>
+    <div class="prepend-top span-19 last">
+    <?php echo $this->form; ?>
+    </div>
+</div>

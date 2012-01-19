@@ -74,6 +74,11 @@ class Nodes_IndexController extends Unwired_Rest_Controller
 		$this->_index();
 	}
 
+	public function viewAction()
+	{
+	    $this->_view();
+	}
+
 	protected function _getFilters()
 	{
 		$filter = array();

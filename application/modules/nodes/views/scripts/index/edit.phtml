@@ -1,6 +1,6 @@
 <h1><?php
 	if ($this->entity->getNodeId()) {
-		echo sprintf($this->translate('nodes_index_edit_heading_edit'), $this->entity->getName());
+		echo sprintf($this->translate((isset($this->isViewOnly)) ? 'nodes_index_view_heading' : 'nodes_index_edit_heading_edit'), $this->entity->getName());
 	} else {
 		echo $this->translate('nodes_index_edit_heading_add');
 	}
@@ -129,7 +129,7 @@ $(function () {
 
 		return false;
     }
-
+	<?php if (!isset($this->isViewOnly)) :?>
 	$('#mapwrap .buttons a.apply').click(function(){
 		var apply = $("select[name=apply_map_data]").val();
 		var geodata = $("select[name=apply_map_data]").data('geodata');
@@ -183,7 +183,9 @@ $(function () {
 
 	    return false;
 	});
-
+	<?php else: ?>
+	setTimeout("$('.grouptree').addClass('disabled');", 1000);
+	<?php endif;?>
 	$('#mapwrap .buttons a.cancel').click(function(){
 	    $.fancybox.close();
 
@@ -243,19 +245,23 @@ $(function () {
 <div style="display:none">
 	<div id="mapwrap">
 		<div id="map" class="fancymap"> </div>
+		<?php if (!isset($this->isViewOnly)) :?>
 		<div class="buttons right">
 			<select name="apply_map_data">
 				<option value="coordinates"><?php echo $this->translate('nodes_index_edit_form_map_coordinates');?></option>
 				<option value="address"><?php echo $this->translate('nodes_index_edit_form_map_address');?></option>
 				<option value="both"><?php echo $this->translate('nodes_index_edit_form_map_both');?></option>
 			</select>
+
 			<a href="javascript:;" class="apply button small green">
 				<span><?php echo $this->translate('nodes_index_edit_form_button_apply'); ?></span>
 			</a>
 			<a href="javascript:;" class="cancel button small blue">
 				<span><?php echo $this->translate('nodes_index_edit_form_button_cancel'); ?></span>
 			</a>
+
 		</div>
+	    <?php endif; ?>
 	</div>
 </div>
 

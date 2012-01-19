@@ -1,7 +1,18 @@
+<?php
+$this->headScript()->appendFile($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.pack.js'));
+$this->headLink()->appendStylesheet($this->baseUrl('scripts/fancybox/jquery.fancybox-1.3.4.css'));
+$this->headScript()->captureStart();
+?>
+$(document).ready(function(){
+	$("#log").find("a.ajax").fancybox();
+});
+<?php
+$this->headScript()->captureEnd();
+?>
 <div class="prepend-top span-19 last">
 <h1><?php echo $this->translate('default_log_index_heading'); ?></h1>
 
-<table class="listing">
+<table id="log" class="listing">
 	<thead>
 		<tr>
 			<th><?php echo $this->translate('default_log_index_id');?></th>
@@ -54,6 +65,7 @@
 						    }
 						}
 
+                        $aOpened = false;
 
 						if ($entity) :
 							$classParts = explode('_', $class);
@@ -61,12 +73,13 @@
 								$classParts[2] = 'index';
 							}
 							?>
-							<a href="<?php echo $this->url(array('module' => strtolower($filter->filter($classParts[0])),
-																'controller' => strtolower($filter->filter($classParts[2])),
-																'action' => 'edit',
-																'id' => $log->getEntityId()),
+							<a class="ajax" href="<?php echo $this->url(array('module' => 'default',
+																'controller' => 'log',
+																'action' => 'view',
+																'id' => $log->getLogId()),
 														  'default',
 														  true); ?>"><?php
+                            $aOpened = true;
 						endif;
 
 						echo ($entity && $entity instanceof Zend_Acl_Resource_Interface)
@@ -101,7 +114,7 @@
 						// nothing
 					}
 
-					if ($entity) :
+					if ($aOpened) :
 						?></a><?php
 					endif;
 

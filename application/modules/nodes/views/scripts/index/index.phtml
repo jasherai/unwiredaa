@@ -89,7 +89,7 @@ $(document).ready(function(){
 			<td><?php echo $node->getOnlineUsersCount(); ?></td>
 			<td class="tools">
 				<?php
-					$actions = array(/*'view',*/ 'edit', 'delete');
+					$actions = array('view', 'edit', 'delete');
 
 					foreach ($actions as $action) :
 						if (!$acl->isAllowed($this->currentUser, $node->getResourceId(), $action)) {
