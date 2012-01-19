@@ -111,6 +111,10 @@ class Default_LogController extends Unwired_Controller_Crud
 	    if (class_exists($formClass)) {
 	    	$form = new $formClass;
 
+	    	if (!$entityData && $currentEntity) {
+	    	    $entity = $currentEntity;
+	    	}
+
             if ($form instanceof Unwired_Form) {
                 $form->setEntity($entity);
             }
